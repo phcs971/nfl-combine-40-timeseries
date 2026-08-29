@@ -27,6 +27,8 @@ CLUSTER_LABELS = "015751546239182"
 
 
 def decode_stream(buf: bytes) -> list[np.ndarray]:
+    if not buf.startswith(PNG_SIG):
+        return []
     out, i = [], 0
     while i >= 0:
         j = buf.find(PNG_SIG, i + 1)
@@ -140,6 +142,52 @@ class PanelReader:
         base = field[0][2]
         return any(lo <= x <= hi and abs(bot - base) < 12
                    for x, _w, bot in marks)
+
+
+def clock_series(video: str, dur: float, reader: "PanelReader",
+                 fps: float = 4.0, chunk: float = 60.0):
+    """Sample the clock column across a video as [(t, value|None)].
+
+    The clock must be tracked as one column. Taking the max over all panel fields
+    instead lets a static field (a previous attempt, the group leaderboard) mask
+    the reset to 0.00 that marks the start of the next run, silently merging runs.
+    """
+    raw = []
+    for ss in np.arange(0.0, dur, chunk):
+        for k, band in enumerate(band_frames(video, ss, chunk, str(fps))):
+            raw.append((ss + k / fps, reader.read(band)))
+
+    cols: dict[int, list] = {}
+    for _, fields in raw:
+        for x, v in fields:
+            cols.setdefault(round(x / 50) * 50, []).append(v)
+    if not cols:
+        return [], None
+    rises = {c: sum(1 for a, b in zip(vs, vs[1:]) if 0 < b - a < 0.2)
+             for c, vs in cols.items()}
+    clock_x = max(rises, key=rises.get)
+
+    series = []
+    for t, fields in raw:
+        hit = [v for x, v in fields if round(x / 50) * 50 == clock_x]
+        series.append((t, hit[0] if hit else None))
+    return series, clock_x
+
+
+def segment_runs(series, min_span: float = 2.0):
+    """Split a clock series into runs at each reset."""
+    runs, cur = [], []
+    for t, v in series:
+        if v is None:
+            continue
+        if cur and v < cur[-1][1] - 0.05:
+            if cur[-1][1] - cur[0][1] > min_span:
+                runs.append(cur)
+            cur = []
+        cur.append((t, v))
+    if cur and cur[-1][1] - cur[0][1] > min_span:
+        runs.append(cur)
+    return runs
 
 
 def main() -> int:

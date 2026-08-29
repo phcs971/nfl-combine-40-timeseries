@@ -28,6 +28,19 @@ inclusion is independent of draft outcome. Selection on 40 time is not ruled out
 that and is checked during segmentation by comparing athletes found on video against
 the frame.
 
+## Athlete identification
+
+Bibs are assigned alphabetically by last name within a position group, over every
+invitee in that group including those who never post a 40. Reading the two-digit bib
+and indexing that roster is cheaper and steadier than OCRing the name, which would
+need a full alphabet of prototypes. Confirmed against five bibs spanning the
+alphabet; suffixes must be stripped before sorting or `Keenan III` and `Jackson Jr.`
+sort under their suffix and shift every bib after them.
+
+The bib renders smaller than the timing digits and correlates lower against the same
+prototypes, so it is majority-voted across frames of a run rather than trusted from
+any single frame.
+
 ## Method
 
 **Draft status is joined from the `draft_picks` release, not read from the combine
@@ -86,8 +99,13 @@ including the slowest (5.31) and all three undrafted. No evidence of selection o
 speed or draft status. Athlete name and bib are on screen continuously, so the
 who-is-on-screen timeline is readable at any sample rate.
 
-Not every athlete runs twice — the panel shows `1st ATT` / `2nd ATT`, with `---` where
-there is no second attempt.
+Most athletes run twice: the DL session yields 28 runs across its 15 athletes, 13 of
+them with a second attempt. The panel shows `1st ATT` / `2nd ATT`, with `---` where
+there is no second.
+
+Segmentation and identification are verified end-to-end on that session: 15/15
+athletes recovered with unanimous bib agreement, and the best of each athlete's
+attempts sits within 0.03 s of their official time (mean +0.005, sd 0.010).
 
 ## Known error sources
 
@@ -126,8 +144,9 @@ Code MIT. Derived measurements CC BY 4.0.
 - [x] Video registry
 - [x] Feed structure verified (clock, coverage, camera behaviour)
 - [x] Clock reader (`src/read_clock.py`), validated against the frame interval
-- [ ] Name/bib reading, to bind each run to an athlete
-- [ ] Run segmentation across all 11 videos
+- [x] Athlete identification from bib (`src/read_bib.py`)
+- [x] Run segmentation, verified end-to-end on the DL session
+- [ ] Segment the remaining 10 videos
 - [ ] Stratified sample, 20/class
 - [ ] Yard-line crossing annotation
 - [ ] Sprint-model fit
