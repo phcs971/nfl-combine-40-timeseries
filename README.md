@@ -42,7 +42,10 @@ is the live run, frozen is post-run. Panel layout is position-dependent — `lin
 groups show `10-YD SPLIT | 40-YD DASH`, other groups show `40-YD DASH` alone, at a
 different x offset — so the read region is located per group, not by a fixed crop.
 Digits are large, fixed-font and high-contrast, so template matching is used rather
-than general OCR.
+than general OCR — prototypes in `data/glyph_templates.npz`, several per digit to
+absorb the feed's subpixel anti-aliasing. Reading is self-validating: the clock must
+advance by exactly one frame interval per frame, so a misread digit shows up as a
+backwards or oversized step rather than passing silently.
 
 Displayed times are labelled `UNOFFICIAL` and run 0.00-0.07 s off the official times
 in the frame; the frame is authoritative.
@@ -110,6 +113,7 @@ reproduce locally. Combine and draft data from
 uv run python src/build_frame.py --seasons 2026   # -> data/frame.csv
 uv run python src/check_videos.py                 # validate video registry
 uv run python src/probe_video.py video/<id>.mp4   # contact sheet for inspection
+uv run python src/read_clock.py video/<id>.mp4 --ss 2 --dur 6   # read timing panel
 ```
 
 `probe_video.py` needs a local download; `video/` and `frames/` are gitignored.
@@ -121,8 +125,9 @@ Code MIT. Derived measurements CC BY 4.0.
 - [x] Sampling frame from combine + draft data
 - [x] Video registry
 - [x] Feed structure verified (clock, coverage, camera behaviour)
-- [ ] Clock + name reading via template matching
-- [ ] Run segmentation from clock state
+- [x] Clock reader (`src/read_clock.py`), validated against the frame interval
+- [ ] Name/bib reading, to bind each run to an athlete
+- [ ] Run segmentation across all 11 videos
 - [ ] Stratified sample, 20/class
 - [ ] Yard-line crossing annotation
 - [ ] Sprint-model fit
