@@ -1,0 +1,381 @@
+season,player_name,pos,cls,school,ht,wt,forty,forty_tercile,drafted,round,pick,team,pfr_id,cfb_id
+2026,Zane Durant,DT,line,Penn St.,6-1,290.0,4.75,fast,True,5.0,181.0,BUF,DuraZa00,zane-durant-1
+2026,Kaleb Proctor,DT,line,Southeastern Louisiana,6-2,291.0,4.79,fast,True,4.0,104.0,ARI,,
+2026,Gracen Halton,DT,line,Oklahoma,6-3,293.0,4.82,fast,True,4.0,107.0,SFO,HaltGr00,gracen-halton-1
+2025,Ty Robinson,DT,line,Nebraska,6-5,288.0,4.83,fast,True,4.0,111.0,PHI,RobiTy02,ty-robinson-1
+2025,Jared Wilson,C,line,Georgia,6-3,310.0,4.84,fast,True,3.0,95.0,NWE,WilsJa02,jared-wilson-2
+2026,DeMonte Capehart,DT,line,Clemson,6-5,313.0,4.85,fast,True,5.0,155.0,TAM,CapeDe00,demonte-capehart-1
+2025,Jared Harrison-Hunte,DT,line,SMU,6-3,290.0,4.86,fast,False,,,,HarrJa06,jared-harrison-hunte-1
+2025,Tyrion Ingram-Dawkins,DT,line,Georgia,6-5,276.0,4.86,fast,True,5.0,139.0,MIN,IngrTy00,tyrion-ingram-dawkins-1
+2026,David Gusta,DT,line,Kentucky,6-2,308.0,4.88,fast,False,,,,,david-gusta-1
+2026,Jackie Marshall,DT,line,Baylor,6-3,293.0,4.88,fast,True,6.0,184.0,TEN,MarsJa02,jackie-marshall-1
+2026,Albert Regis,DT,line,Texas A&M,6-1,295.0,4.88,fast,True,3.0,81.0,JAX,RegiAl00,albert-regis-1
+2026,Logan Jones,C,line,Iowa,6-3,299.0,4.9,fast,True,2.0,57.0,CHI,JoneLo01,logan-jones-1
+2025,Armand Membou,OT,line,Missouri,6-4,332.0,4.91,fast,True,1.0,7.0,NYJ,MembAr00,armand-membou-1
+2026,Spencer Fano,OT,line,Utah,6-6,311.0,4.91,fast,True,1.0,9.0,CLE,FanoSp00,spencer-fano-1
+2026,Maxwell Iheanachor,OT,line,Arizona St.,6-6,321.0,4.91,fast,True,1.0,21.0,PIT,IheaMa00,max-iheanachor-1
+2026,Jalen Farmer,G,line,Kentucky,6-5,312.0,4.93,fast,True,4.0,113.0,IND,FarmJa00,jalen-farmer-1
+2026,Monroe Freeling,OT,line,Georgia,6-7,315.0,4.93,fast,True,1.0,19.0,CAR,FreeMo00,monroe-freeling-1
+2025,Aeneas Peebles,DT,line,Virginia Tech,6-1,282.0,4.94,fast,True,6.0,210.0,BAL,PeebAe00,aeneas-peebles-1
+2026,Jager Burton,C,line,Kentucky,6-4,312.0,4.94,fast,True,5.0,153.0,GNB,BurtJa02,jager-burton-1
+2026,Enrique Cruz,OT,line,Kansas,6-6,313.0,4.94,fast,False,,,,,enrique-cruz-jr-1
+2025,Darius Alexander,DT,line,Toledo,6-4,305.0,4.95,fast,True,3.0,65.0,NYG,AlexDa01,darius-alexander-1
+2025,Derrick Harmon,DT,line,Oregon,6-5,313.0,4.95,fast,True,1.0,21.0,PIT,HarmDe01,derrick-harmon-2
+2025,Jonah Savaiinaea,OT,line,Arizona,6-4,324.0,4.95,fast,True,2.0,37.0,MIA,SavaJo00,jonah-savaiinaea-1
+2025,CJ West,DT,line,Indiana,6-1,316.0,4.95,fast,True,4.0,113.0,SFO,WestCJ00,cj-west-1
+2026,Parker Brailsford,C,line,Alabama,6-2,289.0,4.95,fast,True,5.0,146.0,CLE,BraiPa01,parker-brailsford-1
+2025,Tate Ratledge,G,line,Georgia,6-7,308.0,4.97,fast,True,2.0,57.0,DET,RatlTa00,tate-ratledge-1
+2025,Will Campbell,OT,line,LSU,6-6,319.0,4.98,fast,True,1.0,4.0,NWE,CampWi01,will-campbell-1
+2026,Caleb Lomu,OT,line,Utah,6-6,313.0,4.99,fast,True,1.0,28.0,NWE,LomuCa00,caleb-lomu-1
+2025,Aireontae Ersery,OT,line,Minnesota,6-6,331.0,5.01,fast,True,2.0,48.0,HOU,ErseAi00,aireontae-ersery-1
+2025,Jackson Slater,G,line,Sacramento St.,6-3,311.0,5.01,fast,True,5.0,167.0,TEN,SlatJa01,
+2026,Devon Campbell,G,line,Texas,6-3,313.0,5.01,fast,True,6.0,200.0,MIA,CampDJ01,dj-campbell-2
+2026,Aamil Wagner,OT,line,Notre Dame,6-6,306.0,5.01,fast,False,,,,WagnAa00,aamil-wagner-1
+2025,Eli Cox,C,line,Kentucky,6-4,306.0,5.02,fast,False,,,,CoxxEl00,eli-cox-1
+2026,Chase Bisontis,G,line,Texas A&M,6-5,315.0,5.02,fast,True,2.0,34.0,ARI,BisoCh00,chase-bistonis-1
+2026,Dillon Wade,G,line,Auburn,6-3,316.0,5.02,fast,False,,,,WadeDi00,dillon-wade-1
+2025,Junior Tafuna,DT,line,Utah,6-4,308.0,5.03,mid,False,,,,,junior-tafuna-1
+2025,Joshua Gray,G,line,Oregon St.,6-5,299.0,5.04,mid,False,,,,GrayJo01,joshua-gray-1
+2026,Caleb Banks,DT,line,Florida,6-6,327.0,5.04,mid,True,1.0,18.0,MIN,BankCa01,caleb-banks-1
+2026,Blake Miller,OT,line,Clemson,6-7,317.0,5.04,mid,True,1.0,17.0,DET,MillBl01,blake-miller-2
+2025,Joshua Conerly,OT,line,Oregon,6-5,311.0,5.05,mid,True,1.0,29.0,WAS,ConeJo00,josh-conerly-jr-1
+2025,Drew Kendall,C,line,Boston Col.,6-4,308.0,5.05,mid,True,5.0,168.0,PHI,KendDr00,drew-kendall-1
+2026,Chris McClellan,DT,line,Missouri,6-4,313.0,5.05,mid,True,3.0,77.0,GNB,McClCh01,chris-mcclellan-1
+2026,Keylan Rutledge,G,line,Georgia Tech,6-4,316.0,5.05,mid,True,1.0,26.0,HOU,RutlKe01,keylan-rutledge-1
+2026,Jude Bowry,OT,line,Boston Col.,6-5,314.0,5.08,mid,True,4.0,102.0,BUF,BowrJu00,jude-bowry-1
+2025,Tommy Akingbesote,DT,line,Maryland,6-4,306.0,5.09,mid,True,7.0,247.0,DAL,AkinTo00,tommy-akingbesote-1
+2025,Warren Brinson,DT,line,Georgia,6-5,315.0,5.09,mid,True,6.0,198.0,GNB,,warren-brinson-1
+2026,Bryson Eason,DT,line,Tennessee,6-2,323.0,5.09,mid,False,,,,,bryson-eason-1
+2026,Alan Herron,OT,line,Maryland,6-5,308.0,5.09,mid,False,,,,,alan-herron-1
+2026,Micah Morris,G,line,Georgia,6-5,334.0,5.09,mid,True,6.0,207.0,PHI,MorrMi02,micah-morris-1
+2025,Caleb Rogers,G,line,Texas Tech,6-5,312.0,5.1,mid,True,3.0,98.0,LVR,,caleb-rogers-1
+2026,Nick Barrett,DT,line,South Carolina,6-3,312.0,5.1,mid,True,5.0,145.0,LAC,,nick-barrett-1
+2026,Sam Hecht,C,line,Kansas St.,6-4,303.0,5.1,mid,True,5.0,144.0,CAR,HechSa00,sam-hecht-1
+2026,Jake Slaughter,C,line,Florida,6-5,303.0,5.1,mid,True,2.0,63.0,LAC,SlauJa02,jake-slaughter-2
+2025,Connor Colby,G,line,Iowa,6-6,309.0,5.11,mid,True,7.0,249.0,SFO,ColbCo00,connor-colby-1
+2025,Joshua Farmer,DT,line,Florida St.,6-3,305.0,5.11,mid,True,4.0,137.0,NWE,FarmJo00,joshua-farmer-1
+2025,Robert Webb,C,line,Jacksonville St.,6-3,312.0,5.11,mid,False,,,,WebbCl00,clay-webb-1
+2026,Carver Willis,OT,line,Washington,6-5,303.0,5.11,mid,True,4.0,127.0,SFO,,carver-willis-1
+2025,Carson Vinson,OT,line,Alabama A&M,6-7,314.0,5.12,mid,True,5.0,141.0,BAL,,
+2026,Austin Barber,OT,line,Florida,6-7,318.0,5.12,mid,True,3.0,86.0,CLE,BarbAu00,austin-barber-1
+2026,Brandon Cleveland,DT,line,North Carolina St.,6-3,307.0,5.12,mid,True,7.0,229.0,LVR,ClevBr00,brandon-cleveland-1
+2026,Cameron Ball,DT,line,Arkansas,6-4,310.0,5.13,mid,False,,,,BallCa00,cameron-ball-1
+2025,Zeek Biggers,DT,line,Georgia Tech,6-6,321.0,5.14,mid,True,7.0,253.0,MIA,,zeek-biggers-1
+2025,Eric Gregory,DT,line,Arkansas,6-3,319.0,5.14,mid,False,,,,GregEr00,eric-gregory-1
+2025,Jalen Travis,OT,line,Iowa St.,6-8,339.0,5.14,mid,True,4.0,127.0,IND,TravJa00,jalen-travis-1
+2026,Dametrious Crownover,OT,line,Texas A&M,6-7,319.0,5.14,mid,True,6.0,196.0,NWE,CrowDa00,dametrious-crownover-1
+2026,Brian Parker,C,line,Duke,6-5,309.0,5.14,mid,False,,,,,brian-parker-ii-1
+2025,JJ Pegues,DT,line,Mississippi,6-3,309.0,5.15,mid,True,6.0,180.0,LVR,PeguJJ00,jj-pegues-1
+2025,Nazir Stackhouse,DT,line,Georgia,6-4,327.0,5.15,mid,False,,,,StacNa00,nazir-stackhouse-1
+2026,Diego Pounds,OT,line,Mississippi,6-6,325.0,5.15,mid,False,,,,PounDi00,diego-pounds-1
+2025,Jamaree Caldwell,DT,line,Oregon,6-2,332.0,5.16,slow,True,3.0,86.0,LAC,CaldJa00,jamaree-caldwell-1
+2025,Kelvin Banks Jr.,OT,line,Texas,6-5,315.0,5.16,slow,True,1.0,9.0,NOR,BankKe01,kelvin-banks-jr-1
+2026,J.C. Davis,OT,line,Illinois,6-4,322.0,5.16,slow,True,6.0,192.0,NYG,,jc-davis-1
+2026,Drew Shelton,OT,line,Penn St.,6-5,313.0,5.16,slow,True,4.0,112.0,DAL,ShelDr00,drew-shelton-1
+2025,Cam Jackson,DT,line,Florida,6-6,328.0,5.17,slow,True,5.0,140.0,CAR,JackCa01,camron-jackson-1
+2025,John Williams,G,line,Cincinnati,6-4,322.0,5.17,slow,True,7.0,250.0,GNB,,john-williams-19
+2026,Travis Burke,OT,line,Memphis,6-9,325.0,5.17,slow,True,4.0,117.0,LAC,BurkTr01,travis-burke-1
+2025,Logan Brown,OT,line,Kansas,6-6,311.0,5.18,slow,False,,,,BrowLo01,logan-brown-1
+2026,Gennings Dunker,G,line,Iowa,6-5,319.0,5.18,slow,True,3.0,96.0,PIT,DunkGe00,gennings-dunker-1
+2026,Lee Hunter,DT,line,Texas Tech,6-4,318.0,5.18,slow,True,2.0,49.0,CAR,HuntLe00,lee-hunter-1
+2026,Logan Taylor,G,line,Boston Col.,6-7,314.0,5.19,slow,True,6.0,202.0,LAC,TaylLo00,logan-taylor-2
+2025,Joe Huber,G,line,Wisconsin,6-5,310.0,5.2,slow,False,,,,HubeJo00,joe-huber-1
+2026,Kage Casey,OT,line,Boise St.,6-6,310.0,5.2,slow,True,4.0,111.0,DEN,CaseKa00,kage-casey-1
+2025,Ozzy Trapilo,OT,line,Boston Col.,6-8,316.0,5.21,slow,True,2.0,56.0,CHI,TrapOz00,ozzy-trapilo-1
+2026,Emmanuel Pregnon,G,line,Oregon,6-4,314.0,5.21,slow,True,3.0,88.0,JAX,PregEm00,emmanuel-pregnon-1
+2026,Kadyn Proctor,OT,line,Alabama,6-7,352.0,5.21,slow,True,1.0,12.0,MIA,ProcKa00,kadyn-proctor-1
+2026,Fernando Carmona,G,line,Arkansas,6-5,316.0,5.22,slow,True,5.0,142.0,TEN,CarmFe00,fernando-carmona-jr-1
+2025,Miles Frazier,G,line,LSU,6-6,317.0,5.24,slow,True,5.0,171.0,DET,FrazMi00,miles-frazier-1
+2025,Xavier Truss,G,line,Georgia,6-7,309.0,5.24,slow,False,,,,TrusXa00,xavier-truss-1
+2026,Evan Beerntsen,G,line,Northwestern,6-4,301.0,5.25,slow,True,7.0,253.0,BAL,,evan-beerntsen-1
+2025,Anthony Belton,OT,line,North Carolina St.,6-6,336.0,5.26,slow,True,2.0,54.0,GNB,BeltAn00,anthony-belton-1
+2025,Wyatt Milum,OT,line,West Virginia,6-7,313.0,5.27,slow,True,3.0,89.0,JAX,MiluWy00,wyatt-milum-1
+2026,Ar'maj Reed-Adams,G,line,Texas A&M,6-6,314.0,5.28,slow,True,7.0,241.0,BUF,,armaj-adams-reed-1
+2025,Jalen Rivers,OT,line,Miami,6-6,319.0,5.29,slow,True,5.0,153.0,CIN,RiveJa00,jalen-rivers-1
+2026,Tim Keenan III,DT,line,Alabama,6-1,327.0,5.31,slow,True,7.0,232.0,LAR,KeenTi00,tim-keenan-iii-1
+2025,Brandon Crenshaw-Dickson,OT,line,Florida,6-7,316.0,5.33,slow,False,,,,CrenBr00,brandon-crenshaw-dickson-1
+2026,Beau Stephens,G,line,Iowa,6-6,315.0,5.35,slow,True,5.0,148.0,SEA,StepBe00,beau-stephens-2
+2026,Markel Bell,OT,line,Miami,6-9,346.0,5.36,slow,True,3.0,68.0,PHI,BellMa02,markel-bell-1
+2026,Garrett DiGiorgio,G,line,UCLA,6-7,319.0,5.36,slow,False,,,,DiGiGa00,garrett-digiorgio-1
+2025,Elijah Simmons,DT,line,Tennessee,6-1,334.0,5.37,slow,False,,,,,elijah-simmons-1
+2025,Tyler Booker,G,line,Alabama,6-5,321.0,5.38,slow,True,1.0,12.0,DAL,BookTy00,tyler-booker-1
+2025,Yahya Black,DT,line,Iowa,6-6,336.0,5.39,slow,True,5.0,164.0,PIT,BlacYa00,yahya-black-1
+2025,Torricelli Simpkins III,C,line,South Carolina,6-5,312.0,5.45,slow,False,,,,,torricelli-simpkins-1
+2026,Brenen Thompson,WR,skill,Mississippi St.,5-9,164.0,4.26,fast,True,4.0,105.0,LAC,ThomBr07,brenen-thompson-1
+2026,Lorenzo Styles Jr.,SAF,skill,Ohio St.,6-1,194.0,4.27,fast,True,5.0,172.0,NOR,,lorenzo-styles-jr-1
+2025,Maxwell Hairston,CB,skill,Kentucky,5-11,183.0,4.28,fast,True,1.0,30.0,BUF,HairMa00,maxwell-hairston-1
+2026,Zavion Thomas,WR,skill,LSU,5-10,190.0,4.28,fast,True,3.0,89.0,CHI,ThomZa05,zavion-thomas-1
+2025,Matthew Golden,WR,skill,Texas,5-11,191.0,4.29,fast,True,1.0,23.0,GNB,GoldMa02,matthew-golden-1
+2025,Dont'e Thornton Jr.,WR,skill,Tennessee,6-5,205.0,4.3,fast,True,4.0,108.0,LVR,ThorDo00,donte-thornton-1
+2025,Darien Porter,CB,skill,Iowa St.,6-3,195.0,4.3,fast,True,3.0,68.0,LVR,PortDa00,darien-porter-1
+2026,Deion Burks,WR,skill,Oklahoma,5-10,180.0,4.3,fast,True,7.0,254.0,IND,BurkDe02,deion-burks-1
+2026,Jeff Caldwell,WR,skill,Cincinnati,6-5,216.0,4.31,fast,False,,,,CaldJe01,jeff-caldwell-2
+2026,Toriano Pride,CB,skill,Missouri,5-10,185.0,4.32,fast,True,7.0,220.0,BUF,PridTo00,toriano-pride-jr-1
+2026,Robert Spears-Jennings,SAF,skill,Oklahoma,6-2,205.0,4.32,fast,True,7.0,224.0,PIT,SpeaRo01,robert-spears-jennings-1
+2025,Caleb Ransaw,CB,skill,Tulane,5-11,197.0,4.33,fast,True,3.0,88.0,JAX,RansCa00,caleb-ransaw-1
+2026,Treydan Stukes,SAF,skill,Arizona,6-1,190.0,4.33,fast,True,2.0,38.0,LVR,StukTr00,treydan-stukes-1
+2025,Chimere Dike,WR,skill,Florida,6-1,196.0,4.34,fast,True,4.0,103.0,TEN,DikeCh00,chimere-dike-1
+2025,Joshua Lane,WR,skill,Virginia Tech,5-10,191.0,4.34,fast,True,4.0,128.0,WAS,LaneJa00,jaylin-lane-1
+2026,Bryce Lance,WR,skill,North Dakota St.,6-3,204.0,4.34,fast,True,4.0,136.0,NOR,,
+2025,Jacob Parrish,CB,skill,Kansas St.,5-10,191.0,4.35,fast,True,3.0,84.0,TAM,ParrJa01,jacob-parrish-1
+2026,Zachariah Branch,WR,skill,Georgia,5-9,177.0,4.35,fast,True,3.0,79.0,ATL,BranZa00,zachariah-branch-1
+2026,Eric Rivers,WR,skill,Georgia Tech,5-10,176.0,4.35,fast,False,,,,RiveEr00,eric-rivers-2
+2026,Dillon Thieneman,SAF,skill,Oregon,6-0,201.0,4.35,fast,True,1.0,25.0,CHI,ThieDi00,dillon-thieneman-1
+2025,Zah Frazier,CB,skill,Texas-San Antonio,6-3,186.0,4.36,fast,True,5.0,169.0,CHI,,zah-frazier-1
+2025,Arian Smith,WR,skill,Georgia,6-0,179.0,4.36,fast,True,4.0,110.0,NYJ,SmitAr01,arian-smith-1
+2026,De'Zhaun-Ryan Stribling,WR,skill,Mississippi,6-2,207.0,4.36,fast,True,2.0,33.0,SFO,StriDe01,dezhaun-stribling-1
+2025,Tai Felton,WR,skill,Maryland,6-1,183.0,4.37,fast,True,3.0,102.0,MIN,FeltTa00,tai-felton-1
+2025,KeAndre Lambert-Smith,WR,skill,Auburn,6-1,190.0,4.37,fast,True,5.0,158.0,LAC,LambKe01,keandre-lambert-smith-1
+2025,Marques Sigle,SAF,skill,Kansas St.,5-11,199.0,4.37,fast,True,5.0,160.0,SFO,,marques-sigle-1
+2025,Jordan Watkins,WR,skill,Mississippi,5-11,196.0,4.37,fast,True,4.0,138.0,SFO,,jordan-watkins-2
+2026,Malik Benson,WR,skill,Oregon,6-0,189.0,4.37,fast,True,6.0,195.0,LVR,,malik-benson-1
+2026,Chris Brazzell II,WR,skill,Tennessee,6-4,198.0,4.37,fast,True,3.0,83.0,CAR,,chris-brazzell-ii-1
+2025,Nick Emmanwori,SAF,skill,South Carolina,6-3,220.0,4.38,fast,True,2.0,35.0,SEA,EmmaNi00,nick-emmanwori-1
+2026,Daylen Everette,CB,skill,Georgia,6-1,196.0,4.38,fast,True,3.0,85.0,PIT,EverDa00,daylen-everette-1
+2025,Jahdae Barron,CB,skill,Texas,5-11,194.0,4.39,fast,True,1.0,20.0,DEN,BarrJa01,jahdae-barron-1
+2025,Isaiah Bond,WR,skill,Texas,5-11,180.0,4.39,fast,False,,,,BondIs00,isaiah-bond-1
+2025,Robert Longerbeam,CB,skill,Rutgers,5-11,175.0,4.39,fast,True,6.0,212.0,BAL,,robert-longerbeam-1
+2025,Jaylin Noel,WR,skill,Iowa St.,5-10,194.0,4.39,fast,True,3.0,79.0,HOU,NoelJa00,jaylin-noel-1
+2026,Caleb Douglas,WR,skill,Texas Tech,6-4,206.0,4.39,fast,True,3.0,75.0,MIA,DougCa00,caleb-douglas-1
+2025,Dominic Lovett,WR,skill,Georgia,5-10,185.0,4.4,fast,True,7.0,244.0,DET,LoveDo00,dominic-lovett-1
+2025,Isaiah Neyor,WR,skill,Nebraska,6-4,218.0,4.4,fast,False,,,,,isaiah-neyor-1
+2025,Justin Walley,CB,skill,Minnesota,5-10,190.0,4.4,fast,True,3.0,80.0,IND,WallJu00,justin-walley-1
+2025,Kyle Williams,WR,skill,Washington St.,5-11,190.0,4.4,fast,True,3.0,69.0,NWE,WillKy03,kyle-williams-11
+2026,Skyler Bell,WR,skill,Connecticut,6-0,192.0,4.4,fast,True,4.0,125.0,BUF,BellSk00,skyler-bell-1
+2026,Barion Brown,WR,skill,LSU,5-11,177.0,4.4,fast,True,6.0,190.0,NOR,BrowBa02,barion-brown-1
+2026,Chris Johnson,CB,skill,San Diego St.,6-0,193.0,4.4,fast,True,1.0,27.0,MIA,JohnCh09,chris-johnson-26
+2026,Jalon Kilgore,SAF,skill,South Carolina,6-1,210.0,4.4,fast,True,5.0,167.0,BUF,KilgJa00,jalon-kilgore-1
+2026,VJ Payne,SAF,skill,Kansas St.,6-3,206.0,4.4,fast,True,7.0,228.0,NYJ,PaynVJ00,vj-payne-1
+2026,Chandler Rivers,CB,skill,Duke,5-10,185.0,4.4,fast,True,5.0,162.0,BAL,RiveCh00,chandler-rivers-1
+2026,J. Michael Sturdivant,WR,skill,Florida,6-3,207.0,4.4,fast,False,,,,,j-michael-sturdivant-1
+2025,Kitan Crawford,SAF,skill,Nevada,5-11,202.0,4.41,fast,True,7.0,225.0,ARI,,kitan-crawford-1
+2025,Tory Horton,WR,skill,Colorado St.,6-3,196.0,4.41,fast,True,5.0,166.0,SEA,HortTo00,tory-horton-1
+2025,Luther Burden III,WR,skill,Missouri,6-0,206.0,4.41,fast,True,2.0,39.0,CHI,BurdLu00,luther-burden-1
+2025,Decarrion McWilliams,CB,skill,Central Florida,5-10,191.0,4.41,fast,True,5.0,145.0,PHI,McWiMa01,mac-mcwilliams-1
+2026,Bud Clark,SAF,skill,TCU,6-1,188.0,4.41,fast,True,2.0,64.0,SEA,ClarBu00,bud-clark-1
+2026,Tacario Davis,CB,skill,Washington,6-4,194.0,4.41,fast,True,3.0,72.0,CIN,DaviTa01,tacario-davis-1
+2026,Charles Demmings,CB,skill,Stephen F. Austin St.,6-1,193.0,4.41,fast,True,5.0,163.0,MIN,,
+2026,Chris Hilton,WR,skill,LSU,6-0,188.0,4.41,fast,False,,,,HiltCh00,chris-hilton-jr-1
+2026,Domani Jackson,CB,skill,Alabama,6-1,194.0,4.41,fast,True,6.0,201.0,GNB,JackDo04,domani-jackson-1
+2026,Dalton Johnson,SAF,skill,Arizona,5-11,192.0,4.41,fast,True,5.0,150.0,LVR,,dalton-johnson-1
+2026,Antonio Williams,WR,skill,Clemson,6-0,187.0,4.41,fast,True,3.0,71.0,WAS,WillAn04,antonio-williams-2
+2025,Billy Bowman Jr.,SAF,skill,Oklahoma,5-10,192.0,4.42,mid,True,4.0,118.0,ATL,BowmBi01,billy-bowman-1
+2025,Jalen Royals,WR,skill,Utah St.,6-0,205.0,4.42,mid,True,4.0,133.0,KAN,RoyaJa00,jalen-royals-1
+2026,Omar Cooper,WR,skill,Indiana,6-0,199.0,4.42,mid,True,1.0,30.0,NYJ,CoopOm00,omar-cooper-jr-1
+2026,Ted Hurst,WR,skill,Georgia St.,6-4,206.0,4.42,mid,True,3.0,84.0,TAM,,ted-hurst-1
+2026,Malik Muhammad,CB,skill,Texas,6-0,182.0,4.42,mid,True,4.0,124.0,CHI,MuhaMa00,malik-muhammad-1
+2025,Trey Amos,CB,skill,Mississippi,6-1,195.0,4.43,mid,True,2.0,61.0,WAS,AmosTr00,trey-amos-1
+2025,Elijhah Badger,WR,skill,Florida,6-1,200.0,4.43,mid,False,,,,BadgEl00,elijhah-badger-1
+2025,Bilhal Kone,CB,skill,Western Michigan,6-1,190.0,4.43,mid,True,6.0,178.0,BAL,KoneBi00,bilhal-kone-1
+2025,Isaac TeSlaa,WR,skill,Arkansas,6-4,214.0,4.43,mid,True,3.0,70.0,DET,TeSlIs00,isaac-teslaa-1
+2026,Latrell McCutchin,CB,skill,Houston,6-2,191.0,4.43,mid,False,,,,,latrell-mccutchin-1
+2025,Elic Ayomanor,WR,skill,Stanford,6-2,206.0,4.44,mid,True,4.0,136.0,TEN,AyomEl00,elic-ayomanor-1
+2025,Sam Brown Jr.,WR,skill,Miami,6-2,200.0,4.44,mid,False,,,,BrowSa01,sam-brown-5
+2025,Upton Stout,CB,skill,Western Kentucky,5-9,181.0,4.44,mid,True,3.0,100.0,SFO,StouUp00,upton-stout-1
+2026,Emmanuel Henderson,WR,skill,Kansas,6-1,185.0,4.44,mid,False,,,,,emmanuel-henderson-1
+2026,Colton Hood,CB,skill,Tennessee,6-0,193.0,4.44,mid,True,2.0,37.0,NYG,HoodCo00,colton-hood-1
+2025,Marcus Harris,CB,skill,California,5-11,189.0,4.45,mid,True,6.0,183.0,TEN,,marcus-harris-3
+2025,Andrew Mukuba,SAF,skill,Texas,5-11,186.0,4.45,mid,True,2.0,64.0,PHI,MukuAn00,andrew-mukuba-1
+2025,Jaylin Smith,CB,skill,USC,5-11,187.0,4.45,mid,True,3.0,97.0,HOU,SmitJa11,jaylin-smith-1
+2025,Craig Woodson,SAF,skill,California,6-0,200.0,4.45,mid,True,4.0,106.0,NWE,WoodCr00,criag-woodson-1
+2026,Davison Igbinosun,CB,skill,Ohio St.,6-2,189.0,4.45,mid,True,2.0,62.0,BUF,IgbiDa01,davison-igbinosun-1
+2026,Kendrick Law,WR,skill,Kentucky,5-11,203.0,4.45,mid,True,5.0,168.0,DET,,kendrick-law-1
+2026,Ephesians Prysock,CB,skill,Washington,6-3,196.0,4.45,mid,True,4.0,139.0,SFO,PrysEp00,ephesians-prysock-1
+2025,Jimmy Horn Jr.,WR,skill,Colorado,5-8,174.0,4.46,mid,True,6.0,208.0,CAR,HornJi00,jimmy-horn-jr-1
+2025,Kaden Prather,WR,skill,Maryland,6-4,204.0,4.46,mid,True,7.0,240.0,BUF,PratKa00,kaden-prather-1
+2025,LaJohntay Wester,WR,skill,Colorado,5-10,163.0,4.46,mid,True,6.0,203.0,BAL,WestLa01,lajohntay-wester-1
+2026,Hezekiah Masses,CB,skill,California,6-1,179.0,4.46,mid,True,5.0,175.0,LVR,MassHe00,hezekiah-masses-1
+2025,Jayden Higgins,WR,skill,Iowa St.,6-4,214.0,4.47,mid,True,2.0,34.0,HOU,HiggJa00,jayden-higgins-1
+2026,Ja'Kobi Lane,WR,skill,USC,6-4,200.0,4.47,mid,True,3.0,80.0,BAL,LaneJa01,jakobi-lane-1
+2026,Kamari Ramsey,SAF,skill,USC,6-0,202.0,4.47,mid,True,5.0,141.0,HOU,RamsKa01,kamari-ramsey-1
+2026,Kaden Wetjen,WR,skill,Iowa,5-9,193.0,4.47,mid,True,4.0,121.0,PIT,WetjKa00,kaden-wetjen-1
+2025,Denzel Burke,CB,skill,Ohio St.,5-11,186.0,4.48,mid,True,5.0,174.0,ARI,BurkDe01,denzel-burke-1
+2025,Quincy Riley,CB,skill,Louisville,5-11,194.0,4.48,mid,True,4.0,131.0,NOR,RileQu00,quincy-riley-2
+2025,Jonas Sanker,SAF,skill,Virginia,6-0,206.0,4.48,mid,True,3.0,93.0,NOR,SankJo00,jonas-sanker-1
+2025,Savion Williams,WR,skill,TCU,6-4,222.0,4.48,mid,True,3.0,87.0,GNB,WillSa01,savion-williams-2
+2026,Germie Bernard,WR,skill,Alabama,6-1,206.0,4.48,mid,True,2.0,47.0,PIT,BernGe00,germie-bernard-1
+2026,Xavier Nwankpa,SAF,skill,Iowa,6-3,208.0,4.48,mid,False,,,,NwanXa00,xavier-nwankpa-1
+2025,Jason Marshall Jr.,CB,skill,Florida,6-0,194.0,4.49,mid,True,5.0,150.0,MIA,MarsJa00,jason-marshall-jr-1
+2025,R.J. Mickens,SAF,skill,Clemson,6-0,199.0,4.49,mid,True,6.0,214.0,LAC,MickRJ00,rj-mickens-1
+2025,Jaylen Reed,SAF,skill,Penn St.,6-0,211.0,4.49,mid,True,6.0,187.0,HOU,ReedJa04,jaylen-reed-1
+2025,Roc Taylor,WR,skill,Memphis,6-2,213.0,4.49,mid,False,,,,TaylRo02,roc-taylor-1
+2026,Kevin Coleman,WR,skill,Missouri,5-10,179.0,4.49,mid,True,5.0,177.0,MIA,ColeKe03,kevin-coleman-jr-1
+2026,Andre Fuller,CB,skill,Toledo,6-1,200.0,4.49,mid,True,7.0,236.0,SEA,,andre-fuller-1
+2026,Julian Neal,CB,skill,Arkansas,6-2,203.0,4.49,mid,True,3.0,99.0,SEA,NealJu00,julian-neal-1
+2026,Colbie Young,WR,skill,Georgia,6-5,218.0,4.49,mid,True,4.0,140.0,CIN,YounCo01,colbie-young-1
+2025,Alijah Clark,SAF,skill,Syracuse,6-1,188.0,4.5,slow,False,,,,ClarAl01,alijah-clark-1
+2025,Da'Quan Felton,WR,skill,Virginia Tech,6-5,213.0,4.5,slow,False,,,,FeltDa00,daquan-felton-1
+2025,Malaki Starks,SAF,skill,Georgia,6-1,197.0,4.5,slow,True,1.0,27.0,BAL,StarMa00,malaki-starks-1
+2025,Dorian Strong,CB,skill,Virginia Tech,6-1,185.0,4.5,slow,True,6.0,177.0,BUF,StroDo01,dorian-strong-1
+2025,Nohl Williams,CB,skill,California,6-0,199.0,4.5,slow,True,3.0,85.0,KAN,WillNo01,nohl-williams-1
+2026,Marcus Allen,CB,skill,North Carolina,6-2,187.0,4.5,slow,False,,,,AlleMa05,marcus-allen-6
+2026,Dillon Bell,WR,skill,Georgia,6-1,209.0,4.5,slow,False,,,,BellDi01,dillon-bell-1
+2026,Devin Moore,CB,skill,Florida,6-3,198.0,4.5,slow,True,4.0,114.0,DAL,MoorDe04,devin-moore-2
+2026,Michael Taaffe,SAF,skill,Texas,6-0,190.0,4.5,slow,True,5.0,158.0,MIA,TaafMi00,michael-taaffe-1
+2025,Andrew Armstrong,WR,skill,Arkansas,6-4,202.0,4.51,slow,False,,,,,andrew-armstrong-2
+2025,Tez Johnson,WR,skill,Oregon,5-10,154.0,4.51,slow,True,7.0,235.0,TAM,JohnTe03,tez-johnson-1
+2026,Adari Haulcy,SAF,skill,LSU,6-0,215.0,4.52,slow,True,3.0,78.0,IND,HaulAJ00,aj-haulcy-1
+2026,Will Lee III,CB,skill,Texas A&M,6-2,189.0,4.52,slow,True,4.0,129.0,CAR,LeexWi00,will-lee-iii-1
+2026,Emmanuel McNeil-Warren,SAF,skill,Toledo,6-4,201.0,4.52,slow,True,2.0,58.0,CLE,McNeEm00,emmanuel-mcneil-warren-1
+2025,BJ Adams,CB,skill,Central Florida,6-2,182.0,4.53,slow,False,,,,AdamBr00,brandon-adams-2
+2025,Jacobee Bryant,CB,skill,Kansas,6-0,180.0,4.53,slow,False,,,,BryaCo02,jacobee-bryant-1
+2026,Carnell Tate,WR,skill,Ohio St.,6-2,192.0,4.53,slow,True,1.0,4.0,TEN,TateCa00,carnell-tate-1
+2025,Cleveland Harris,WR,skill,Mississippi,6-2,205.0,4.54,slow,True,2.0,55.0,LAC,HarrTr03,tre-harris-1
+2026,Vinny Anthony II,WR,skill,Wisconsin,6-0,183.0,4.54,slow,False,,,,AnthVi01,vinny-anthony-1
+2026,Avery Smith,CB,skill,Toledo,5-11,196.0,4.54,slow,False,,,,SmitAv00,avery-smith-1
+2026,Harrison Wallace,WR,skill,Mississippi,6-0,192.0,4.54,slow,False,,,,WallHa00,harrison-wallace-iii-1
+2025,Maxen Hook,SAF,skill,Toledo,6-1,202.0,4.55,slow,False,,,,HookMa01,maxen-hook-1
+2026,Bishop Fitzgerald,SAF,skill,USC,5-11,201.0,4.55,slow,False,,,,FitzBi00,bishop-fitzgerald-1
+2026,Caullin Lacy,WR,skill,Louisville,5-9,183.0,4.55,slow,False,,,,LacyCa01,caullin-lacy-1
+2025,Zy Alexander,CB,skill,LSU,6-1,187.0,4.56,slow,False,,,,AlexZy00,zy-alexander-1
+2025,Isas Waxter,CB,skill,Villanova,6-1,209.0,4.56,slow,False,,,,,
+2025,Theo Wease,WR,skill,Missouri,6-3,200.0,4.56,slow,False,,,,WeasTh00,theo-wease-1
+2025,Traeshon Holden,WR,skill,Oregon,6-2,205.0,4.57,slow,False,,,,HoldTr00,traeshon-holden-1
+2025,Kobe Hudson,WR,skill,Central Florida,6-1,193.0,4.57,slow,False,,,,HudsKo00,kobe-hudson-1
+2025,Rayuan Lane III,SAF,skill,Navy,5-11,200.0,4.57,slow,True,6.0,200.0,JAX,LaneRa00,rayuan-lane-1
+2025,Nick Nash,WR,skill,San Jose St.,6-3,203.0,4.57,slow,False,,,,NashNi00,nick-nash-1
+2025,Hunter Wohler,SAF,skill,Wisconsin,6-2,213.0,4.57,slow,True,7.0,232.0,IND,WohlHu00,hunter-wohler-1
+2026,Reggie Virgil,WR,skill,Texas Tech,6-3,187.0,4.57,slow,True,5.0,143.0,ARI,,reginald-virgil-1
+2026,Jalen Walthall,WR,skill,Incarnate Word,6-1,191.0,4.57,slow,False,,,,,
+2025,Antwane Wells Jr.,WR,skill,Mississippi,6-1,201.0,4.58,slow,False,,,,WellAn00,antwane-wells-jr-1
+2025,Sebastian Castro,SAF,skill,Iowa,5-11,203.0,4.59,slow,False,,,,CastSe01,sebastian-castro-1
+2025,Ra'Mello Dotson,CB,skill,Kansas,6-1,192.0,4.59,slow,False,,,,DotsMe00,ramello-dotson-1
+2025,Konata Mumpfield,WR,skill,Pittsburgh,5-11,186.0,4.59,slow,True,7.0,242.0,LAR,MumpKo00,konata-mumpfield-1
+2026,TJ Hall,CB,skill,Iowa,6-1,189.0,4.59,slow,True,7.0,219.0,NOR,HallTJ00,tj-hall-1
+2025,Pat Bryant,WR,skill,Illinois,6-2,204.0,4.61,slow,True,3.0,74.0,DEN,BryaPa00,pat-bryant-1
+2025,Ricky White III,WR,skill,UNLV,6-1,184.0,4.61,slow,True,7.0,238.0,SEA,WhitRi01,ricky-white-2
+2026,Malachi Fields,WR,skill,Notre Dame,6-5,218.0,4.61,slow,True,3.0,74.0,NYG,FielMa00,malachi-fields-1
+2026,Chase Roberts,WR,skill,BYU,6-3,209.0,4.64,slow,False,,,,RobeCh00,chase-roberts-2
+2025,Josh Kelly,WR,skill,Texas Tech,6-1,186.0,4.7,slow,False,,,,,josh-kelly-2
+2025,Bhayshul Tuten,RB,strong,Virginia Tech,5-9,206.0,4.32,fast,True,4.0,104.0,JAX,TuteBh00,bhayshul-tuten-1
+2026,Mike Washington Jr.,RB,strong,Arkansas,6-1,223.0,4.33,fast,True,4.0,122.0,LVR,WashMi00,mike-washington-5
+2026,Jeremiyah Love,RB,strong,Notre Dame,6-0,212.0,4.36,fast,True,1.0,3.0,ARI,LoveJe00,jeremiyah-love-1
+2026,Demond Claiborne,RB,strong,Wake Forest,5-10,188.0,4.37,fast,True,6.0,198.0,MIN,ClaiDe00,demond-claiborne-1
+2025,Jaydon Blue,RB,strong,Texas,5-9,196.0,4.38,fast,True,5.0,149.0,DAL,,jaydon-blue-1
+2025,Brashard Smith,RB,strong,SMU,5-10,194.0,4.39,fast,True,7.0,228.0,KAN,SmitBr09,brashard-smith-1
+2026,Kenyon Sadiq,TE,strong,Oregon,6-3,241.0,4.39,fast,True,1.0,16.0,NYJ,SadiKe00,kenyon-sadiq-1
+2025,RJ Harvey,RB,strong,Central Florida,5-8,205.0,4.4,fast,True,2.0,60.0,DEN,HarvRJ00,rj-harvey-1
+2025,Montrell Johnson Jr.,RB,strong,Florida,5-11,212.0,4.41,fast,False,,,,JohnMo00,montrell-johnson-1
+2025,Trevor Etienne,RB,strong,Georgia,5-9,198.0,4.42,fast,True,4.0,114.0,CAR,EtieTr01,trevor-etienne-1
+2026,Jam Miller,RB,strong,Alabama,5-10,209.0,4.42,fast,True,7.0,245.0,NWE,,jamarion-miller-1
+2025,DJ Giddens,RB,strong,Kansas St.,6-0,212.0,4.43,fast,True,5.0,151.0,IND,GiddDJ00,dj-giddens-1
+2025,TreVeyon Henderson,RB,strong,Ohio St.,5-10,202.0,4.43,fast,True,2.0,38.0,NWE,HendTr02,treveyon-henderson-1
+2025,Donovan Edwards,RB,strong,Michigan,5-11,205.0,4.44,fast,False,,,,EdwaDo01,donovan-edwards-1
+2025,Jarquez Hunter,RB,strong,Auburn,5-9,204.0,4.44,fast,True,4.0,117.0,LAR,HuntJa03,jarquez-hunter-1
+2026,Eli Heidenreich,RB,strong,Navy,6-0,198.0,4.44,fast,True,7.0,230.0,PIT,HeidEl00,eli-heidenreich-1
+2025,Marcus Yarns,RB,strong,Delaware,5-11,193.0,4.45,fast,False,,,,,
+2025,Omarion Hampton,RB,strong,North Carolina,6-0,221.0,4.46,fast,True,1.0,22.0,LAC,HampOm00,omarion-hampton-1
+2025,Kain Medrano,LB,strong,UCLA,6-3,222.0,4.46,fast,True,6.0,205.0,WAS,,kain-medrano-1
+2025,Raheim Sanders,RB,strong,South Carolina,6-0,217.0,4.46,fast,False,,,,SandRa00,raheim-sanders-1
+2026,Arvell Reese,EDGE,strong,Ohio St.,6-4,241.0,4.46,fast,True,1.0,5.0,NYG,ReesAr00,arvell-reese-1
+2026,Alex Styles,LB,strong,Ohio St.,6-5,244.0,4.46,fast,True,1.0,7.0,WAS,StylSo01,sonny-styles-1
+2025,James Pearce Jr.,EDGE,strong,Tennessee,6-5,245.0,4.47,fast,True,1.0,26.0,ATL,PearJa00,james-pearce-jr-1
+2026,Kaleb Elarms-Orr,LB,strong,TCU,6-2,234.0,4.47,fast,True,4.0,126.0,BUF,ElarKa00,kaleb-elarms-orr-1
+2025,Eugene Asante,LB,strong,Auburn,6-1,223.0,4.48,fast,False,,,,AsanEu01,eugene-asante-1
+2025,Quinshon Judkins,RB,strong,Ohio St.,6-0,221.0,4.48,fast,True,2.0,36.0,CLE,JudkQu00,quinshon-judkins-1
+2026,Seth McGowan,RB,strong,Kentucky,6-0,223.0,4.49,fast,True,7.0,237.0,IND,McGoSe01,seth-mcgowan-1
+2026,Jadarian Price,RB,strong,Notre Dame,5-11,203.0,4.49,fast,True,1.0,32.0,SEA,PricJa02,jadarian-price-1
+2026,David Bailey,EDGE,strong,Texas Tech,6-4,251.0,4.5,fast,True,1.0,2.0,NYJ,BailDa02,david-bailey-5
+2026,Adam Randall,RB,strong,Clemson,6-3,232.0,4.5,fast,True,5.0,174.0,BAL,RandAd00,adam-randall-1
+2025,Damien Martinez,RB,strong,Miami,6-0,217.0,4.51,fast,True,7.0,223.0,SEA,MartDa02,damien-martinez-1
+2026,Anthony Hill,LB,strong,Texas,6-2,238.0,4.51,fast,True,2.0,60.0,TEN,HillAn01,anthony-hill-jr-1
+2026,RJ Maryland,TE,strong,SMU,6-4,236.0,4.51,fast,False,,,,MaryRJ00,rj-maryland-1
+2026,Eli Stowers,TE,strong,Vanderbilt,6-4,239.0,4.51,fast,True,2.0,54.0,PHI,StowEl00,eli-stowers-1
+2025,Tahj Brooks,RB,strong,Texas Tech,5-9,214.0,4.52,fast,True,6.0,193.0,CIN,BrooTa00,tahj-brooks-1
+2025,Jihaad Campbell,LB,strong,Alabama,6-3,235.0,4.52,fast,True,1.0,31.0,PHI,CampJi00,jihaad-campbell-1
+2025,Danny Stutsman,LB,strong,Oklahoma,6-3,233.0,4.52,fast,True,4.0,112.0,NOR,StutDa00,danny-stutsman-1
+2026,Robert Henry Jr.,RB,strong,Texas-San Antonio,5-9,196.0,4.52,fast,False,,,,HenrRo00,robert-henry-1
+2026,Jaren Kanak,TE,strong,Oklahoma,6-2,234.0,4.52,fast,True,7.0,225.0,TEN,KanaJa00,jaren-kanak-1
+2026,Malachi Lawrence,EDGE,strong,Central Florida,6-4,253.0,4.52,fast,True,1.0,23.0,DAL,LawrMa01,malachi-lawrence-1
+2025,Nickolas Martin,LB,strong,Oklahoma St.,6-0,221.0,4.53,fast,True,3.0,75.0,SFO,MartNi01,nickolas-martin-1
+2026,Kyle Louis,LB,strong,Pittsburgh,6-0,220.0,4.53,fast,True,4.0,138.0,MIA,LouiKy00,kyle-louis-1
+2026,Namdi Obiazor,LB,strong,TCU,6-3,229.0,4.53,fast,True,6.0,212.0,NWE,ObiaNa00,namdi-obiazor-1
+2025,Woody Marks,RB,strong,USC,5-10,207.0,4.54,fast,True,4.0,116.0,HOU,,joquavious-marks-1
+2026,Trey Moore,EDGE,strong,Texas,6-2,243.0,4.54,fast,True,4.0,130.0,MIA,MoorTr02,trey-moore-1
+2025,Jordan James,RB,strong,Oregon,5-10,205.0,4.55,mid,True,5.0,147.0,SFO,JameJo01,jordan-james-3
+2025,Collin Oliver,EDGE,strong,Oklahoma St.,6-2,240.0,4.56,mid,True,5.0,159.0,GNB,OlivCo00,collin-oliver-1
+2026,Emmett Johnson,RB,strong,Nebraska,5-10,202.0,4.56,mid,True,5.0,161.0,KAN,JohnEm01,emmett-johnson-2
+2026,Karson Sharar,LB,strong,Iowa,6-2,231.0,4.56,mid,True,6.0,183.0,ARI,,karson-sharar-1
+2025,Fadil Diggs,EDGE,strong,Syracuse,6-4,257.0,4.57,mid,True,7.0,254.0,NOR,DiggFa00,fadil-diggs-1
+2025,Kaleb Johnson,RB,strong,Iowa,6-1,224.0,4.57,mid,True,3.0,83.0,PIT,JohnKa03,kaleb-johnson-2
+2025,Corey Kiner,RB,strong,Cincinnati,5-9,209.0,4.57,mid,False,,,,KineCo00,corey-kiner-1
+2026,Matthew Hibner,TE,strong,SMU,6-4,251.0,4.57,mid,True,4.0,133.0,BAL,HibnMa00,matthew-hibner-1
+2026,Justin Jefferson,LB,strong,Alabama,6-0,223.0,4.57,mid,True,5.0,149.0,CLE,JeffJu01,justin-jefferson-3
+2026,Jack Kelly,LB,strong,BYU,6-2,240.0,4.57,mid,True,6.0,193.0,NYG,KellJa00,jack-kelly-2
+2026,Jacob Rodriguez,LB,strong,Texas Tech,6-1,231.0,4.57,mid,True,2.0,43.0,MIA,RodrJa00,jacob-rodriguez-1
+2025,Carson Bruener,LB,strong,Washington,6-1,227.0,4.58,mid,True,7.0,226.0,PIT,,carson-bruener-1
+2025,Demetrius Knight Jr.,LB,strong,South Carolina,6-2,235.0,4.58,mid,True,2.0,49.0,CIN,KnigDe00,demetrius-knight-ii-1
+2025,Smael Mondon,LB,strong,Georgia,6-2,224.0,4.58,mid,True,5.0,161.0,PHI,MondSm01,smael-mondon-jr-1
+2025,Devin Neal,RB,strong,Kansas,5-11,213.0,4.58,mid,True,6.0,184.0,NOR,NealDe00,devin-neal-3
+2025,Shemar Stewart,EDGE,strong,Texas A&M,6-5,267.0,4.59,mid,True,1.0,17.0,CIN,StewSh00,shemar-stewart-1
+2026,Cashius Howell,EDGE,strong,Texas A&M,6-3,253.0,4.59,mid,True,2.0,41.0,CIN,HoweCa00,cashius-howell-1
+2025,Teddye Buchanan,LB,strong,California,6-2,233.0,4.6,mid,True,4.0,129.0,BAL,BuchTe00,teddye-buchanan-1
+2025,Jah Joyner,EDGE,strong,Minnesota,6-4,262.0,4.6,mid,False,,,,JoynJa00,jah-joyner-1
+2025,Francisco Mauigoa,LB,strong,Miami,6-2,233.0,4.6,mid,True,5.0,162.0,NYJ,MauiFr00,francisco-mauigoa-1
+2025,Kyle Monangai,RB,strong,Rutgers,5-8,211.0,4.6,mid,True,7.0,233.0,CHI,MonaKy00,kyle-monangai-1
+2026,John Michael Gyllenborg,TE,strong,Wyoming,6-6,249.0,4.6,mid,False,,,,,john-michael-gyllenborg-1
+2025,Ollie Gordon II,RB,strong,Oklahoma St.,6-1,226.0,4.61,mid,True,6.0,179.0,MIA,GordOl00,ollie-gordon-1
+2026,Marlin Klein,TE,strong,Michigan,6-6,248.0,4.61,mid,True,2.0,59.0,HOU,KleiMa00,marlin-klein-1
+2025,Tyler Baron,EDGE,strong,Miami,6-5,258.0,4.62,mid,True,5.0,176.0,NYJ,BaroTy00,tyler-baron-1
+2025,Ulysses Bentley IV,RB,strong,Mississippi,5-10,201.0,4.62,mid,False,,,,BentUl00,ulysses-bentley-iv-1
+2026,Dallen Bentley,TE,strong,Utah,6-4,253.0,4.62,mid,True,7.0,256.0,DEN,BentDa00,dallen-bentley-1
+2026,Jack Endries,TE,strong,Texas,6-5,245.0,4.62,mid,True,7.0,221.0,CIN,EndrJa00,jack-endries-1
+2026,Jake Golday,LB,strong,Cincinnati,6-5,239.0,4.62,mid,True,2.0,51.0,MIN,GoldJa01,jake-golday-1
+2026,Owen Heinecke,LB,strong,Oklahoma,6-2,227.0,4.62,mid,False,,,,HeinOw00,owen-heinecke-1
+2026,Elijah Raridon,TE,strong,Notre Dame,6-6,245.0,4.62,mid,True,3.0,95.0,NWE,RariEl00,eli-raridon-1
+2025,Jeffrey Bassa,LB,strong,Oregon,6-1,232.0,4.63,mid,True,5.0,156.0,KAN,BassJe00,jeffrey-bassa-1
+2025,Terrance Ferguson,TE,strong,Oregon,6-5,247.0,4.63,mid,True,2.0,46.0,LAR,FergTe00,terrance-ferguson-1
+2025,Chris Paul Jr.,LB,strong,Mississippi,6-1,222.0,4.63,mid,True,5.0,172.0,LAR,PaulCh01,chris-paul-jr-1
+2025,Bam Martin-Scott,LB,strong,South Carolina,6-2,231.0,4.63,mid,False,,,,,bam-martin-scott-1
+2026,Dani Dennis-Sutton,EDGE,strong,Penn St.,6-6,256.0,4.63,mid,True,4.0,120.0,GNB,DennDa01,dani-dennis-sutton-1
+2026,Xavian Sorey Jr.,LB,strong,Arkansas,6-2,228.0,4.63,mid,False,,,,SoreXa01,xavian-sorey-jr-1
+2026,Bauer Sharp,TE,strong,LSU,6-5,249.0,4.63,mid,True,6.0,185.0,TAM,SharBa00,bauer-sharp-1
+2026,Jaishawn Barham,EDGE,strong,Michigan,6-4,240.0,4.64,mid,True,3.0,92.0,DAL,BarhJa01,jaishawn-barham-1
+2026,Romello Height,EDGE,strong,Texas Tech,6-3,239.0,4.64,mid,True,3.0,70.0,SFO,HeigRo00,romello-height-1
+2025,Joshua Simon,TE,strong,South Carolina,6-4,239.0,4.65,mid,False,,,,,joshua-simon-1
+2026,Josh Cuevas,TE,strong,Alabama,6-3,245.0,4.65,mid,True,5.0,173.0,BAL,CuevJo00,josh-cuevas-1
+2026,George Gumbs Jr.,EDGE,strong,Florida,6-4,245.0,4.66,mid,True,5.0,156.0,IND,GumbGe00,george-gumbs-1
+2026,Riley Nowakowski,TE,strong,Indiana,6-2,250.0,4.66,mid,True,5.0,169.0,PIT,NowaRi00,riley-nowakowski-1
+2025,Jordan Burch,EDGE,strong,Oregon,6-4,279.0,4.67,slow,True,3.0,78.0,ARI,BurcJo00,jordan-burch-1
+2026,R Mason Thomas,EDGE,strong,Oklahoma,6-2,241.0,4.67,slow,True,2.0,40.0,KAN,,r-mason-thomas-1
+2025,Landon Jackson,EDGE,strong,Arkansas,6-6,264.0,4.68,slow,True,3.0,72.0,BUF,JackLa03,landon-jackson-1
+2025,Barryn Sorrell,EDGE,strong,Texas,6-3,256.0,4.68,slow,True,4.0,124.0,GNB,SorrBa00,barryn-sorrell-1
+2026,Tomarrion Parker,EDGE,strong,Clemson,6-4,263.0,4.68,slow,True,2.0,35.0,BUF,ParkTJ00,tj-parker-1
+2025,CJ Dippre,TE,strong,Alabama,6-5,256.0,4.69,slow,False,,,,DippCJ00,cj-dippre-1
+2025,Ethan Downs,EDGE,strong,Oklahoma,6-4,269.0,4.69,slow,False,,,,DownEt00,ethan-downs-1
+2025,Shemar James,LB,strong,Florida,6-1,222.0,4.69,slow,True,5.0,152.0,DAL,JameSh00,shemar-james-1
+2025,Antwaun Powell-Ryland,EDGE,strong,Virginia Tech,6-3,258.0,4.69,slow,True,6.0,209.0,PHI,PoweAn00,antwuan-powell-1
+2025,David Walker,EDGE,strong,Central Arkansas,6-1,263.0,4.69,slow,True,4.0,121.0,TAM,,
+2026,Marvin Jones Jr.,EDGE,strong,Oklahoma,6-5,245.0,4.69,slow,False,,,,JoneMa09,marvin-jones-jr-1
+2025,Gavin Bartholomew,TE,strong,Pittsburgh,6-5,246.0,4.7,slow,True,6.0,202.0,MIN,BartGa00,gavin-bartholomew-1
+2025,Thomas Fidone II,TE,strong,Nebraska,6-5,243.0,4.7,slow,False,,,,,thomas-fidone-iii-1
+2026,Tanner Koziol,TE,strong,Houston,6-7,247.0,4.7,slow,True,5.0,164.0,JAX,KoziTa00,tanner-koziol-1
+2026,Sam Roush,TE,strong,Stanford,6-6,267.0,4.7,slow,True,3.0,69.0,CHI,RousSa00,sam-roush-1
+2025,Harold Fannin Jr.,TE,strong,Bowling Green,6-3,241.0,4.71,slow,True,3.0,67.0,CLE,FannHa00,harold-fannin-jr-1
+2025,Princely Umanmielen,EDGE,strong,Mississippi,6-4,244.0,4.72,slow,True,3.0,77.0,CAR,UmanPr00,princely-umanmielen-1
+2026,Khalil Dinkins,TE,strong,Penn St.,6-4,251.0,4.72,slow,False,,,,,khalil-dinkins-1
+2025,Power Echols,LB,strong,North Carolina,5-11,237.0,4.73,slow,False,,,,EchoPo00,power-echols-1
+2025,Kyle Kennard,EDGE,strong,South Carolina,6-4,254.0,4.73,slow,True,4.0,125.0,LAC,KennKy00,kyle-kennard-1
+2026,Nadame Tucker,EDGE,strong,Western Michigan,6-2,247.0,4.73,slow,False,,,,TuckNa00,nadame-tucker-1
+2025,Jalin Conyers,TE,strong,Texas Tech,6-4,260.0,4.74,slow,False,,,,ConyJa00,jalin-conyers-1
+2025,Mitchell Evans,TE,strong,Notre Dame,6-5,258.0,4.74,slow,True,5.0,163.0,CAR,EvanMi01,mitchell-evans-2
+2026,Quintayvious Hutchins,EDGE,strong,Boston Col.,6-3,233.0,4.74,slow,True,7.0,247.0,NWE,HutcQu00,quintayvious-hutchins-1
+2026,Will Kacmarek,TE,strong,Ohio St.,6-6,261.0,4.74,slow,True,3.0,87.0,MIA,,will-kacmarek-1
+2025,Jake Briningstool,TE,strong,Clemson,6-6,241.0,4.75,slow,False,,,,BrinJa00,jake-briningstool-1
+2025,Ahmed Hassanein,EDGE,strong,Boise St.,6-2,267.0,4.77,slow,True,6.0,196.0,DET,HassAh00,ahmed-hassanein-1
+2025,Tyler Batty,EDGE,strong,BYU,6-6,271.0,4.78,slow,False,,,,BattTy00,tyler-batty-1
+2025,Elijah Roberts,EDGE,strong,SMU,6-4,285.0,4.78,slow,True,5.0,157.0,TAM,RobeEl01,elijah-roberts-1
+2026,Mason Reiger,EDGE,strong,Wisconsin,6-5,251.0,4.78,slow,False,,,,ReigMa00,mason-reiger-1
+2025,Moliki Matavao,TE,strong,UCLA,6-6,260.0,4.81,slow,True,7.0,248.0,NOR,MataMo00,moliki-matavao-1
+2026,Max Llewellyn,EDGE,strong,Iowa,6-6,258.0,4.81,slow,True,7.0,238.0,MIA,LlewMa00,max-llewellyn-1
+2025,Jackson Hawes,TE,strong,Georgia Tech,6-5,253.0,4.82,slow,True,5.0,173.0,BUF,HaweJa00,jackson-hawes-1
+2025,Jay Higgins,LB,strong,Iowa,6-0,224.0,4.82,slow,False,,,,HiggJa01,jay-higgins-1
+2025,Gunnar Helm,TE,strong,Texas,6-5,241.0,4.84,slow,True,4.0,120.0,TEN,HelmGu00,gunnar-helm-1
+2026,Vincent Anthony Jr.,EDGE,strong,Duke,6-6,258.0,4.84,slow,False,,,,AnthVi00,vincent-anthony-jr-1
+2026,Labbeus Overton,EDGE,strong,Alabama,6-3,274.0,4.87,slow,False,,,,,lebbeus-overton-1
+2025,Sean Martin,EDGE,strong,West Virginia,6-6,293.0,4.88,slow,False,,,,MartSe00,sean-martin-3
+2025,Bryson Nesbit,TE,strong,North Carolina,6-5,238.0,4.88,slow,False,,,,NesbBr00,bryson-nesbit-1
+2026,Nyjalik Kelly,EDGE,strong,Central Florida,6-5,256.0,4.88,slow,False,,,,KellNy00,nyjalik-kelly-1
+2026,Wesley Williams,EDGE,strong,Duke,6-4,256.0,4.89,slow,True,4.0,119.0,JAX,WillWe01,wesley-williams-3
+2026,Miles Kitselman,TE,strong,Tennessee,6-5,251.0,4.9,slow,False,,,,KitsMi00,miles-kitselman-1
+2025,Robbie Ouzts,TE,strong,Alabama,6-3,274.0,4.91,slow,True,5.0,175.0,SEA,OuztRo00,robbie-ouzts-1
