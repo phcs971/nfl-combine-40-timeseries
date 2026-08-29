@@ -54,22 +54,26 @@ def _norm(mask: np.ndarray) -> np.ndarray:
     return v - v.mean()
 
 
-def extract_glyphs(band: np.ndarray) -> list[tuple[int, np.ndarray]]:
+def extract_glyphs(band: np.ndarray):
+    """Return (digits, marks); marks are decimal-point sized blobs."""
     white = (band > 195).all(axis=2)
     lab, _ = ndimage.label(white)
-    out = []
+    digits, marks = [], []
     for sl in ndimage.find_objects(lab):
-        h = sl[0].stop - sl[0].start
-        w = sl[1].stop - sl[1].start
+        y, x = sl[0].start, sl[1].start
+        h = sl[0].stop - y
+        w = sl[1].stop - x
         if 38 < h < 52 and 8 < w < 40:
-            out.append((sl[1].start, w, _norm(white[sl])))
-    return sorted(out)
+            digits.append((x, w, y + h, _norm(white[sl])))
+        elif 4 < h < 18 and 4 < w < 18:
+            marks.append((x, w, y + h))
+    return sorted(digits), sorted(marks)
 
 
 def build_templates(video: str, ss: float, dur: float, out_path: str) -> None:
-    glyphs = [g for f in band_frames(video, ss, dur, "4") for g in extract_glyphs(f)]
+    glyphs = [g for f in band_frames(video, ss, dur, "4") for g in extract_glyphs(f)[0]]
     cents, counts = [], []
-    for _, _, v in glyphs:
+    for *_, v in glyphs:
         sims = [float(v @ c / (np.linalg.norm(v) * np.linalg.norm(c) + 1e-9))
                 for c in cents]
         if sims and max(sims) > 0.90:
@@ -98,15 +102,15 @@ class PanelReader:
 
     def read(self, band: np.ndarray) -> list[tuple[float, float]]:
         """Return [(x_centre, value)] for each 3-digit d.dd field in the panel."""
-        glyphs = extract_glyphs(band)
+        glyphs, marks = extract_glyphs(band)
         fields, cur = [], []
-        for x, w, v in glyphs:
+        for g in glyphs:
             # Gap between glyph edges, not origins: the decimal point opens a ~30px
             # hole inside a value, while separate fields sit >150px apart.
-            if cur and x - (cur[-1][0] + cur[-1][1]) > 60:
+            if cur and g[0] - (cur[-1][0] + cur[-1][1]) > 60:
                 fields.append(cur)
                 cur = []
-            cur.append((x, w, v))
+            cur.append(g)
         if cur:
             fields.append(cur)
 
@@ -114,12 +118,28 @@ class PanelReader:
         for f in fields:
             if len(f) != 3:
                 continue
-            digits, confs = zip(*(self._digit(v) for _, _, v in f))
+            if not self._has_point(f, marks):
+                continue
+            digits, confs = zip(*(self._digit(g[3]) for g in f))
             if min(confs) < MIN_CORR:
                 continue
-            out.append((float(np.mean([x for x, _, _ in f])),
+            out.append((float(np.mean([g[0] for g in f])),
                         float(f"{digits[0]}.{digits[1]}{digits[2]}")))
         return out
+
+    @staticmethod
+    def _has_point(field, marks) -> bool:
+        """A d.dd value carries a baseline dot between its first two digits.
+
+        Without this check any three-digit run parses as a time, and the bio card
+        that replaces the timing panel at the start of a run turns its weight
+        (e.g. 323) into a plausible-looking 3.23.
+        """
+        lo = field[0][0] + field[0][1]
+        hi = field[1][0]
+        base = field[0][2]
+        return any(lo <= x <= hi and abs(bot - base) < 12
+                   for x, _w, bot in marks)
 
 
 def main() -> int:
