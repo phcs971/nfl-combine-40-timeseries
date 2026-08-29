@@ -8,6 +8,7 @@ dependencies = [
     "pyarrow>=16",
     "numpy>=1.26",
     "scipy>=1.13",
+    "yt-dlp>=2025.1.1",
 ]
 
 [tool.uv]
