@@ -34,10 +34,35 @@ the frame.
 release** — the latter ships `draft_round` null for all 2026 rows, which reads as
 universally undrafted. A name-normalised fallback covers rows with no `pfr_id`.
 
-**Sub-frame interpolation.** The corpus is 30 fps with no 60 fps rendition. Nearest-
-frame snapping quantises a crossing to 33 ms, ~0.33 m at top speed. Crossing times
-are recovered by interpolating the landmark's pixel position across the two
-bracketing frames.
+**The broadcast clock is the time reference.** The graphic carries a live 40-yd clock
+at 0.01 s resolution that starts on the athlete's first movement and freezes at the
+finish. It gives `t=0` and a continuous check on elapsed time without inferring
+either from pixels, and it drives segmentation: clock at `0.00` is pre-run, counting
+is the live run, frozen is post-run. Panel layout is position-dependent — `line`
+groups show `10-YD SPLIT | 40-YD DASH`, other groups show `40-YD DASH` alone, at a
+different x offset — so the read region is located per group, not by a fixed crop.
+Digits are large, fixed-font and high-contrast, so template matching is used rather
+than general OCR.
+
+Displayed times are labelled `UNOFFICIAL` and run 0.00-0.07 s off the official times
+in the frame; the frame is authoritative.
+
+**Sub-frame interpolation.** The corpus is 29.97 fps (30000/1001) with no 60 fps
+rendition. Nearest-frame snapping quantises a crossing to 33.4 ms, ~0.33 m at top
+speed. Crossing times are recovered by interpolating the landmark's pixel position
+across the two bracketing frames.
+
+**Per-frame calibration against a panning camera.** The live camera tracks the runner
+rather than holding a fixed view, so no single homography covers a run. A yard-line
+crossing is nonetheless camera-motion-invariant: it is a coincidence of runner and
+line within one frame. Scale is recovered per frame from the yard markings visible in
+that frame, whose 5-yd spacing is known.
+
+**The tracked landmark is ground contact, not hip.** Feet share the ground plane with
+the yard lines, so their coincidence in image space is a coincidence in reality and
+carries no parallax term. A hip or torso landmark sits ~1 m above the plane and
+projects ahead of or behind the true position under an elevated camera. Stride
+oscillation in the foot signal is absorbed by the model fit.
 
 **Splits are fitted, not finite-differenced.** Nine yard-line crossings over ~4.5 s
 differentiated twice yields acceleration dominated by noise. A mono-exponential
@@ -51,21 +76,23 @@ x(t) = v_max · (t + τ·e^(−t/τ) − τ)
 Two parameters over ~9 points give smooth analytic `v(t)` and `a(t)`, plus `v_max`,
 `τ`, peak horizontal force and `P_max` (Samozino/Morin sprint profiling).
 
-## Open problem: segmentation and identification
+## Coverage
 
-Videos carry no chapters and a boilerplate description. Each athlete must be located
-within the session and matched to a frame row — intended route is OCR of the
-broadcast lower-third (name, school, official time) on sampled frames, then isolating
-the live run from its replays. Both combine attempts appear to be shown, giving two
-measurements per athlete and a test-retest estimate.
+Verified on the 2026 DL session: all 15 athletes in that group appear in the video,
+including the slowest (5.31) and all three undrafted. No evidence of selection on
+speed or draft status. Athlete name and bib are on screen continuously, so the
+who-is-on-screen timeline is readable at any sample rate.
+
+Not every athlete runs twice — the panel shows `1st ATT` / `2nd ATT`, with `---` where
+there is no second attempt.
 
 ## Known error sources
 
-- **Slow-motion replays** are frame-indistinguishable from live runs; each clip needs
-  explicit real-time verification.
-- **Parallax** dominates over frame rate. Runners are offset from the camera axis, so
-  a yard-line crossing carries an offset varying down the track. A fixed landmark
-  (hip centre) is used and the offset treated as estimable bias.
+- **Replays and cutaways.** The feed cuts to other angles and to slow motion within
+  seconds of the finish. The running clock discriminates these from the live run;
+  frozen or absent clock means the frame is not measurable.
+- **Stride oscillation** in the ground-contact landmark, absorbed by the model fit
+  rather than differentiated directly.
 - **Timing convention.** Official 40s use a human-triggered start and laser finish;
   video-derived times start at first movement and will not match exactly. Used as a
   validation signal.
@@ -82,7 +109,10 @@ reproduce locally. Combine and draft data from
 ```bash
 uv run python src/build_frame.py --seasons 2026   # -> data/frame.csv
 uv run python src/check_videos.py                 # validate video registry
+uv run python src/probe_video.py video/<id>.mp4   # contact sheet for inspection
 ```
+
+`probe_video.py` needs a local download; `video/` and `frames/` are gitignored.
 
 Code MIT. Derived measurements CC BY 4.0.
 
@@ -90,7 +120,9 @@ Code MIT. Derived measurements CC BY 4.0.
 
 - [x] Sampling frame from combine + draft data
 - [x] Video registry
-- [ ] Segmentation + player identification
+- [x] Feed structure verified (clock, coverage, camera behaviour)
+- [ ] Clock + name reading via template matching
+- [ ] Run segmentation from clock state
 - [ ] Stratified sample, 20/class
 - [ ] Yard-line crossing annotation
 - [ ] Sprint-model fit
