@@ -10,6 +10,7 @@ import argparse
 import sys
 
 import numpy as np
+from itertools import combinations
 import pandas as pd
 from scipy.optimize import least_squares
 
@@ -20,13 +21,14 @@ def model(t, vmax, tau):
     return vmax * (t + tau * np.exp(-t / tau) - tau)
 
 
-def fit_run(cross_rel, t_final, offset=None, k0=0):
+def fit_run(cross_rel, t_final, offset=None, k=None, k0=0):
     """Fit v_max, tau (and the mat offset when not supplied).
 
-    `k0` is the index of the first mat actually seen: a run that misses the first
-    mat otherwise has every crossing assigned ten yards short.
+    `k` gives each crossing's mat index; `k0` is the shorthand for consecutive
+    mats starting there. A run that misses the first mat otherwise has every
+    crossing assigned ten yards short.
     """
-    k = np.arange(len(cross_rel)) + k0
+    k = np.arange(len(cross_rel)) + k0 if k is None else np.asarray(k)
 
     def resid(p):
         vmax, tau = p[0], p[1]
@@ -42,6 +44,38 @@ def fit_run(cross_rel, t_final, offset=None, k0=0):
     vmax, tau = s.x[0], s.x[1]
     off = s.x[2] if offset is None else offset
     return vmax, tau, off, float(np.max(np.abs(s.fun)))
+
+
+def best_assignment(cross_rel, t_final, offset, n_mats: int = 4,
+                    allow_drop: bool = True):
+    """Fit over which mats the crossings correspond to, not just where they start.
+
+    Crossings are not necessarily consecutive mats: one can be missed when the
+    runner occludes it, and a stray detection can add one that is not a mat at
+    all. Forcing them to be consecutive leaves those runs unfittable, which is
+    what put the failures in a tight band near half a mat spacing rather than
+    scattering them.
+    """
+    best = None
+    idx = range(len(cross_rel))
+    subsets = [tuple(idx)]
+    if allow_drop and len(cross_rel) >= 3:
+        subsets += [tuple(j for j in idx if j != d) for d in idx]
+
+    for keep in subsets:
+        rel = np.asarray([cross_rel[j] for j in keep])
+        if len(rel) < 2:
+            continue
+        for combo in combinations(range(n_mats), len(rel)):
+            vmax, tau, off, res = fit_run(rel, t_final, offset=offset, k=combo)
+            # Prefer explanations that discard nothing, all else equal.
+            penalty = 0.15 * (len(cross_rel) - len(rel))
+            if best is None or res + penalty < best[4]:
+                best = (vmax, tau, off, res, res + penalty, keep, combo)
+    if best is None:
+        return None
+    vmax, tau, off, res, _, keep, combo = best
+    return vmax, tau, off, res
 
 
 def time_at(y, vmax, tau):
@@ -96,12 +130,11 @@ def main() -> int:
         if len(rel) < 2:
             print(f"{str(name)[:22]:22} {len(rel):3d}   (too few crossings)")
             continue
-        best = None
-        for k0 in range(0, max(1, 5 - len(rel))):
-            cand = fit_run(rel, fc, offset=offset, k0=k0)
-            if best is None or cand[3] < best[3]:
-                best = cand
-        vmax, tau, _, res = best
+        got = best_assignment(rel, fc, offset)
+        if got is None:
+            print(f"{str(name)[:22]:22} {len(rel):3d}   (no assignment)")
+            continue
+        vmax, tau, _, res = got
         keep.append((name, vmax, tau, res))
         print(f"{str(name)[:22]:22} {len(rel):3d} {vmax * 0.9144:6.2f} {tau:5.2f} "
               f"{res:6.3f} {fc:5.2f}")

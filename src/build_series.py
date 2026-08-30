@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 from crossings import gather, crossings
-from fit_runs import fit_run, model, time_at
+from fit_runs import fit_run, best_assignment, model, time_at
 
 GOOD_RESID = 0.8
 
@@ -41,12 +41,7 @@ def process_video(vid: str, runs: pd.DataFrame, path: str):
         if len(rel) < 2:
             out.append((r, rel, None))
             continue
-        best = None
-        for k0 in range(0, max(1, 5 - len(rel))):
-            cand = fit_run(rel, r.final_clock, offset=offset, k0=k0)
-            if best is None or cand[3] < best[3]:
-                best = cand
-        out.append((r, rel, best))
+        out.append((r, rel, best_assignment(rel, r.final_clock, offset)))
     return offset, out
 
 

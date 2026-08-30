@@ -99,7 +99,7 @@ def crossings(rows, max_gap: float = 0.40, match_px: float = 220.0):
     events = []
     for tr in tracks:
         pts = tr["pts"]
-        if len(pts) < 4:
+        if len(pts) < 3:
             continue
         for (ta, da), (tb, db) in zip(pts, pts[1:]):
             if da > 0 >= db and tb - ta <= max_gap:
