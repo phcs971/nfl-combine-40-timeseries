@@ -63,23 +63,48 @@ def merge_mats(mats, tol: float = 300.0):
     return out
 
 
-def crossings(rows, gap: float = 0.25):
-    """Interpolate the time the foot passes each mat, mats taken in order."""
+def crossings(rows, max_gap: float = 0.40, match_px: float = 220.0):
+    """Time each mat's passage by tracking it, not by comparing frame pairs.
+
+    Position is expressed as (mat - foot), which cancels the lane origin: that
+    origin is the lane's centroid and so moves with the camera, while the
+    difference between two points in the same frame does not.
+
+    Mats are tracked across frames and each track's own sign change is
+    interpolated. Comparing consecutive frames instead loses a crossing whenever
+    mat detection blinks out at the moment of passing, which is exactly when the
+    runner occludes the mat.
+    """
+    tracks = []          # each: {"last_t", "last_d", "pts": [(t, delta)]}
+    for t_, foot, mats in rows:
+        deltas = sorted(m[0] - foot for m in mats)
+        used = set()
+        for tr in tracks:
+            if t_ - tr["last_t"] > max_gap:
+                continue
+            cand = [(abs(d - tr["last_d"]), i) for i, d in enumerate(deltas)
+                    if i not in used]
+            if not cand:
+                continue
+            err, i = min(cand)
+            if err > match_px:
+                continue
+            used.add(i)
+            tr["last_t"], tr["last_d"] = t_, deltas[i]
+            tr["pts"].append((t_, deltas[i]))
+        for i, d in enumerate(deltas):
+            if i not in used:
+                tracks.append({"last_t": t_, "last_d": d, "pts": [(t_, d)]})
+
     events = []
-    for (ta, fa, ma), (tb, fb, mb) in zip(rows, rows[1:]):
-        if tb - ta > gap or not ma or not mb:
+    for tr in tracks:
+        pts = tr["pts"]
+        if len(pts) < 4:
             continue
-        for sa, wa in ma:
-            # Match the same mat in the next frame by nearest projected position.
-            if not mb:
-                continue
-            sb, _ = min(mb, key=lambda m: abs(m[0] - sa))
-            if abs(sb - sa) > 160:
-                continue
-            da, db = fa - sa, fb - sb
-            if da < 0 <= db:
-                frac = -da / (db - da) if db != da else 0.0
-                events.append(ta + frac * (tb - ta))
+        for (ta, da), (tb, db) in zip(pts, pts[1:]):
+            if da > 0 >= db and tb - ta <= max_gap:
+                events.append(ta + (tb - ta) * da / (da - db))
+                break
     events.sort()
     merged = []
     for e in events:

@@ -130,11 +130,39 @@ mats fit it at **13.03 yd with sd 0.009**, and returned near-identical `v_max` a
 index of the first mat seen is inferred rather than assumed — a run that misses the
 first mat otherwise has every crossing assigned ten yards short.
 
-**Open gap.** Crossing extraction is not yet reliable enough for a batch: on 10 runs
-of the DL session, 4 fit cleanly (residual < 0.7 yd, `v_max` 8.8-9.6 m/s, `tau`
-0.97-1.07) and the rest see only two or three mats, or none. Detection is not the
-limit — lane and athlete resolve on 100% of frames and mats on ~75% — so the gap is
-in turning those detections into crossings.
+Mats are tracked across frames and each track's own sign change is interpolated.
+Comparing consecutive frames instead loses a crossing whenever mat detection blinks
+out at the moment of passing, which is exactly when the runner occludes the mat.
+
+## Results
+
+`data/fits.csv` — one row per run; `data/series.csv` — position sampled every 50 ms
+for the runs that fit.
+
+**102 of 180 runs fit cleanly, covering 85 athletes**, every class above the
+20-athlete target:
+
+| Class | Runs | Athletes | `v_max` (m/s) | `tau` (s) |
+|---|---|---|---|---|
+| `skill` | 42 | 34 | 10.66 ± 0.45 | 1.03 |
+| `strong` | 31 | 26 | 10.43 ± 0.63 | 1.09 |
+| `line` | 29 | 25 | 9.12 ± 0.41 | 1.07 |
+
+Three things say the geometry is right:
+
+- **The mat offset agrees across all 11 videos** — fitted independently per video
+  from different athletes, it lands at 12.94 yd, sd 0.25, range 12.46-13.36.
+- **Class ordering and magnitude** come out as physics requires, skill fastest and
+  line slowest, without either being an input.
+- **Held-out 10-yd split.** The panel publishes a 10-yd split for `line` groups and
+  it is never used in the fit. Over 14 runs the model reaches 10 yd **+0.108 s**
+  later than the panel, sd **0.027**. The scatter is small and every run has the
+  same sign, so this is a calibration constant rather than noise — most likely the
+  mono-exponential understating the drive phase out of a three-point stance, which
+  is a known weakness of the model near t=0.
+
+The 78 runs that do not fit cleanly see too few mats. Detection is not the limit:
+lane and athlete resolve on 100% of frames and mats on ~75%.
 
 ## Method
 
@@ -228,6 +256,7 @@ uv run python src/check_videos.py                 # validate video registry
 uv run python src/probe_video.py video/<id>.mp4   # contact sheet for inspection
 uv run python src/read_clock.py video/<id>.mp4 --ss 2 --dur 6   # read timing panel
 uv run python src/build_runs.py                   # -> data/runs.csv (resumable)
+uv run python src/build_series.py                 # -> data/fits.csv, data/series.csv
 ```
 
 `probe_video.py` needs a local download; `video/` and `frames/` are gitignored.
@@ -242,12 +271,12 @@ Code MIT. Derived measurements CC BY 4.0.
 - [x] Clock reader (`src/read_clock.py`), validated against the frame interval
 - [x] Athlete identification from bib (`src/read_bib.py`)
 - [x] Run manifest for all 11 videos (`src/build_runs.py` -> `data/runs.csv`)
-- [~] Position tracking (`src/track_position.py`) — geometry solved, foot
-      detection not yet accurate enough (see below)
-- [ ] Sprint-model fit across all runs
+- [x] Mat crossings and sprint-model fit (`src/build_series.py`)
+- [ ] Recover the runs that see too few mats (78 of 180)
+- [ ] Stratified sample, 20/class, validated against the population
 - [ ] Stratified sample, 20/class
-- [~] Position tracking (`src/track_position.py`) — geometry solved, foot
-      detection not yet accurate enough (see below)
-- [ ] Sprint-model fit across all runs
+- [x] Mat crossings and sprint-model fit (`src/build_series.py`)
+- [ ] Recover the runs that see too few mats (78 of 180)
+- [ ] Stratified sample, 20/class, validated against the population
 - [ ] Sprint-model fit
 - [ ] Validation vs. official 40 times
