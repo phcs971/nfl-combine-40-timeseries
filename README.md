@@ -105,11 +105,36 @@ apparent spacing with it. Passing the runner's foot selects the row he runs besi
 which turns spacing from a 84-172 px jitter into a smooth 126-172 px perspective
 trend.
 
-**Open gap.** Ticks resolve on 8/15 frames of the reference run, and the misses are
-concentrated in the first ~1.5 s, where the start area is carpet and logo rather
-than green field so the mask that isolates the field fails. That is the drive phase,
-which the sprint fit most depends on. The 10-yd split, available for `line` groups,
-is the acceptance test and is not met yet.
+`detect_mats` finds the numbered distance mats by their saturated yellow border
+around a black face. The border alone also matches the lane's painted yellow lines,
+so a mat is required to be dark inside — that separates them cleanly (dark fraction
+~0.2-0.4 against ~0.0). A mat's numerals split its face, so it arrives as two blobs
+a few hundred pixels apart and they must be merged; ten yards is an order of
+magnitude wider, so anything closer is the same mat.
+
+### Crossings and the mat offset
+
+`src/crossings.py` times when the foot passes each mat. A crossing is a coincidence
+of runner and mat within one frame, so it is immune to the camera panning, and both
+lie on the ground plane so it carries no parallax term.
+
+**The numbered mats are not at the dash's 10/20/30 marks.** At his true 10-yard
+moment the reference athlete is still well short of the `10` mat and reaches it 0.65 s
+later. The mats are 10 yards apart, but the first sits about 13 yards from the
+start, so their distance from the start is carried as one unknown per video.
+
+That offset is one physical constant for a video, which makes agreement between
+independently fitted runs a check on the geometry: the two runs that saw all four
+mats fit it at **13.03 yd with sd 0.009**, and returned near-identical `v_max` and
+`tau`. Holding it fixed then lets runs that saw fewer mats be fitted, provided the
+index of the first mat seen is inferred rather than assumed — a run that misses the
+first mat otherwise has every crossing assigned ten yards short.
+
+**Open gap.** Crossing extraction is not yet reliable enough for a batch: on 10 runs
+of the DL session, 4 fit cleanly (residual < 0.7 yd, `v_max` 8.8-9.6 m/s, `tau`
+0.97-1.07) and the rest see only two or three mats, or none. Detection is not the
+limit — lane and athlete resolve on 100% of frames and mats on ~75% — so the gap is
+in turning those detections into crossings.
 
 ## Method
 

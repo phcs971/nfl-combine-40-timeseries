@@ -84,6 +84,48 @@ def detect_yard_ticks(frame: np.ndarray, min_inliers: int = 5,
     return mu, d, along
 
 
+def detect_mats(frame: np.ndarray):
+    """Locate the numbered distance mats lying on the lane.
+
+    Each has a saturated yellow border around a black face. The border alone also
+    matches the lane's painted yellow lines, so a mat is required to be dark
+    inside - that is what separates them (dark fraction ~0.2-0.4 against ~0.0).
+    Returns a list of (centroid, width).
+    """
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    h, s, v = (hsv[..., i].astype(int) for i in range(3))
+    yel = ((h > 18) & (h < 38) & (s > 120) & (v > 120)).astype(np.uint8)
+    yel = cv2.morphologyEx(yel, cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+    n, lab, st, ct = cv2.connectedComponentsWithStats(yel)
+    out = []
+    for j in range(1, n):
+        x, y, w, hh = st[j, :4]
+        if st[j, cv2.CC_STAT_AREA] < 900 or w < 90 or hh < 25:
+            continue
+        if float((v[y:y + hh, x:x + w] < 90).mean()) < 0.15:
+            continue
+        out.append((np.asarray(ct[j], float), int(w)))
+    return out
+
+
+def lane_axis_of(frame: np.ndarray):
+    """Origin and unit direction of the running lane."""
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    s, v = hsv[..., 1].astype(int), hsv[..., 2].astype(int)
+    lane = ((s < 70) & (v > 110)).astype(np.uint8)
+    lane = cv2.morphologyEx(lane, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
+    lane = cv2.morphologyEx(lane, cv2.MORPH_OPEN, np.ones((7, 7), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(lane)
+    if n < 2:
+        return None
+    m = (lab == 1 + int(np.argmax(st[1:, cv2.CC_STAT_AREA])))
+    ys, xs = np.nonzero(m)
+    pts = np.stack([xs, ys], 1).astype(float)
+    mu = pts.mean(0)
+    d = np.linalg.svd(pts - mu, full_matrices=False)[2][0]
+    return mu, (d if d[0] >= 0 else -d)
+
+
 def tick_spacing(along: np.ndarray) -> float:
     """Median gap between consecutive ticks, robust to missed detections."""
     if len(along) < 3:
