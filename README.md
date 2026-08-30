@@ -41,6 +41,30 @@ The bib renders smaller than the timing digits and correlates lower against the 
 prototypes, so it is majority-voted across frames of a run rather than trusted from
 any single frame.
 
+## Run manifest
+
+`data/runs.csv` — 328 runs across the 11 videos, 177 athletes, every run bound to an
+athlete (327/328 with a unanimous bib vote). 178 runs are marked `complete`; the rest
+are fragments where clock tracking was lost mid-run and whose final value is not a
+40 time.
+
+| Class | Complete runs | Athletes |
+|---|---|---|
+| `skill` | 75 | 57 |
+| `strong` | 54 | 41 |
+| `line` | 49 | 35 |
+
+Over the 129 athletes with a complete run, the best of their attempts sits within
+0.05 s of their official time for 119, mean +0.017, sd 0.046.
+
+Bib offsets are fitted per video rather than hard-coded. Two constraints pin them:
+every observed bib must land inside the roster, and it must land on someone who
+actually posted a 40 — an athlete with no recorded time cannot be the one on screen.
+Timing alone does not separate offsets when a group's times cluster tightly. The
+fitted offsets recover the real block structure: safeties sit 32 behind the
+cornerbacks they share the `DB` group with, and edge rushers 29 behind the defensive
+tackles in `DL`.
+
 ## Method
 
 **Draft status is joined from the `draft_picks` release, not read from the combine
@@ -132,6 +156,7 @@ uv run python src/build_frame.py --seasons 2026   # -> data/frame.csv
 uv run python src/check_videos.py                 # validate video registry
 uv run python src/probe_video.py video/<id>.mp4   # contact sheet for inspection
 uv run python src/read_clock.py video/<id>.mp4 --ss 2 --dur 6   # read timing panel
+uv run python src/build_runs.py                   # -> data/runs.csv (resumable)
 ```
 
 `probe_video.py` needs a local download; `video/` and `frames/` are gitignored.
@@ -145,8 +170,8 @@ Code MIT. Derived measurements CC BY 4.0.
 - [x] Feed structure verified (clock, coverage, camera behaviour)
 - [x] Clock reader (`src/read_clock.py`), validated against the frame interval
 - [x] Athlete identification from bib (`src/read_bib.py`)
-- [x] Run segmentation, verified end-to-end on the DL session
-- [ ] Segment the remaining 10 videos
+- [x] Run manifest for all 11 videos (`src/build_runs.py` -> `data/runs.csv`)
+- [ ] Yard-line crossing annotation
 - [ ] Stratified sample, 20/class
 - [ ] Yard-line crossing annotation
 - [ ] Sprint-model fit

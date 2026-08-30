@@ -144,6 +144,55 @@ class PanelReader:
                    for x, _w, bot in marks)
 
 
+def track_runs(video: str, dur: float, reader: "PanelReader", fps: float = 4.0,
+               chunk: float = 60.0, tol: float = 0.12, min_span: float = 2.0):
+    """Follow the running clock by behaviour rather than by panel position.
+
+    The clock does not hold one x offset: the panel re-lays out between the live
+    view and the attempt summary, so a fixed column reads it only part of the time
+    and whole runs fall outside it. Instead a run is tracked frame to frame as the
+    field that keeps advancing at real time, which is what makes it the clock.
+    """
+    raw = []
+    for ss in np.arange(0.0, dur, chunk):
+        for k, band in enumerate(band_frames(video, ss, chunk, str(fps))):
+            raw.append((ss + k / fps, [v for _, v in reader.read(band)]))
+
+    def finished(final: float, i: int, look: int = 12) -> bool:
+        """A real finish freezes the clock and leaves it on screen.
+
+        When tracking is merely lost mid-run the value stops appearing at all, so
+        persistence of the final value separates a completed run from a fragment.
+        """
+        return any(any(abs(v - final) < 0.005 for v in raw[j][1])
+                   for j in range(i, min(i + look, len(raw))))
+
+    runs, cur = [], None
+    for i, (t, fields) in enumerate(raw):
+        if cur:
+            expect = cur[-1][1] + (t - cur[-1][0])
+            cand = [v for v in fields if abs(v - expect) <= tol]
+            if cand:
+                cur.append((t, min(cand, key=lambda v: abs(v - expect))))
+                continue
+            if cur[-1][1] - cur[0][1] > min_span:
+                runs.append((cur, finished(cur[-1][1], i)))
+            cur = None
+        # Seed on any pair of frames whose values advance at real time, not on a
+        # reading of 0.00: the panel shows a bio card over the first seconds of
+        # some runs, so their clock is first legible well after the start.
+        if i + 1 < len(raw):
+            t2, f2 = raw[i + 1]
+            dt = t2 - t
+            seeds = [v for v in fields
+                     if any(abs(v2 - v - dt) <= tol for v2 in f2)]
+            if seeds:
+                cur = [(t, min(seeds))]
+    if cur and cur[-1][1] - cur[0][1] > min_span:
+        runs.append((cur, finished(cur[-1][1], len(raw) - 1)))
+    return runs
+
+
 def clock_series(video: str, dur: float, reader: "PanelReader",
                  fps: float = 4.0, chunk: float = 60.0):
     """Sample the clock column across a video as [(t, value|None)].
