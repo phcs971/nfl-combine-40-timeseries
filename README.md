@@ -43,19 +43,22 @@ any single frame.
 
 ## Run manifest
 
-`data/runs.csv` — 328 runs across the 11 videos, 177 athletes, every run bound to an
-athlete (327/328 with a unanimous bib vote). 178 runs are marked `complete`; the rest
-are fragments where clock tracking was lost mid-run and whose final value is not a
-40 time.
+`data/runs.csv` — 328 runs across the 11 videos, every run bound to an athlete
+(327/328 with a unanimous bib vote). 180 are marked `complete`; the rest are
+fragments where clock tracking was lost mid-run, whose final value is not a 40 time.
+Two runs are flagged `duplicate`: consecutive group uploads overlap at their seam,
+the later video opening by replaying the athlete the previous one closed on.
 
-| Class | Complete runs | Athletes |
+Filtering to complete, non-duplicate runs gives **180 runs over 134 athletes**:
+
+| Class | Runs | Athletes |
 |---|---|---|
-| `skill` | 75 | 57 |
+| `skill` | 76 | 57 |
 | `strong` | 54 | 41 |
-| `line` | 49 | 35 |
+| `line` | 50 | 36 |
 
-Over the 129 athletes with a complete run, the best of their attempts sits within
-0.05 s of their official time for 119, mean +0.017, sd 0.046.
+Over the 130 athletes with an official time, the best of their attempts sits within
+0.05 s of it for 119, mean +0.016, sd 0.047.
 
 Bib offsets are fitted per video rather than hard-coded. Two constraints pin them:
 every observed bib must land inside the roster, and it must land on someone who
