@@ -85,13 +85,31 @@ gap mixes true spacings with the offset between rows, and the mixture shifts as 
 enter and leave frame, which distorts the recovered speed profile rather than merely
 rescaling it. Spacing is therefore measured within a single row.
 
-**Not yet accurate enough.** On a reference run the fitted model lands the 40 within
-0.075 s of the panel, but reaches 10 yd at 2.23 s against an official split of 1.79,
-and returns an unphysical `v_max` of 14.7 m/s. Roughly 44% of frames need their
-displacement repaired. The cause is the foot detector: it keys on neon shoe colour,
-which is inconsistent between athletes and unreliable through the drive phase. The
-10-yd split, available for `line` groups, is the acceptance test and it is not met;
-a person/pose detector for ground contact is the intended fix.
+### Detectors
+
+`src/detectors.py` keeps the two measurements apart, since they want opposite image
+treatment: the yard ticks are small static marks found by colour-thresholding the
+field, the athlete is a large deformable object needing a learned pose model.
+
+`detect_athlete` runs YOLO pose and takes the lower ankle as ground contact - it
+shares the ground plane with the ticks, so the projection carries no parallax term.
+Candidates are filtered to the middle of frame, where the tracking camera holds the
+runner, and to feet low enough to be on the lane; without the second test the model
+picks officials standing further up the field. It resolves the runner on 15/15
+frames of the reference run.
+
+`detect_yard_ticks` fits a RANSAC line to white marks on the field. The field
+carries several parallel rows - the sideline ticks and two inbound hash rows - and
+picking whichever has most inliers makes the fit jump between rows, taking the
+apparent spacing with it. Passing the runner's foot selects the row he runs beside,
+which turns spacing from a 84-172 px jitter into a smooth 126-172 px perspective
+trend.
+
+**Open gap.** Ticks resolve on 8/15 frames of the reference run, and the misses are
+concentrated in the first ~1.5 s, where the start area is carpet and logo rather
+than green field so the mask that isolates the field fails. That is the drive phase,
+which the sprint fit most depends on. The 10-yd split, available for `line` groups,
+is the acceptance test and is not met yet.
 
 ## Method
 
