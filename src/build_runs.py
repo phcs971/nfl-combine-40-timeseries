@@ -105,6 +105,30 @@ def process(video_id: str, meta: pd.Series, reader: PanelReader,
     return rows
 
 
+def mark_duplicates(df: pd.DataFrame) -> pd.DataFrame:
+    """Flag runs for athletes that a second video repeats.
+
+    Consecutive group uploads overlap at their seam: the next video opens by
+    replaying the athlete the previous one closed on. The replay is the copy whose
+    bib sits at the very start of its video's bib range, so the other video's runs
+    are kept.
+    """
+    df = df.copy()
+    df["duplicate"] = False
+    if "player_name" not in df or df.empty:
+        return df
+    lo = df.groupby("video_id").bib.transform("min")
+    for name, g in df[df.player_name.notna()].groupby("player_name"):
+        if g.video_id.nunique() < 2:
+            continue
+        lead_in = g.index[(g.bib == lo[g.index]) & (g.video_id != g.video_id.iloc[0])]
+        keep_vid = g.loc[~g.index.isin(lead_in), "video_id"]
+        if keep_vid.empty or lead_in.empty:
+            continue
+        df.loc[lead_in, "duplicate"] = True
+    return df
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--videos", default="data/videos_checked.csv")
@@ -141,7 +165,7 @@ def main() -> int:
         named = sum(1 for r in new if r["player_name"])
         print(f"     {len(new)} runs, {named} identified", file=sys.stderr)
 
-    df = pd.DataFrame(rows)
+    df = mark_duplicates(pd.DataFrame(rows))
     df.to_csv(out, index=False)
     print(f"\n{len(df)} runs across {df.video_id.nunique()} videos -> {out}")
     return 0

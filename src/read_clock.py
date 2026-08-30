@@ -158,11 +158,13 @@ def track_runs(video: str, dur: float, reader: "PanelReader", fps: float = 4.0,
         for k, band in enumerate(band_frames(video, ss, chunk, str(fps))):
             raw.append((ss + k / fps, [v for _, v in reader.read(band)]))
 
-    def finished(final: float, i: int, look: int = 12) -> bool:
+    def finished(final: float, i: int, look: int = 40) -> bool:
         """A real finish freezes the clock and leaves it on screen.
 
         When tracking is merely lost mid-run the value stops appearing at all, so
         persistence of the final value separates a completed run from a fragment.
+        The window has to outlast the panel's transition to the attempt summary,
+        which can take several seconds.
         """
         return any(any(abs(v - final) < 0.005 for v in raw[j][1])
                    for j in range(i, min(i + look, len(raw))))

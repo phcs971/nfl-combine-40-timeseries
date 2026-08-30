@@ -21,7 +21,7 @@ video_id,season,group,cls,bib,player_name,bib_agreement,t_zero,t_start,t_end,fin
 0r_usy_GIAI,2026,Wide Receivers Group 1,skill,6,Malik Benson,1.0,493.756,493.75,498.25,4.41,19,4.37,0,True
 0r_usy_GIAI,2026,Wide Receivers Group 1,skill,7,Germie Bernard,1.0,505.28,505.25,509.75,4.47,19,4.48,0,False
 0r_usy_GIAI,2026,Wide Receivers Group 1,skill,9,Zachariah Branch,1.0,531.379,531.5,535.75,4.36,18,4.35,0,True
-0r_usy_GIAI,2026,Wide Receivers Group 1,skill,11,Barion Brown,1.0,568.446,568.5,572.75,4.32,18,4.4,0,False
+0r_usy_GIAI,2026,Wide Receivers Group 1,skill,11,Barion Brown,1.0,568.446,568.5,572.75,4.32,18,4.4,0,True
 0r_usy_GIAI,2026,Wide Receivers Group 1,skill,12,Deion Burks,1.0,581.205,581.25,585.5,4.3,18,4.3,0,False
 0r_usy_GIAI,2026,Wide Receivers Group 1,skill,13,Jeff Caldwell,1.0,592.715,592.75,597.0,4.29,18,4.31,0,False
 0r_usy_GIAI,2026,Wide Receivers Group 1,skill,15,Kevin Coleman,1.0,609.094,609.0,613.5,4.41,19,4.49,0,False
@@ -209,34 +209,6 @@ olzS7RidilY,2026,Linebackers,strong,21,James Rolder,1.0,534.729,534.75,539.25,4.
 olzS7RidilY,2026,Linebackers,strong,23,Xavian Sorey Jr.,1.0,578.129,578.25,582.75,4.58,19,4.63,0,True
 olzS7RidilY,2026,Linebackers,strong,24,Alex Styles,1.0,602.058,602.0,606.75,4.64,20,4.46,0,True
 olzS7RidilY,2026,Linebackers,strong,25,Josiah Trotter,1.0,635.698,635.75,640.25,4.49,19,,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,1,Cameron Ball,1.0,2.117,2.0,7.25,5.11,22,5.13,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,2,Caleb Banks,1.0,21.005,21.0,26.0,4.97,21,5.04,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,3,Nick Barrett,1.0,39.489,39.5,44.5,5.02,21,5.1,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,5,DeMonte Capehart,1.0,55.678,55.75,60.5,4.81,20,4.85,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,6,Brandon Cleveland,1.0,67.317,67.25,72.5,5.12,22,5.12,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,8,Zane Durant,1.0,78.547,78.5,83.25,4.7,20,4.75,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,9,Bryson Eason,1.0,90.992,92.75,96.0,5.01,14,5.09,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,12,David Gusta,1.0,119.68,119.75,124.5,4.81,20,4.88,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,13,Gracen Halton,1.0,135.876,135.75,140.75,4.83,21,4.82,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,15,Lee Hunter,1.0,165.332,165.25,170.5,5.17,22,5.18,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,18,Tim Keenan III,1.0,181.579,182.75,187.0,5.32,18,5.31,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,19,Jackie Marshall,1.0,218.328,218.25,223.25,4.88,21,4.88,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,20,Chris McClellan,1.0,233.674,233.75,238.75,5.05,21,5.05,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,25,Kaleb Proctor,1.0,246.22,246.25,251.0,4.79,20,4.79,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,26,Albert Regis,1.0,257.79,257.75,262.75,4.92,21,4.88,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,1,Cameron Ball,1.0,276.066,276.0,281.25,5.13,22,5.13,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,2,Caleb Banks,1.0,316.164,316.25,321.25,5.08,21,5.04,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,3,Nick Barrett,1.0,338.874,339.0,344.0,5.11,21,5.1,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,5,DeMonte Capehart,1.0,351.318,351.25,356.25,4.86,21,4.85,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,6,Brandon Cleveland,1.0,365.308,365.25,370.5,5.18,22,5.12,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,9,Bryson Eason,1.0,392.968,393.0,398.0,5.02,21,5.09,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,12,David Gusta,1.0,407.686,407.75,412.5,4.82,20,4.88,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,13,Gracen Halton,1.0,428.296,428.25,433.25,4.86,21,4.82,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,15,Lee Hunter,1.0,439.331,439.25,444.5,5.17,22,5.18,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,19,Jackie Marshall,1.0,449.392,449.5,454.25,4.86,20,4.88,0,False
-Sr-Q6UjJq6g,2026,Defensive Line,line,20,Chris McClellan,1.0,464.9,465.0,470.0,5.08,21,5.05,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,25,Kaleb Proctor,1.0,485.819,485.75,490.75,4.84,21,4.79,0,True
-Sr-Q6UjJq6g,2026,Defensive Line,line,26,Albert Regis,1.0,504.988,505.0,510.0,4.92,21,4.88,0,True
 LDqozfzjaNU,2026,Edge Rushers,strong,30,Vincent Anthony Jr.,1.0,-2.167,0.0,2.75,4.85,12,4.84,29,True
 LDqozfzjaNU,2026,Edge Rushers,strong,31,David Bailey,0.86,63.114,63.25,67.75,4.64,19,4.5,29,False
 LDqozfzjaNU,2026,Edge Rushers,strong,43,Quintayvious Hutchins,1.0,185.823,185.75,190.5,4.68,20,4.74,29,False
@@ -252,78 +224,3 @@ LDqozfzjaNU,2026,Edge Rushers,strong,62,Nadame Tucker,1.0,392.153,393.75,396.5,4
 LDqozfzjaNU,2026,Edge Rushers,strong,30,Vincent Anthony Jr.,1.0,403.652,403.75,408.5,4.85,20,4.84,29,True
 LDqozfzjaNU,2026,Edge Rushers,strong,40,Romello Height,1.0,480.088,480.0,484.75,4.65,20,4.64,29,True
 LDqozfzjaNU,2026,Edge Rushers,strong,45,Marvin Jones Jr.,1.0,573.092,574.0,577.75,4.65,16,4.69,29,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,2,Austin Barber,1.0,45.89,46.0,51.0,5.12,21,5.12,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,3,Evan Beerntsen,1.0,67.595,67.5,72.75,5.17,22,5.25,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,4,Markel Bell,1.0,80.965,81.0,86.5,5.5,23,5.36,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,5,Chase Bisontis,1.0,103.056,103.0,108.0,4.95,21,5.02,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,6,Jude Bowry,1.0,144.842,144.75,150.0,5.12,22,5.08,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,7,Parker Brailsford,1.0,164.964,165.0,170.0,5.02,21,4.95,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,9,Travis Burke,1.0,176.322,176.25,181.5,5.17,22,5.17,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,10,Jager Burton,1.0,188.599,189.25,193.5,4.88,18,4.94,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,11,Devon Campbell,1.0,201.107,201.0,206.25,5.07,22,5.01,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,12,Fernando Carmona,1.0,211.594,211.5,216.75,5.15,22,5.22,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,13,Kage Casey,1.0,222.829,222.75,228.0,5.17,22,5.2,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,16,Dametrious Crownover,1.0,243.474,243.5,248.5,5.04,21,5.14,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,17,Enrique Cruz,1.0,276.984,277.0,282.0,4.95,21,4.94,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,18,J.C. Davis,1.0,293.083,293.0,298.25,5.16,22,5.16,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,19,Garrett DiGiorgio,1.0,339.176,339.25,344.5,5.31,22,5.36,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,20,Gennings Dunker,1.0,363.707,363.75,369.0,5.19,22,5.18,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,22,Spencer Fano,1.0,392.808,395.0,397.75,4.91,12,4.91,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,23,Jalen Farmer,1.0,424.031,424.0,429.0,4.93,21,4.93,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,24,Monroe Freeling,1.0,443.81,443.75,448.75,4.93,21,4.93,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,27,Sam Hecht,1.0,477.246,477.25,482.25,5.0,21,5.1,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,28,Alan Herron,1.0,502.539,502.5,507.5,4.97,21,5.09,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,29,Maxwell Iheanachor,1.0,538.649,538.75,543.5,4.86,20,4.91,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,2,Austin Barber,1.0,580.795,580.75,586.0,5.12,22,5.12,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,3,Evan Beerntsen,1.0,595.199,595.25,600.5,5.27,22,5.25,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,4,Markel Bell,1.0,607.152,607.0,612.75,5.5,24,5.36,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,5,Chase Bisontis,1.0,618.766,618.75,623.75,4.99,21,5.02,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,6,Jude Bowry,1.0,641.671,641.75,646.75,5.08,21,5.08,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,7,Parker Brailsford,1.0,688.415,688.5,693.5,5.02,21,4.95,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,9,Travis Burke,1.0,724.386,724.25,729.5,5.1,22,5.17,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,10,Jager Burton,1.0,738.311,738.25,740.5,2.18,10,4.94,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,10,Jager Burton,1.0,738.314,741.0,743.25,4.92,10,4.94,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,11,Devon Campbell,1.0,750.956,751.0,756.0,5.02,21,5.01,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,12,Fernando Carmona,1.0,762.42,762.5,767.75,5.23,22,5.22,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,13,Kage Casey,1.0,774.701,774.75,780.0,5.31,22,5.2,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,16,Dametrious Crownover,1.0,795.679,795.75,800.75,5.08,21,5.14,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,17,Enrique Cruz,1.0,807.906,808.0,812.75,4.84,20,4.94,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,19,Garrett DiGiorgio,1.0,840.43,840.5,845.75,5.31,22,5.36,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,20,Gennings Dunker,1.0,867.176,868.5,870.75,3.58,10,5.18,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,22,Spencer Fano,1.0,890.0,890.0,895.0,4.93,21,4.91,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,24,Monroe Freeling,1.0,922.345,922.25,927.25,4.91,21,4.93,0,False
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,27,Sam Hecht,1.0,955.779,956.5,961.0,5.15,19,5.1,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,28,Alan Herron,1.0,972.891,973.0,978.0,5.09,21,5.09,0,True
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,line,29,Maxwell Iheanachor,1.0,992.584,992.5,997.5,4.92,21,4.91,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,31,Logan Jones,1.0,37.998,38.0,43.0,4.94,21,4.9,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,33,Caleb Lomu,1.0,64.802,64.75,69.75,4.95,21,4.99,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,35,Blake Miller,1.0,89.282,89.25,94.25,4.97,21,5.04,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,36,Micah Morris,1.0,104.392,104.5,109.5,5.1,21,5.09,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,38,Brian Parker,1.0,142.963,143.75,148.0,5.06,18,5.14,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,39,Diego Pounds,1.0,166.928,167.0,172.0,5.08,21,5.15,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,40,Emmanuel Pregnon,1.0,212.352,212.25,217.5,5.17,22,5.21,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,41,Kadyn Proctor,1.0,251.904,252.0,257.0,5.11,21,5.21,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,42,Ar'maj Reed-Adams,1.0,264.609,264.5,270.0,5.29,23,5.28,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,44,Keylan Rutledge,1.0,277.552,277.5,282.5,4.97,21,5.05,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,46,Drew Shelton,1.0,289.117,289.0,294.25,5.13,22,5.16,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,47,Jake Slaughter,1.0,301.901,302.0,307.0,5.1,21,5.1,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,48,Beau Stephens,1.0,313.14,313.25,318.5,5.36,22,5.35,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,49,Logan Taylor,1.0,324.587,324.5,329.75,5.17,22,5.19,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,52,Dillon Wade,1.0,339.186,339.25,344.25,5.04,21,5.02,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,53,Aamil Wagner,1.0,364.547,364.5,369.5,4.95,21,5.01,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,54,Carver Willis,1.0,380.035,380.0,385.25,5.14,22,5.11,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,31,Logan Jones,1.0,402.786,402.75,407.75,4.94,21,4.9,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,33,Caleb Lomu,1.0,427.337,427.25,432.25,4.93,21,4.99,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,35,Blake Miller,1.0,439.902,440.0,445.0,5.09,21,5.04,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,36,Micah Morris,1.0,460.566,460.5,465.75,5.1,22,5.09,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,38,Brian Parker,1.0,485.888,485.75,491.0,5.13,22,5.14,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,39,Diego Pounds,1.0,499.289,499.25,504.5,5.19,22,5.15,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,41,Kadyn Proctor,1.0,531.535,531.5,536.75,5.22,22,5.21,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,42,Ar'maj Reed-Adams,1.0,571.034,571.0,576.25,5.2,22,5.28,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,44,Keylan Rutledge,1.0,585.646,585.75,590.75,5.06,21,5.05,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,47,Jake Slaughter,1.0,597.731,597.75,602.75,5.02,21,5.1,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,48,Beau Stephens,1.0,609.103,609.0,614.5,5.37,23,5.35,0,True
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,49,Logan Taylor,1.0,620.585,620.5,625.75,5.17,22,5.19,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,52,Dillon Wade,1.0,632.812,632.75,637.75,4.95,21,5.02,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,53,Aamil Wagner,1.0,650.75,650.75,655.75,4.99,21,5.01,0,False
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,line,54,Carver Willis,1.0,695.825,695.75,701.0,5.14,22,5.11,0,True

@@ -65,6 +65,31 @@ fitted offsets recover the real block structure: safeties sit 32 behind the
 cornerbacks they share the `DB` group with, and edge rushers 29 behind the defensive
 tackles in `DL`.
 
+## Position tracking
+
+The camera pans with the athlete, so image position alone measures nothing. The
+lane's black dashes are fixed in the world, so their frame-to-frame shift measures
+the pan and the runner's displacement is the remainder:
+
+    displacement = (shift of foot in image) - (shift of marks in image)
+
+projected onto the lane axis, with scale from local mark spacing so perspective
+cancels. Distance accumulates in mark-spacings, and the yard value of one spacing
+follows from the run being 40 yards — no external calibration.
+
+The dashes sit in two rows offset along the lane. Pooling them and taking the median
+gap mixes true spacings with the offset between rows, and the mixture shifts as rows
+enter and leave frame, which distorts the recovered speed profile rather than merely
+rescaling it. Spacing is therefore measured within a single row.
+
+**Not yet accurate enough.** On a reference run the fitted model lands the 40 within
+0.075 s of the panel, but reaches 10 yd at 2.23 s against an official split of 1.79,
+and returns an unphysical `v_max` of 14.7 m/s. Roughly 44% of frames need their
+displacement repaired. The cause is the foot detector: it keys on neon shoe colour,
+which is inconsistent between athletes and unreliable through the drive phase. The
+10-yd split, available for `line` groups, is the acceptance test and it is not met;
+a person/pose detector for ground contact is the intended fix.
+
 ## Method
 
 **Draft status is joined from the `draft_picks` release, not read from the combine
@@ -171,8 +196,12 @@ Code MIT. Derived measurements CC BY 4.0.
 - [x] Clock reader (`src/read_clock.py`), validated against the frame interval
 - [x] Athlete identification from bib (`src/read_bib.py`)
 - [x] Run manifest for all 11 videos (`src/build_runs.py` -> `data/runs.csv`)
-- [ ] Yard-line crossing annotation
+- [~] Position tracking (`src/track_position.py`) — geometry solved, foot
+      detection not yet accurate enough (see below)
+- [ ] Sprint-model fit across all runs
 - [ ] Stratified sample, 20/class
-- [ ] Yard-line crossing annotation
+- [~] Position tracking (`src/track_position.py`) — geometry solved, foot
+      detection not yet accurate enough (see below)
+- [ ] Sprint-model fit across all runs
 - [ ] Sprint-model fit
 - [ ] Validation vs. official 40 times
