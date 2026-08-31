@@ -176,3 +176,138 @@ def row_spacing(ticks):
         if len(r) >= 3:
             sp.append(np.median(np.diff(r)))
     return float(np.median(sp)) if sp else float("nan")
+
+
+def detect_yard_lines(frame, axis, min_len=150):
+    """The field's painted 5-yard lines, which cross the running direction.
+
+    They are white on turf, so they fall outside a plain green mask - the mask has
+    to be closed over them before they can be searched for inside it. They are
+    then separated from the lane edges and sideline, which are long and white too,
+    by running across the lane rather than along it.
+    """
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    h, s, v = (hsv[..., i].astype(int) for i in range(3))
+    green = ((h > 30) & (h < 95) & (s > 60)).astype(np.uint8)
+    field = cv2.morphologyEx(green, cv2.MORPH_CLOSE, np.ones((81, 81), np.uint8))
+    white = ((s < 85) & (v > 150) & (field > 0)).astype(np.uint8)
+    white = cv2.morphologyEx(white, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+
+    segs = cv2.HoughLinesP(white, 1, np.pi / 360, threshold=55,
+                           minLineLength=min_len, maxLineGap=26)
+    if segs is None:
+        return []
+    perp = np.array([-axis[1], axis[0]])
+    cand = []
+    for x1, y1, x2, y2 in np.asarray(segs).reshape(-1, 4):
+        d = np.array([x2 - x1, y2 - y1], float)
+        L = float(np.linalg.norm(d))
+        if L < min_len:
+            continue
+        d /= L
+        if abs(float(d @ axis)) > 0.72:      # runs along the lane: an edge, not a line
+            continue
+        cand.append((np.array([(x1 + x2) / 2, (y1 + y2) / 2]), d, L))
+    if not cand:
+        return []
+
+    # Merge segments of one painted line by where it cuts the running axis.
+    cand.sort(key=lambda c: float(c[0] @ axis))
+    out, cur = [], [cand[0]]
+    for c in cand[1:]:
+        # A painted line is thick enough to return two parallel segments; five
+        # yards is several times wider, so anything closer is the same line.
+        if float(c[0] @ axis) - float(cur[-1][0] @ axis) < 220:
+            cur.append(c)
+        else:
+            out.append(_merge_line(cur, axis))
+            cur = [c]
+    out.append(_merge_line(cur, axis))
+    return out
+
+
+def _merge_line(group, axis):
+    w = np.array([g[2] for g in group])
+    ctr = np.average([g[0] for g in group], axis=0, weights=w)
+    d = np.average([g[1] * np.sign(g[1][1] or 1) for g in group], axis=0, weights=w)
+    d = d / max(np.linalg.norm(d), 1e-6)
+    return ctr, d, float(w.sum())
+
+
+class YardTracker:
+    """Carry tick identity across frames so a yard is a count, not a measurement.
+
+    Spacing in pixels is not constant - it grows down the frame with perspective
+    and changes as the camera moves - so any per-frame estimate of it is noisy and
+    a missed tick doubles a gap. Counting is immune to all of that: once a tick
+    keeps its identity between frames, its yard is its index, and pixel spacing is
+    only ever needed to interpolate between two adjacent ticks.
+
+    Indices are relative until something names a yard; a mat's leading edge is
+    stationary in the world, so its index must not drift, which is the check.
+    """
+
+    def __init__(self, tol=0.45):
+        self.tol = tol
+        self.tracks = {}      # index -> last position along the axis
+        self.next_hi = None
+        self.next_lo = None
+
+    @staticmethod
+    def _spacing(pos):
+        if len(pos) < 3:
+            return float("nan")
+        g = np.diff(np.sort(pos))
+        g = g[g > 20]
+        if not len(g):
+            return float("nan")
+        base = np.median(g)
+        # Fold gaps that span a missed tick back onto the single-step spacing.
+        folded = [x / max(1, round(x / base)) for x in g if x / base < 6]
+        return float(np.median(folded)) if folded else float("nan")
+
+    def update(self, ticks_along):
+        pos = np.sort(np.asarray(ticks_along, float))
+        sp = self._spacing(pos)
+        if len(pos) < 2 or not np.isfinite(sp):
+            return {}
+
+        if not self.tracks:
+            idx = np.round((pos - pos[0]) / sp).astype(int)
+            self.tracks = {int(i): float(p) for i, p in zip(idx, pos)}
+            return dict(self.tracks)
+
+        prev_pos = np.array(list(self.tracks.values()))
+        prev_idx = np.array(list(self.tracks.keys()))
+        # Camera shift: the median move of marks that are fixed in the world.
+        deltas = [p - prev_pos[np.argmin(np.abs(prev_pos - p))] for p in pos]
+        shift = float(np.median(deltas))
+        pred = prev_pos + shift
+
+        assigned, used = {}, set()
+        for p in pos:
+            j = int(np.argmin(np.abs(pred - p)))
+            if j not in used and abs(pred[j] - p) < self.tol * sp:
+                assigned[int(prev_idx[j])] = float(p)
+                used.add(j)
+        # Ticks entering frame extend the index run by whole steps.
+        if assigned:
+            ref_i = min(assigned)
+            ref_p = assigned[ref_i]
+            for p in pos:
+                if any(abs(p - q) < 1e-6 for q in assigned.values()):
+                    continue
+                k = ref_i + int(round((p - ref_p) / sp))
+                if k not in assigned:
+                    assigned[k] = float(p)
+        self.tracks = assigned
+        return dict(assigned)
+
+    def index_of(self, along, spacing_hint=None):
+        """Fractional index of an arbitrary position, e.g. a mat's leading edge."""
+        if len(self.tracks) < 2:
+            return float("nan")
+        idx = np.array(list(self.tracks.keys()), float)
+        pos = np.array(list(self.tracks.values()), float)
+        order = np.argsort(pos)
+        return float(np.interp(along, pos[order], idx[order]))
