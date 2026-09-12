@@ -77,7 +77,7 @@ def _vp_ransac(segs, iters=600, tol=0.012, rng=None):
     return best[1], best[2]
 
 
-def detect(frame, lane_mask, axis, min_support=2, max_align=0.992):
+def detect_full(frame, lane_mask, axis, min_support=2, max_align=0.992):
     """Return [(point, direction, support)] for painted lines crossing the lane.
 
     Two families of white lines share the turf: the lane edges, sideline and hash
@@ -88,7 +88,7 @@ def detect(frame, lane_mask, axis, min_support=2, max_align=0.992):
     """
     segs = segments(frame, lane_mask)
     if len(segs) < 4:
-        return []
+        return [], None
     rng = np.random.default_rng(0)
     v1, inl1 = _vp_ransac(segs, rng=rng)
     rest = [s for s, k in zip(segs, inl1) if not k]
@@ -109,7 +109,7 @@ def detect(frame, lane_mask, axis, min_support=2, max_align=0.992):
     cands.sort(key=lambda c: alignment(c[1]))
     vp, members = cands[0]
     if vp is None or len(members) < min_support:
-        return []
+        return [], vp
 
     centre, _ = lane_centreline(lane_mask, axis)
     out = []
@@ -131,8 +131,8 @@ def detect(frame, lane_mask, axis, min_support=2, max_align=0.992):
             continue
         out.append((mid, d, L, s, X))
     if not out:
-        return []
-    return _group(out)
+        return [], vp
+    return _group(out), vp
 
 
 def _group(lines, tol=200):
@@ -148,6 +148,10 @@ def _group(lines, tol=200):
             cur = [c]
     out.append(_merge(cur))
     return out
+
+
+def detect(frame, lane_mask, axis, **kw):
+    return detect_full(frame, lane_mask, axis, **kw)[0]
 
 
 def _merge(group):
@@ -170,3 +174,87 @@ def cross_at(pt, direction, centre, axis):
     """Where a yard line meets the lane centreline."""
     return _meet(_line(pt, pt + direction * 100.0),
                  _line(centre, centre + axis * 100.0))
+
+
+class LineTracker:
+    """Hold yard lines steady across frames.
+
+    Detection is independent per frame, so a line that briefly misses its support
+    threshold vanishes and returns. The vanishing point and the lines belong to
+    the world and the camera rather than to a frame: the VP is smoothed, and a
+    line that goes unseen is carried on the camera shift measured from the lines
+    that were seen.
+    """
+
+    def __init__(self, vp_alpha=0.3, max_miss=4, min_hits=2, margin=700):
+        self.vp = None
+        self.vp_alpha = vp_alpha
+        self.max_miss = max_miss
+        self.min_hits = min_hits
+        self.margin = margin
+        self.tracks = []
+
+    def _gate(self):
+        if len(self.tracks) < 2:
+            return 280.0
+        g = np.diff(np.sort([t["s"] for t in self.tracks]))
+        g = g[g > 60]
+        return float(np.clip(0.42 * np.median(g), 120.0, 320.0)) if len(g) else 280.0
+
+    def update(self, dets, axis, vp=None, shape=None):
+        if vp is not None:
+            self.vp = vp if self.vp is None else (
+                (1 - self.vp_alpha) * np.asarray(self.vp) + self.vp_alpha * np.asarray(vp))
+
+        obs = [{"s": float(X @ axis), "d": d, "X": X, "w": w}
+               for _pt, d, w, X in dets]
+        gate = self._gate()
+
+        shift = 0.0
+        if self.tracks and obs:
+            deltas = []
+            prev = np.array([t["s"] for t in self.tracks])
+            for o in obs:
+                j = int(np.argmin(np.abs(prev - o["s"])))
+                if abs(prev[j] - o["s"]) < gate:
+                    deltas.append(o["s"] - prev[j])
+            if deltas:
+                shift = float(np.median(deltas))
+
+        for t in self.tracks:
+            t["s"] += shift
+            t["X"] = t["X"] + axis * shift
+            t["seen"] = False
+
+        for o in obs:
+            best, bd = None, gate
+            for t in self.tracks:
+                dd = abs(t["s"] - o["s"])
+                if dd < bd and not t["seen"]:
+                    best, bd = t, dd
+            if best is None:
+                self.tracks.append({"s": o["s"], "d": o["d"], "X": o["X"],
+                                    "hits": 1, "miss": 0, "seen": True})
+            else:
+                a = 0.5
+                best["s"] = (1 - a) * best["s"] + a * o["s"]
+                best["X"] = (1 - a) * best["X"] + a * o["X"]
+                best["d"] = (1 - a) * best["d"] + a * o["d"]
+                best["d"] /= max(np.linalg.norm(best["d"]), 1e-9)
+                best["hits"] += 1
+                best["miss"] = 0
+                best["seen"] = True
+
+        for t in self.tracks:
+            if not t["seen"]:
+                t["miss"] += 1
+        self.tracks = [t for t in self.tracks if t["miss"] <= self.max_miss]
+        if shape is not None:
+            h, w = shape[:2]
+            self.tracks = [t for t in self.tracks
+                           if -self.margin < t["X"][0] < w + self.margin
+                           and -self.margin < t["X"][1] < h + self.margin]
+
+        return [(t["X"], t["d"], t["seen"], t["hits"])
+                for t in sorted(self.tracks, key=lambda z: z["s"])
+                if t["hits"] >= self.min_hits]

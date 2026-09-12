@@ -89,7 +89,8 @@ kbd{background:#0e1116;border:1px solid var(--line);border-radius:4px;
     Label with the overlay <b>off</b> — it is there to inspect the detector,
     not to label against.<br><br>
     magenta = 5-yard line &middot; yellow = lane centreline &middot;
-    green dot = where the line meets the centreline &middot;
+    green dot = where the line meets the centreline (dim = predicted, not
+    seen this frame) &middot;
     white = pose &middot; cyan cross = hip centre
   </div>
 </aside>

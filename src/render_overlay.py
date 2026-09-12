@@ -39,7 +39,7 @@ def pose(frame, centre=(0.25,0.85), min_foot_y=0.42):
     return best
 
 
-def draw(frame):
+def draw(frame, tracker=None):
     v = frame.copy()
     L = lane(frame)
     if L is None:
@@ -48,10 +48,17 @@ def draw(frame):
     centre, a_ = FL.lane_centreline(mask, ax)
     cv2.line(v, tuple((centre - a_*2400).astype(int)),
              tuple((centre + a_*2400).astype(int)), (0,215,255), 2, cv2.LINE_AA)
-    for pt, d, _, X in FL.detect(frame, mask, ax):
+    dets, vp = FL.detect_full(frame, mask, ax)
+    if tracker is None:
+        lines = [(X, d, True, 9) for _pt, d, _w, X in dets]
+    else:
+        lines = tracker.update(dets, ax, vp, shape=frame.shape)
+    for X, d, seen, _hits in lines:
+        col = LINE if seen else (150, 70, 140)
         cv2.line(v, tuple((X - d*900).astype(int)), tuple((X + d*900).astype(int)),
-                 LINE, 3, cv2.LINE_AA)
-        cv2.circle(v, tuple(X.astype(int)), 12, GRN, -1, cv2.LINE_AA)
+                 col, 3 if seen else 2, cv2.LINE_AA)
+        cv2.circle(v, tuple(X.astype(int)), 12 if seen else 8,
+                   GRN if seen else (60, 160, 110), -1, cv2.LINE_AA)
     k = pose(frame)
     if k is not None:
         for a,b in SKEL:
@@ -78,9 +85,10 @@ def main() -> int:
     out = root/"overlay"; out.mkdir(exist_ok=True)
     for old in out.glob("*.jpg"):
         old.unlink()
+    tracker = FL.LineTracker()
     for i,p in enumerate(src,1):
         im = cv2.imread(str(p))
-        cv2.imwrite(str(out/p.name), draw(im), [cv2.IMWRITE_JPEG_QUALITY,85])
+        cv2.imwrite(str(out/p.name), draw(im, tracker), [cv2.IMWRITE_JPEG_QUALITY,85])
         if i % 40 == 0:
             print(f"  {i}/{len(src)}", file=sys.stderr)
     print(f"{len(src)} overlay frames -> {out}")
