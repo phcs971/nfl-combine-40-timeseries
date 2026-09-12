@@ -139,9 +139,26 @@ addEventListener('keydown',e=>{
 """
 
 
+def _safe(x):
+    s = "" if x is None else str(x)
+    return "'" + s if s[:1] in "=+-@\t\r" else s
+
+
 class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
+
+    def _local(self):
+        host = self.headers.get("Host", "").split(":")[0]
+        if host not in ("localhost", "127.0.0.1", "[::1]", "::1"):
+            self._send(403, b"bad host", "text/plain")
+            return False
+        origin = self.headers.get("Origin")
+        if origin and origin.split("://")[-1].split(":")[0] not in (
+                "localhost", "127.0.0.1"):
+            self._send(403, b"bad origin", "text/plain")
+            return False
+        return True
 
     def _send(self, code, body, ctype):
         self.send_response(code)
@@ -151,6 +168,8 @@ class H(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
+        if not self._local():
+            return
         if self.path in ("/", "/index.html"):
             return self._send(200, PAGE.encode(), "text/html; charset=utf-8")
         if self.path == "/meta.json":
@@ -163,19 +182,22 @@ class H(BaseHTTPRequestHandler):
         self._send(404, b"not found", "text/plain")
 
     def do_POST(self):
+        if not self._local():
+            return
         if self.path != "/save":
             return self._send(404, b"no", "text/plain")
         n = int(self.headers.get("Content-Length", 0))
         data = json.loads(self.rfile.read(n) or b"{}")
         rows = data.get("labels", [])
-        meta = data.get("meta", {})
+        meta = json.loads((ROOT / "meta.json").read_text())
         OUT.parent.mkdir(parents=True, exist_ok=True)
         with OUT.open("w", newline="") as f:
             w = csv.writer(f)
             w.writerow(["video_id", "player_name", "frame", "t_rel_s", "yard"])
             for r in rows:
-                w.writerow([meta.get("video_id"), meta.get("athlete"),
-                            r["frame"], r["t"], r["yard"]])
+                w.writerow([_safe(meta.get("video_id")),
+                            _safe(meta.get("athlete")),
+                            int(r["frame"]), float(r["t"]), float(r["yard"])])
         self._send(200, json.dumps({"n": len(rows), "path": str(OUT)}).encode(),
                    "application/json")
 
