@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 import fieldlines as FL
-from yardage import lane, detect_ticks, detect_mats, FIELD_H
+from yardage import lane, FIELD_H
 from detectors import _model, ANKLES
 
 SKEL = [(5,7),(7,9),(6,8),(8,10),(5,6),(5,11),(6,12),(11,12),
@@ -45,16 +45,13 @@ def draw(frame):
     if L is None:
         return v
     mask, mu, ax = L
-    for pt,d,_ in FL.detect(frame, mask, ax):
-        a = FL.project_to(pt,d,20); b = FL.project_to(pt,d,FIELD_H-10)
-        if a is not None and b is not None:
-            cv2.line(v, tuple(a.astype(int)), tuple(b.astype(int)), LINE, 3, cv2.LINE_AA)
-    for box,_,_ in detect_ticks(frame, ax, mask):
-        cv2.polylines(v, [box.astype(int)], True, TICK, 2, cv2.LINE_AA)
-    for b in detect_mats(frame, ax, mask):
-        cv2.polylines(v, [b.astype(int)], True, CYAN, 4, cv2.LINE_AA)
-        cor = sorted(b, key=lambda q: float(q@ax))[:2]
-        cv2.line(v, tuple(np.int32(cor[0])), tuple(np.int32(cor[1])), GRN, 6, cv2.LINE_AA)
+    centre, a_ = FL.lane_centreline(mask, ax)
+    cv2.line(v, tuple((centre - a_*2400).astype(int)),
+             tuple((centre + a_*2400).astype(int)), (0,215,255), 2, cv2.LINE_AA)
+    for pt, d, _, X in FL.detect(frame, mask, ax):
+        cv2.line(v, tuple((X - d*900).astype(int)), tuple((X + d*900).astype(int)),
+                 LINE, 3, cv2.LINE_AA)
+        cv2.circle(v, tuple(X.astype(int)), 12, GRN, -1, cv2.LINE_AA)
     k = pose(frame)
     if k is not None:
         for a,b in SKEL:

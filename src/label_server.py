@@ -88,8 +88,9 @@ kbd{background:#0e1116;border:1px solid var(--line);border-radius:4px;
     Mark the frame where the athlete's <b>hip</b> is over a known mark.
     Label with the overlay <b>off</b> — it is there to inspect the detector,
     not to label against.<br><br>
-    magenta = 5-yard line &middot; blue = 1-yard ticks &middot; cyan = mat
-    &middot; white = pose &middot; cyan cross = hip centre
+    magenta = 5-yard line &middot; yellow = lane centreline &middot;
+    green dot = where the line meets the centreline &middot;
+    white = pose &middot; cyan cross = hip centre
   </div>
 </aside>
 <script>
