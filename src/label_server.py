@@ -66,6 +66,12 @@ kbd{background:#0e1116;border:1px solid var(--line);border-radius:4px;
 </main>
 <aside>
   <h2>Label this frame</h2>
+  <div style="margin-bottom:12px">
+    <label style="display:flex;gap:8px;align-items:center;cursor:pointer;color:var(--mut)">
+      <input type="checkbox" id="ov" style="accent-color:var(--acc)">
+      show detector overlay
+    </label>
+  </div>
   <div class="yard">
     <input id="y" type="number" step="0.5" placeholder="yard" autocomplete="off">
     <button class="pri" id="add">Add</button>
@@ -80,7 +86,10 @@ kbd{background:#0e1116;border:1px solid var(--line);border-radius:4px;
     <kbd>←</kbd><kbd>→</kbd> step 1 &nbsp; <kbd>shift</kbd>+ step 10<br>
     <kbd>enter</kbd> add label &nbsp; <kbd>del</kbd> remove current<br><br>
     Mark the frame where the athlete's <b>hip</b> is over a known mark.
-    Frames are unannotated on purpose.
+    Label with the overlay <b>off</b> — it is there to inspect the detector,
+    not to label against.<br><br>
+    magenta = 5-yard line &middot; blue = 1-yard ticks &middot; cyan = mat
+    &middot; white = pose &middot; cyan cross = hip centre
   </div>
 </aside>
 <script>
@@ -100,12 +109,14 @@ fetch('/meta.json').then(r=>r.json()).then(m=>{
 function tOf(n){ return (n-1)/M.fps + M.clip_start - M.t_zero; }
 function show(n){
   i=Math.max(1,Math.min(M.n,n)); sl.value=i;
-  img.src='/frames/f'+String(i).padStart(4,'0')+'.jpg';
+  const dir=document.getElementById('ov').checked?'overlay':'frames';
+  img.src='/'+dir+'/f'+String(i).padStart(4,'0')+'.jpg';
   fno.textContent='frame '+i+' / '+M.n;
   tt.textContent='t = '+tOf(i).toFixed(3)+' s';
   draw();
 }
 sl.oninput=()=>show(+sl.value);
+document.getElementById('ov').onchange=()=>show(i);
 function add(){
   const v=parseFloat(yEl.value);
   if(isNaN(v)){yEl.focus();return;}
@@ -175,10 +186,11 @@ class H(BaseHTTPRequestHandler):
         if self.path == "/meta.json":
             return self._send(200, (ROOT / "meta.json").read_bytes(),
                               "application/json")
-        if self.path.startswith("/frames/"):
-            p = ROOT / "frames" / pathlib.Path(self.path).name
-            if p.exists():
-                return self._send(200, p.read_bytes(), "image/jpeg")
+        for d in ("frames", "overlay"):
+            if self.path.startswith(f"/{d}/"):
+                p = ROOT / d / pathlib.Path(self.path).name
+                if p.exists():
+                    return self._send(200, p.read_bytes(), "image/jpeg")
         self._send(404, b"not found", "text/plain")
 
     def do_POST(self):
