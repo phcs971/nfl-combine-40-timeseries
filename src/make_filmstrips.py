@@ -1,4 +1,9 @@
-"""Render each pipeline stage as a horizontal filmstrip."""
+"""Render the pipeline as horizontal strips.
+
+Every step shows the same four frames of one run, with each stage's findings drawn
+on top of the previous stage's, so the reader watches one run accumulate meaning
+rather than meeting six unrelated sets of pictures.
+"""
 
 import sys
 
@@ -8,203 +13,166 @@ import numpy as np
 sys.path.insert(0, "src")
 
 VID = "video/Sr-Q6UjJq6g.mp4"
+ATHLETE = "Cameron Ball"
 FH = 790
-PERF_BG = (18, 18, 20)
+BG = (16, 18, 22)
+CYAN, YEL, GRN, PNK = (214, 193, 53), (78, 193, 242), (141, 214, 88), (220, 120, 255)
 
 
-def grab(t, crop=None):
+def grab(t):
     cap = cv2.VideoCapture(VID)
     cap.set(cv2.CAP_PROP_POS_MSEC, t * 1000.0)
     ok, fr = cap.read()
     cap.release()
-    if not ok:
-        return None
-    if crop:
-        x, y, w, h = crop
-        return fr[y:y + h, x:x + w]
-    return fr[:FH]
+    return fr if ok else None
 
 
-def filmstrip(images, cell_h=280, gap=10, border=40, caption=None, title_h=54):
-    """Lay images out horizontally inside a perforated film border."""
+def strip(images, cell_h=430, gap=14, caption=None, title_h=64):
     cells = []
     for im in images:
         s = cell_h / im.shape[0]
         cells.append(cv2.resize(im, (max(1, int(im.shape[1] * s)), cell_h)))
-    W = sum(c.shape[1] for c in cells) + gap * (len(cells) + 1)
+    W = sum(c.shape[1] for c in cells) + gap * (len(cells) - 1)
     top = title_h if caption else 0
-    H = cell_h + 2 * border + top
-    strip = np.full((H, W, 3), PERF_BG, np.uint8)
-
-    x = gap
+    out = np.full((cell_h + top, W, 3), BG, np.uint8)
+    x = 0
     for c in cells:
-        strip[top + border:top + border + cell_h, x:x + c.shape[1]] = c
+        out[top:top + cell_h, x:x + c.shape[1]] = c
         x += c.shape[1] + gap
-
-    # Sprocket holes sit in the film borders, so the caption gets its own band
-    # above them - printed over the perforations it is white on white.
-    hw, hh, pitch = 26, 20, 62
-    for cx in range(pitch // 2, W, pitch):
-        for cy in (top + border // 2, H - border // 2):
-            cv2.rectangle(strip, (cx - hw // 2, cy - hh // 2),
-                          (cx + hw // 2, cy + hh // 2), (238, 238, 235), -1,
-                          lineType=cv2.LINE_AA)
     if caption:
-        cv2.rectangle(strip, (0, 0), (W, top), (10, 10, 11), -1)
-        cv2.putText(strip, caption, (gap + 8, int(top * 0.68)),
-                    cv2.FONT_HERSHEY_DUPLEX, 1.0, (245, 245, 240), 2,
-                    cv2.LINE_AA)
-    return strip
+        cv2.putText(out, caption, (4, int(top * 0.66)), cv2.FONT_HERSHEY_DUPLEX,
+                    1.05, (242, 244, 248), 2, cv2.LINE_AA)
+    return out
 
 
-def around(frame, pt, w=1180, h=660):
-    """Crop a window centred on a point, clamped to the frame."""
-    H, W = frame.shape[:2]
-    x = int(np.clip(pt[0] - w // 2, 0, max(0, W - w)))
-    y = int(np.clip(pt[1] - h // 2, 0, max(0, H - h)))
-    return frame[y:y + h, x:x + w]
+def tag(im, text, org, scale=1.0, color=(255, 255, 255), thick=2):
+    """Draw a label on a plate.
 
-
-def label(im, text, org=(14, 40), scale=0.95, color=(255, 255, 255)):
-    im = im.copy()
-    cv2.putText(im, text, org, cv2.FONT_HERSHEY_SIMPLEX, scale, (0, 0, 0), 6,
+    The strips are viewed scaled well down, so thin outlined text vanishes; a
+    solid plate keeps every label legible at any width.
+    """
+    scale *= 2.0
+    thick += 2
+    (tw, th), base = cv2.getTextSize(text, cv2.FONT_HERSHEY_DUPLEX, scale, thick)
+    x, y = org
+    pad = 12
+    cv2.rectangle(im, (x - pad, y - th - pad), (x + tw + pad, y + base + pad // 2),
+                  (14, 15, 18), -1)
+    cv2.putText(im, text, (x, y), cv2.FONT_HERSHEY_DUPLEX, scale, color, thick,
                 cv2.LINE_AA)
-    cv2.putText(im, text, org, cv2.FONT_HERSHEY_SIMPLEX, scale, color, 2,
-                cv2.LINE_AA)
-    return im
 
 
-def save(name, strip):
-    path = f"frames/steps/{name}.jpg"
-    cv2.imwrite(path, strip, [cv2.IMWRITE_JPEG_QUALITY, 86])
-    print(f"  {path}  {strip.shape[1]}x{strip.shape[0]}")
+def save(name, im):
+    p = f"frames/steps/{name}.jpg"
+    cv2.imwrite(p, im, [cv2.IMWRITE_JPEG_QUALITY, 87])
+    print(f"  {p}  {im.shape[1]}x{im.shape[0]}")
 
 
-def step_clock():
-    """The broadcast clock: t=0 and the run's own time base."""
-    ims = []
-    for t, tag in [(1.6, "0.00  set"), (2.5, "0.23  moving"), (3.6, "1.79  10yd"),
-                   (5.0, "3.24"), (6.9, "5.11  stop")]:
-        c = grab(t, crop=(300, 838, 1000, 120))
-        if c is not None:
-            ims.append(label(c, tag, (12, 34), 0.8, (120, 255, 170)))
-    save("2_clock", filmstrip(ims, cell_h=118,
-                              caption="2  READ THE CLOCK  -  t=0, splits, finish"))
-
-
-def step_bib():
-    """Bib number indexes the alphabetical position-group roster."""
-    ims = []
-    for t, tag in [(4.0, "DL 3  Barrett"), (88.0, "DL 8  Durant"),
-                   (185.0, "DL 18  Keenan"), (250.0, "DL 25  Proctor")]:
-        c = grab(t, crop=(255, 820, 330, 140))
-        if c is not None:
-            ims.append(label(c, tag, (10, 28), 0.62, (255, 220, 120)))
-    save("3_bib", filmstrip(ims, cell_h=190,
-                            caption="3  IDENTIFY THE ATHLETE  -  bib -> roster"))
-
-
-def step_detect():
+def build():
+    from read_clock import PanelReader, extract_glyphs
+    from read_bib import read_bib, roster
     from detectors import detect_mats, lane_axis_of, detect_athlete
-    ims = []
-    for t in (3.6, 4.5, 5.4, 6.3):
-        f = grab(t)
-        if f is None:
-            continue
-        v = f.copy()
-        la = lane_axis_of(f)
-        if la:
-            mu, d = la
-            a = (mu - d * 2400).astype(int)
-            b = (mu + d * 2400).astype(int)
-            cv2.line(v, tuple(a), tuple(b), (255, 210, 60), 3, cv2.LINE_AA)
-        for c, w in detect_mats(f):
-            cv2.circle(v, (int(c[0]), int(c[1])), 30, (60, 230, 255), 5)
-        at = detect_athlete(f)
-        if at:
-            foot, hip = at
-            cv2.circle(v, (int(foot[0]), int(foot[1])), 30, (90, 255, 120), 7)
-            if hip is not None:
-                cv2.circle(v, (int(hip[0]), int(hip[1])), 18, (255, 120, 220), 5)
-            ims.append(around(v, foot))
-        else:
-            ims.append(v)
-    save("4_detect", filmstrip(
-        ims, caption="4  DETECT  -  lane axis (cyan), mats (yellow), foot (green)"))
-
-
-def step_source():
-    ims = []
-    for t in (4.0, 60.0, 140.0, 250.0):
-        f = grab(t)
-        if f is not None:
-            ims.append(f)
-    save("1_source", filmstrip(
-        ims, caption="1  SOURCE  -  one uncut position-group session, every athlete"))
-
-
-def step_crossings():
-    from crossings import gather, crossings as find
-    from detectors import detect_mats, lane_axis_of, detect_athlete
-    t0 = 1.77
-    ev = find(gather(VID, t0, t0 + 6.6))
-    ims = []
-    for k, e in enumerate(ev[:4]):
-        f = grab(e)
-        if f is None:
-            continue
-        v = f.copy()
-        at = detect_athlete(f)
-        for c, w in detect_mats(f):
-            cv2.circle(v, (int(c[0]), int(c[1])), 34, (60, 230, 255), 7)
-        if at:
-            foot = at[0]
-            cv2.circle(v, (int(foot[0]), int(foot[1])), 30, (90, 255, 120), 7)
-            # Label after cropping: the crop is centred on the foot, so a label
-            # drawn on the full frame falls outside it.
-            ims.append(label(around(v, foot),
-                             f"mat {k + 1}    t = {e - t0:.2f}s", (18, 48), 1.15,
-                             (120, 255, 170)))
-    save("5_crossings", filmstrip(
-        ims, caption="5  CROSSINGS  -  foot meets mat, one frame, no parallax"))
-
-
-def step_fit():
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
+    from crossings import gather, crossings as find_cross
+    from fit_runs import model
     import pandas as pd
 
-    f = pd.read_csv("data/fits.csv")
-    # Require a run that saw every mat: with only two crossings the fit is
-    # exactly determined and its zero residual means nothing.
-    f = f[(f.quality == "ok") & (f.n_crossings >= 4)]
-    r = f.sort_values("resid_yd").iloc[0]
-    vmax, tau = r.v_max_yd_s, r.tau_s
-    t = np.linspace(0, r.final_clock, 300)
-    x = vmax * (t + tau * np.exp(-t / tau) - tau)
-    v = vmax * (1 - np.exp(-t / tau)) * 0.9144
-    a = (vmax / tau) * np.exp(-t / tau) * 0.9144
+    reader = PanelReader("data/glyph_templates.npz")
+    f = pd.read_csv("data/fits.csv", dtype={"video_id": str})
+    cand = f[(f.video_id == "Sr-Q6UjJq6g") & (f.player_name == ATHLETE)
+             & (f.quality == "ok")]
+    # Take the run's start from its own fit. Every label on these strips is read
+    # from the frame it sits on; none is asserted from a constant.
+    r = cand.sort_values("t_zero").iloc[0]
+    T_ZERO = float(r.t_zero)
 
-    panels = []
-    for ys, lab_, col in [(x, "position  (yd)", "#39d98a"),
-                          (v, "velocity  (m/s)", "#4cc9f0"),
-                          (a, "acceleration  (m/s2)", "#ff8fab")]:
-        fig, ax = plt.subplots(figsize=(4.6, 3.4), dpi=150)
-        fig.patch.set_facecolor("#0d0d0f")
-        ax.set_facecolor("#0d0d0f")
-        ax.plot(t, ys, color=col, lw=2.6)
-        ax.set_xlabel("t (s)", color="#cfcfcf", fontsize=9)
-        ax.set_title(lab_, color="#f2f2f2", fontsize=11, pad=8)
-        for sp in ax.spines.values():
-            sp.set_color("#3a3a3f")
-        ax.tick_params(colors="#9a9aa0", labelsize=8)
-        ax.grid(alpha=0.16, color="#8a8a90")
-        fig.tight_layout()
-        fig.canvas.draw()
-        buf = np.asarray(fig.canvas.buffer_rgba())[..., :3]
-        panels.append(cv2.cvtColor(buf, cv2.COLOR_RGB2BGR))
-        plt.close(fig)
-    save("6_fit", filmstrip(panels, cell_h=430, caption=(
-        f"6  FIT  -  {r.player_name}: v_max {r.v_max_m_s:.2f} m/s, "
-        f"tau {tau:.2f}s, residual {r.resid_yd:.2f} yd")))
+    ev = find_cross(gather(VID, T_ZERO, T_ZERO + 6.6))[:4]
+    times = list(ev)
+    frames = [fr for fr in (grab(x) for x in times) if fr is not None]
+
+    ros = roster(2026, ["DT"])
+    by_bib = dict(zip(ros.bib, ros.player_name))
+
+    # 1 — raw
+    save("1_source", strip([f.copy() for f in frames], caption=(
+        "1  SOURCE  -  one athlete inside an uncut session, four moments of his run")))
+
+    # 2 — clock
+    lay2 = []
+    for t, fr in zip(times, frames):
+        v = fr.copy()
+        band = fr[800:1000]
+        fields = reader.read(band)
+        if fields:
+            # The panel shows several numbers; the clock is the one reading the
+            # elapsed time, not simply the rightmost.
+            x, val = min(fields, key=lambda z: abs(z[1] - (t - T_ZERO)))
+            cv2.rectangle(v, (int(x) - 110, 840), (int(x) + 110, 928), GRN, 5)
+            tag(v, f"clock {val:.2f}", (int(x) - 150, 812), 0.9, GRN)
+        tag(v, f"t = {t - T_ZERO:.2f}s", (30, 82), 1.15, GRN)
+        lay2.append(v)
+    save("2_clock", strip(lay2, caption=(
+        "2  READ THE CLOCK  -  the panel supplies t=0 and the run's own time base")))
+
+    # 3 — + bib
+    lay3 = []
+    for v in lay2:
+        v = v.copy()
+        bib = read_bib(v[800:1000], reader)
+        cv2.rectangle(v, (256, 902), (404, 962), YEL, 5)
+        if bib:
+            tag(v, f"DL {bib} = {by_bib.get(bib, '?')}", (258, 1060), 0.85, YEL)
+        lay3.append(v)
+    save("3_bib", strip(lay3, caption=(
+        "3  IDENTIFY  -  bib number indexes the alphabetical position-group roster")))
+
+    # 4 — + detections
+    lay4 = []
+    for v in lay3:
+        v = v.copy()
+        la = lane_axis_of(v[:FH])
+        if la:
+            mu, d = la
+            cv2.line(v, tuple((mu - d * 2400).astype(int)),
+                     tuple((mu + d * 2400).astype(int)), CYAN, 3, cv2.LINE_AA)
+        for c, w in detect_mats(v[:FH]):
+            cv2.circle(v, (int(c[0]), int(c[1])), 34, YEL, 6)
+        at = detect_athlete(v[:FH])
+        if at:
+            foot, hip = at
+            cv2.circle(v, (int(foot[0]), int(foot[1])), 30, GRN, 7)
+            if hip is not None:
+                cv2.circle(v, (int(hip[0]), int(hip[1])), 18, PNK, 5)
+        lay4.append(v)
+    save("4_detect", strip(lay4, caption=(
+        "4  DETECT  -  lane axis (blue), mats (yellow), hip (pink), ground contact (green)")))
+
+    # 5 — + the crossing itself
+    lay5 = []
+    for k, (t, v) in enumerate(zip(times, lay4), start=1):
+        v = v.copy()
+        at = detect_athlete(v[:FH])
+        mats = detect_mats(v[:FH])
+        if at and mats:
+            foot = at[0]
+            c, _ = min(mats, key=lambda m: abs(m[0][0] - foot[0]))
+            cv2.line(v, (int(foot[0]), int(foot[1])), (int(c[0]), int(c[1])),
+                     (255, 255, 255), 3, cv2.LINE_AA)
+            tag(v, f"mat {k}   {t - T_ZERO:.2f}s", (30, 250), 1.05, (255, 255, 255))
+        lay5.append(v)
+    save("5_crossings", strip(lay5, caption=(
+        "5  CROSS  -  foot meets mat inside one frame, so the pan cannot bias it")))
+
+    # 6 — + the fitted state at each frame
+    vmax, tau = r.v_max_yd_s, r.tau_s
+    lay6 = []
+    for t, v in zip(times, lay5):
+        v = v.copy()
+        dt = t - T_ZERO
+        x = model(dt, vmax, tau)
+        vel = vmax * (1 - np.exp(-dt / tau)) * 0.9144
+        tag(v, f"x = {x:5.1f} yd", (30, 390), 1.05, CYAN)
+        tag(v, f"v = {vel:4.1f} m/s", (30, 500), 1.05, CYAN)
+        lay6.append(v)
+    save("6_fit", strip(lay6, caption=(
+        f"6  FIT  -  {r.player_name}: v_max {r.v_max_m_s:.2f} m/s, tau {tau:.2f}s, "
+        f"residual {r.resid_yd:.2f} yd")))
