@@ -108,3 +108,30 @@ def runway(frame, turf=None, min_frac=0.008):
     c = pts.mean(0)
     d = np.linalg.svd(pts - c, full_matrices=False)[2][0]
     return m, c, (d if d[0] >= 0 else -d)
+
+
+def boundary(frame, min_frac=0.04, min_piece=0.004):
+    """In-bounds region as a filled polygon, not a per-pixel colour mask.
+
+    The playing surface is a rectangle in the world, so it is convex in the image.
+    Taking the hull of the turf keeps what stands on the field - players, benches,
+    the runway, the mats - inside the region. A colour mask instead punches a hole
+    at every one of them, which fragments the painted lines that have to be found
+    inside it.
+    """
+    turf = turf_mask(frame)
+    if turf.mean() < min_frac:
+        return None
+    m = cv2.morphologyEx(turf, cv2.MORPH_CLOSE, np.ones((81, 81), np.uint8))
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((21, 21), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(m)
+    pts = []
+    for j in range(1, n):
+        if st[j, cv2.CC_STAT_AREA] >= min_piece * m.size:
+            pts.append(np.argwhere(lab == j)[:, ::-1])
+    if not pts:
+        return None
+    hull = cv2.convexHull(np.vstack(pts).astype(np.int32))
+    out = np.zeros(frame.shape[:2], np.uint8)
+    cv2.fillConvexPoly(out, hull, 1)
+    return out, hull
