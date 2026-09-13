@@ -15,24 +15,28 @@ def _white_in_field(frame, region):
     return cv2.morphologyEx(w, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
 
 
-def candidates(frame, region, min_len=70, min_elong=4.0):
-    """Elongated white strokes on the field: yard lines, hash rows, sideline."""
+def candidates(frame, region, min_len=80, gap=45):
+    """Straight white strokes on the field: yard lines, hash rows, sideline.
+
+    Found by Hough rather than by connected components. A yard line is broken
+    wherever a player, a bench or the runway crosses it, so as components its
+    pieces fall under any useful length threshold and the line is lost.
+    """
     w = _white_in_field(frame, region)
-    n, lab, st, _ = cv2.connectedComponentsWithStats(w)
+    segs = cv2.HoughLinesP(w, 1, np.pi / 720, threshold=45,
+                           minLineLength=min_len, maxLineGap=gap)
+    if segs is None:
+        return []
     out = []
-    for j in range(1, n):
-        if st[j, cv2.CC_STAT_AREA] < 220:
+    for x1, y1, x2, y2 in np.asarray(segs).reshape(-1, 4):
+        p, q = np.array([x1, y1], float), np.array([x2, y2], float)
+        L = float(np.linalg.norm(q - p))
+        if L < min_len:
             continue
-        pts = np.argwhere(lab == j)[:, ::-1].astype(np.float32)
-        (cx, cy), (bw, bh), _ = cv2.minAreaRect(pts)
-        L, S = max(bw, bh), max(min(bw, bh), 1e-6)
-        if L < min_len or L / S < min_elong:
-            continue
-        mu = pts.mean(0)
-        d = np.linalg.svd(pts - mu, full_matrices=False)[2][0]
+        d = (q - p) / L
         if d[1] < 0:
             d = -d
-        out.append({"p": mu, "d": d, "len": float(L), "n": int(len(pts))})
+        out.append({"p": (p + q) / 2, "d": d, "len": L, "n": int(L)})
     return out
 
 
@@ -77,31 +81,37 @@ def detect(frame, region, runway_axis, max_align=0.80, min_len=150,
     return merge_collinear(cands)
 
 
-def merge_collinear(cands, perp_tol=26.0, dir_tol=0.985):
-    """Fuse fragments of one painted line.
+def merge_collinear(cands, rho_tol=22.0, theta_tol=0.05):
+    """Fuse detections of one painted line, in line space rather than by position.
 
-    A line is broken by the runway, by players and by its own wear, so it arrives
-    as several strokes. They are the same line when each lies on the other's
-    infinite line, which is a far better test than proximity along the axis -
-    two genuinely different yard lines can project close together near the
-    vanishing point.
+    Hough returns many overlapping segments along a single line. Two segments are
+    the same line when their normal form agrees, which is what (theta, rho) tests
+    directly; comparing midpoints instead keeps duplicates whose midpoints happen
+    to sit far apart along the line.
     """
+    items = []
+    for c in cands:
+        th = float(np.arctan2(c["d"][1], c["d"][0])) % np.pi
+        nrm = np.array([-np.sin(th), np.cos(th)])
+        items.append((th, float(c["p"] @ nrm), c))
+
     groups = []
-    for c in sorted(cands, key=lambda z: -z["len"]):
-        placed = False
+    for th, rho, c in sorted(items, key=lambda z: -z[2]["len"]):
         for g in groups:
-            if abs(float(c["d"] @ g["d"])) < dir_tol:
-                continue
-            off = c["p"] - g["p"]
-            perp = abs(float(off @ np.array([-g["d"][1], g["d"][0]])))
-            if perp < perp_tol:
+            dth = abs(th - g["th"])
+            dth = min(dth, np.pi - dth)
+            if dth < theta_tol and abs(rho - g["rho"]) < rho_tol:
                 w = g["len"] + c["len"]
+                g["th"] = (g["th"] * g["len"] + th * c["len"]) / w
+                g["rho"] = (g["rho"] * g["len"] + rho * c["len"]) / w
                 g["p"] = (g["p"] * g["len"] + c["p"] * c["len"]) / w
-                d = g["d"] * g["len"] + c["d"] * c["len"] * np.sign(float(c["d"] @ g["d"]))
-                g["d"] = d / max(np.linalg.norm(d), 1e-9)
                 g["len"] = w
-                placed = True
                 break
-        if not placed:
-            groups.append(dict(c))
-    return [(g["p"], g["d"], g["len"]) for g in groups]
+        else:
+            groups.append({"th": th, "rho": rho, "p": c["p"].copy(),
+                           "len": c["len"]})
+    out = []
+    for g in groups:
+        d = np.array([np.cos(g["th"]), np.sin(g["th"])])
+        out.append((g["p"], d, g["len"]))
+    return out

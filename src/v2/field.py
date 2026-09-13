@@ -123,6 +123,13 @@ def boundary(frame, min_frac=0.04, min_piece=0.01):
     if turf.mean() < min_frac:
         return None
     broad, _ = split_white(frame, turf)
+    # Everything below the runway is out of bounds. The camera placement is fixed
+    # across the shoot, so the runway reliably separates the playing field above
+    # it from the sideline apron below.
+    ys, _ = np.nonzero(broad)
+    if len(ys):
+        turf = turf.copy()
+        turf[int(np.percentile(ys, 95)):] = 0
     m = cv2.morphologyEx(turf, cv2.MORPH_CLOSE, np.ones((51, 51), np.uint8))
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((17, 17), np.uint8))
 
