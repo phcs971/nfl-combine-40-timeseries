@@ -110,28 +110,33 @@ def runway(frame, turf=None, min_frac=0.008):
     return m, c, (d if d[0] >= 0 else -d)
 
 
-def boundary(frame, min_frac=0.04, min_piece=0.004):
-    """In-bounds region as a filled polygon, not a per-pixel colour mask.
+def boundary(frame, min_frac=0.04, min_piece=0.01):
+    """In-bounds region: the green playing surface, and nothing else.
 
-    The playing surface is a rectangle in the world, so it is convex in the image.
-    Taking the hull of the turf keeps what stands on the field - players, benches,
-    the runway, the mats - inside the region. A colour mask instead punches a hole
-    at every one of them, which fragments the painted lines that have to be found
-    inside it.
+    The end zone, the runway laid over the field, and everything past the
+    sideline are all out of bounds. The close is sized to swallow a player or a
+    bench standing on the turf without bridging the runway, which is an order of
+    magnitude wider; interior holes are then filled so those figures sit inside
+    the region rather than punching through it.
     """
     turf = turf_mask(frame)
     if turf.mean() < min_frac:
         return None
-    m = cv2.morphologyEx(turf, cv2.MORPH_CLOSE, np.ones((81, 81), np.uint8))
-    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((21, 21), np.uint8))
+    broad, _ = split_white(frame, turf)
+    m = cv2.morphologyEx(turf, cv2.MORPH_CLOSE, np.ones((51, 51), np.uint8))
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((17, 17), np.uint8))
+
     n, lab, st, _ = cv2.connectedComponentsWithStats(m)
-    pts = []
+    out = np.zeros_like(m)
+    parts = []
     for j in range(1, n):
-        if st[j, cv2.CC_STAT_AREA] >= min_piece * m.size:
-            pts.append(np.argwhere(lab == j)[:, ::-1])
-    if not pts:
+        if st[j, cv2.CC_STAT_AREA] < min_piece * m.size:
+            continue
+        cnts, _ = cv2.findContours((lab == j).astype(np.uint8),
+                                   cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(out, cnts, -1, 1, -1)
+        parts += list(cnts)
+    out[broad > 0] = 0
+    if out.mean() < min_frac:
         return None
-    hull = cv2.convexHull(np.vstack(pts).astype(np.int32))
-    out = np.zeros(frame.shape[:2], np.uint8)
-    cv2.fillConvexPoly(out, hull, 1)
-    return out, hull
+    return out, parts
