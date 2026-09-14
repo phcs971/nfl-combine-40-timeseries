@@ -1,0 +1,61 @@
+video_id,cls,pos,split,bib,player_name,official_forty,drafted,t_zero,final_clock,v_max_yd_s,tau_s,mat_offset
+BEFga72DF3U,skill,WR,train,39,Brenen Thompson,4.26,True,720.722,4.26,13.0,1.2755,12.784
+UcatZ1FYe5E,skill,SAF,test,48,Robert Spears-Jennings,4.32,True,213.401,4.32,11.5863,0.8741,13.144
+0r_usy_GIAI,skill,WR,train,9,Zachariah Branch,4.35,True,531.379,4.36,11.7315,1.0286,13.046
+UcatZ1FYe5E,skill,SAF,test,52,Dillon Thieneman,4.35,True,352.373,4.37,12.2056,1.1201,13.144
+-zgIolzsJxY,skill,CB,train,9,Daylen Everette,4.38,True,482.317,4.4,,,
+-zgIolzsJxY,skill,CB,test,28,Chandler Rivers,4.4,True,386.23,4.42,11.2456,0.8674,13.127
+BEFga72DF3U,skill,WR,train,36,J. Michael Sturdivant,4.4,False,213.519,4.41,11.8444,1.0491,12.784
+0r_usy_GIAI,skill,WR,test,5,Skyler Bell,4.4,True,470.519,4.42,,,
+BEFga72DF3U,skill,WR,train,45,Antonio Williams,4.41,True,436.992,4.42,12.4294,1.237,12.784
+-zgIolzsJxY,skill,CB,test,16,Domani Jackson,4.41,True,226.532,4.41,11.9063,1.0671,13.127
+0r_usy_GIAI,skill,WR,train,17,Omar Cooper,4.42,True,620.694,4.47,11.4269,0.9732,13.046
+0r_usy_GIAI,skill,WR,test,21,Emmanuel Henderson,4.44,False,684.032,4.46,11.6864,1.0382,13.046
+BEFga72DF3U,skill,WR,train,28,Kendrick Law,4.45,True,144.046,4.46,12.7239,1.4195,12.784
+-zgIolzsJxY,skill,CB,test,19,Hezekiah Masses,4.46,True,693.974,4.56,11.3131,1.0307,13.127
+UcatZ1FYe5E,skill,SAF,train,43,Xavier Nwankpa,4.48,False,453.821,4.48,11.4463,0.9986,13.144
+-zgIolzsJxY,skill,CB,test,24,Julian Neal,4.49,True,785.16,4.54,11.2561,0.9945,13.127
+UcatZ1FYe5E,skill,SAF,train,51,Michael Taaffe,4.5,True,338.999,4.5,11.2235,0.9464,13.144
+UcatZ1FYe5E,skill,SAF,test,40,Emmanuel McNeil-Warren,4.52,True,102.604,4.55,,,
+0r_usy_GIAI,skill,WR,train,2,Vinny Anthony II,4.54,False,434.64,4.58,,,
+BEFga72DF3U,skill,WR,test,42,Harrison Wallace,4.54,False,798.855,4.57,,,
+g__zmhX838U,strong,RB,train,20,Mike Washington Jr.,4.33,True,225.353,4.33,11.9572,0.9844,13.359
+9xc35LbeeUE,strong,TE,test,23,Kenyon Sadiq,4.39,True,353.791,4.4,12.0049,1.0825,12.627
+olzS7RidilY,strong,LB,test,24,Alex Styles,4.46,True,602.058,4.64,11.9636,1.3883,12.464
+g__zmhX838U,strong,RB,test,16,Adam Randall,4.5,True,212.431,4.51,10.9332,0.8615,13.359
+olzS7RidilY,strong,LB,test,12,Anthony Hill,4.51,True,372.594,4.59,11.4614,1.1131,12.464
+LDqozfzjaNU,strong,EDGE,test,48,Malachi Lawrence,4.52,True,230.694,4.53,11.2087,0.97,12.888
+olzS7RidilY,strong,LB,train,16,Kyle Louis,4.53,True,133.173,4.57,11.5662,1.1404,12.464
+LDqozfzjaNU,strong,EDGE,test,53,Trey Moore,4.54,True,256.193,4.55,11.1954,0.9945,12.888
+g__zmhX838U,strong,RB,train,10,Emmett Johnson,4.56,True,275.877,4.6,10.8658,0.9245,13.359
+9xc35LbeeUE,strong,TE,train,7,John Michael Gyllenborg,4.6,False,464.571,4.62,11.6979,1.2364,12.627
+9xc35LbeeUE,strong,TE,train,14,Marlin Klein,4.61,True,248.856,4.62,11.8786,1.2791,12.627
+9xc35LbeeUE,strong,TE,test,6,Jack Endries,4.62,True,454.055,4.68,11.2832,1.164,12.627
+9xc35LbeeUE,strong,TE,train,1,Dallen Bentley,4.62,True,39.076,4.65,11.6558,1.2449,12.627
+olzS7RidilY,strong,LB,train,23,Xavian Sorey Jr.,4.63,False,578.129,4.58,12.2957,1.3786,12.464
+LDqozfzjaNU,strong,EDGE,train,40,Romello Height,4.64,True,480.088,4.65,,,
+LDqozfzjaNU,strong,EDGE,test,45,Marvin Jones Jr.,4.69,False,202.666,4.74,11.328,1.2271,12.888
+9xc35LbeeUE,strong,TE,train,15,Tanner Koziol,4.7,True,579.782,4.71,12.0687,1.4432,12.627
+LDqozfzjaNU,strong,EDGE,test,62,Nadame Tucker,4.73,False,392.153,4.34,,,
+9xc35LbeeUE,strong,TE,train,10,Will Kacmarek,4.74,True,185.673,4.75,11.036,1.1442,12.627
+LDqozfzjaNU,strong,EDGE,test,30,Vincent Anthony Jr.,4.84,False,403.652,4.85,8.7066,0.2266,12.888
+Sr-Q6UjJq6g,line,DT,train,25,Kaleb Proctor,4.79,True,485.819,4.84,11.1439,1.2811,12.94
+Sr-Q6UjJq6g,line,DT,test,13,Gracen Halton,4.82,True,428.296,4.86,10.4395,1.012,12.94
+Sr-Q6UjJq6g,line,DT,test,19,Jackie Marshall,4.88,True,218.328,4.88,10.4457,1.066,12.94
+f9RAoGpGkIY,line,C,test,31,Logan Jones,4.9,True,402.786,4.94,10.2467,1.0544,12.873
+W23Nvg3rw6U,line,OT,train,22,Spencer Fano,4.91,True,392.808,4.91,10.2686,1.0584,13.074
+W23Nvg3rw6U,line,OT,train,17,Enrique Cruz,4.94,False,276.984,4.95,,,
+W23Nvg3rw6U,line,C,train,7,Parker Brailsford,4.95,True,688.415,5.02,9.9903,1.0239,13.074
+f9RAoGpGkIY,line,G,test,52,Dillon Wade,5.02,False,339.186,5.04,9.8064,0.9792,12.873
+f9RAoGpGkIY,line,OT,train,35,Blake Miller,5.04,True,439.902,5.09,9.5478,0.8973,12.873
+f9RAoGpGkIY,line,G,test,44,Keylan Rutledge,5.05,True,585.646,5.06,10.4575,1.2617,12.873
+W23Nvg3rw6U,line,OT,train,6,Jude Bowry,5.08,True,144.842,5.12,9.6134,0.9732,13.074
+Sr-Q6UjJq6g,line,DT,test,3,Nick Barrett,5.1,True,338.874,5.11,,,
+f9RAoGpGkIY,line,OT,train,54,Carver Willis,5.11,True,695.825,5.14,9.9903,1.146,12.873
+W23Nvg3rw6U,line,OT,test,2,Austin Barber,5.12,True,45.89,5.12,9.8992,1.1049,13.074
+Sr-Q6UjJq6g,line,DT,train,1,Cameron Ball,5.13,False,2.117,5.11,9.8532,1.0787,12.94
+f9RAoGpGkIY,line,OT,test,39,Diego Pounds,5.15,False,499.289,5.19,9.2049,0.8326,12.873
+W23Nvg3rw6U,line,OT,train,13,Kage Casey,5.2,True,774.701,5.31,10.1701,1.3814,13.074
+W23Nvg3rw6U,line,G,test,12,Fernando Carmona,5.22,True,762.42,5.23,9.5083,1.0217,13.074
+Sr-Q6UjJq6g,line,DT,train,18,Tim Keenan III,5.31,True,181.579,5.32,,,
+f9RAoGpGkIY,line,G,test,48,Beau Stephens,5.35,True,609.103,5.37,9.4293,1.1087,12.873

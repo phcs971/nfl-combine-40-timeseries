@@ -252,6 +252,39 @@ attempts sits within 0.03 s of their official time (mean +0.005, sd 0.010).
   video-derived times start at first movement and will not match exactly. Used as a
   validation signal.
 
+## Hand-labelled study set
+
+Automatic yard-line detection is not reliable enough to measure crossings on its
+own, so the study set is labelled by hand with the detector as an assist.
+
+`src/label_plan.py` picks the runs: 20 athletes per class, split 10 train /
+10 test. Within a class the picks are spread over quantiles of the official 40
+time rather than taken from the fast end, the two splits alternate down that
+sorted order so each spans the same range, and draft status is balanced between
+them by swapping non-extreme pairs. One run per athlete, so no athlete appears in
+both splits.
+
+`src/extract_run.py` cuts each planned run to frames plus a `meta.json` carrying
+the clip's time origin and, from `data/fits.csv`, the sprint model's predicted
+frame for every 5-yard mark.
+
+`src/label_server.py` serves those runs at `localhost`. It opens each mark on its
+predicted frame - within 0-4 frames of truth on the run that has ground truth -
+so the work is confirming or nudging rather than searching. Arrow keys step,
+Enter sets the mark and advances, `[` and `]` change run, clicking the image
+zooms. Labels merge into `data/labels.csv` per run and are keyed to clip time, so
+re-extracting a clip with different padding does not orphan them.
+
+The detector overlay is a toggle, off by default: a label read off the detector
+would only reproduce the detector's error. It draws every white-on-turf segment
+running across the lane, not the vanishing-point pick alone - over-generous on
+purpose, because its job is to make sure the real line is among what is shown.
+
+`src/build_labeled_series.py` fits each labelled run and writes the measured
+crossings (`data/series_points.csv`), the model series (`data/series_labeled.csv`)
+and the fit parameters (`data/fits_labeled.csv`). The fit uses the labels alone,
+which leaves the official 40 time as an independent check.
+
 ## Data & licensing
 
 No video or extracted frames are committed — footage is NFL-copyrighted. This repo
@@ -264,13 +297,18 @@ reproduce locally. Combine and draft data from
 ```bash
 uv run python src/build_frame.py --seasons 2026   # -> data/frame.csv
 uv run python src/check_videos.py                 # validate video registry
-uv run python src/probe_video.py video/<id>.mp4   # contact sheet for inspection
 uv run python src/read_clock.py video/<id>.mp4 --ss 2 --dur 6   # read timing panel
 uv run python src/build_runs.py                   # -> data/runs.csv (resumable)
 uv run python src/build_series.py                 # -> data/fits.csv, data/series.csv
+
+uv run python src/label_plan.py                   # -> data/label_plan.csv
+uv run python src/extract_run.py                  # -> label/<video>_<bib>/frames
+uv run python src/label_server.py                 # label at http://localhost:8765
+uv run python src/build_labeled_series.py         # -> data/series_labeled.csv
 ```
 
-`probe_video.py` needs a local download; `video/` and `frames/` are gitignored.
+`video/`, `frames/` and `label/` are gitignored; the overlay needs
+`opencv-python-headless`, and draws pose too when `ultralytics` is installed.
 
 Code MIT. Derived measurements CC BY 4.0.
 
@@ -283,11 +321,7 @@ Code MIT. Derived measurements CC BY 4.0.
 - [x] Athlete identification from bib (`src/read_bib.py`)
 - [x] Run manifest for all 11 videos (`src/build_runs.py` -> `data/runs.csv`)
 - [x] Mat crossings and sprint-model fit (`src/build_series.py`)
-- [ ] Recover the 32 runs that see one mat or none
-- [ ] Stratified sample, 20/class, validated against the population
-- [ ] Stratified sample, 20/class
-- [x] Mat crossings and sprint-model fit (`src/build_series.py`)
-- [ ] Recover the 32 runs that see one mat or none
-- [ ] Stratified sample, 20/class, validated against the population
-- [ ] Sprint-model fit
-- [ ] Validation vs. official 40 times
+- [x] Study set chosen and extracted: 20 per class, 10 train / 10 test
+- [x] Labeller with model-seeded marks and detector overlay
+- [ ] Label the 60 runs
+- [ ] Validate the labelled fits against the official 40 times

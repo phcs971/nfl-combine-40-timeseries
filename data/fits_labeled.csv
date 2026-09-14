@@ -1,0 +1,2 @@
+video_id,bib,player_name,cls,split,pos,drafted,official_forty,n_marks,v_max_yd_s,v_max_m_s,tau_s,rmse_yd,max_resid_yd,t40_fit,t40_err
+Sr-Q6UjJq6g,1,Cameron Ball,line,train,DT,False,5.13,8,9.666810455685598,8.83933148067891,1.1422080287041094,0.1950741822289494,0.3933414755758786,5.268741898839621,0.13874189883962096
