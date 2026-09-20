@@ -21,11 +21,16 @@ def model(t, vmax, tau):
 
 
 def fit(t, x):
-    s = least_squares(lambda p: model(t, p[0], p[1]) - x, [9.0, 0.9],
-                      bounds=([5, 0.2], [14, 3.0]))
-    vmax, tau = s.x
-    r = model(t, vmax, tau) - x
-    return vmax, tau, float(np.sqrt(np.mean(r ** 2))), float(np.max(np.abs(r)))
+    """v_max, tau and the motion onset relative to the timer.
+
+    The clock starts on the start sensor, by which point the athlete is already
+    accelerating; holding onset at zero forces the curve through a point the
+    sprint was never at and doubles the residuals.
+    """
+    s = least_squares(lambda p: model(np.maximum(t - p[2], 0), p[0], p[1]) - x,
+                      [9.0, 0.9, 0.0], bounds=([5, 0.2, -0.4], [14, 3.0, 0.4]))
+    vmax, tau, t0 = s.x
+    return vmax, tau, t0, float(np.sqrt(np.mean(s.fun ** 2))), float(np.max(np.abs(s.fun)))
 
 
 def main() -> int:
@@ -54,22 +59,24 @@ def main() -> int:
             continue
         t = g.t_rel_s.to_numpy(float)
         x = g.yard.to_numpy(float)
-        vmax, tau, rmse, worst = fit(t, x)
-        t40 = float(np.interp(40.0, model(np.arange(0, 8, 1e-3), vmax, tau),
-                              np.arange(0, 8, 1e-3)))
+        vmax, tau, t0, rmse, worst = fit(t, x)
+        grid_fine = np.arange(0, 9, 1e-3)
+        t40 = float(np.interp(40.0, model(np.maximum(grid_fine - t0, 0), vmax, tau),
+                              grid_fine))
         fits.append({
             "video_id": vid, "bib": bib, "player_name": row.player_name,
             "cls": row.cls, "split": row.split, "pos": row.pos,
             "drafted": row.drafted, "official_forty": row.official_forty,
             "n_marks": len(g), "v_max_yd_s": vmax,
-            "v_max_m_s": vmax * 0.9144, "tau_s": tau,
+            "v_max_m_s": vmax * 0.9144, "tau_s": tau, "onset_s": t0,
             "rmse_yd": rmse, "max_resid_yd": worst,
             "t40_fit": t40, "t40_err": t40 - row.official_forty,
         })
         grid = np.arange(0.0, t.max() + 1e-9, a.dt)
-        xs = model(grid, vmax, tau)
-        v = vmax * (1 - np.exp(-grid / tau))
-        acc = (vmax / tau) * np.exp(-grid / tau)
+        e = np.maximum(grid - t0, 0)
+        xs = model(e, vmax, tau)
+        v = vmax * (1 - np.exp(-e / tau))
+        acc = (vmax / tau) * np.exp(-e / tau)
         series.append(pd.DataFrame({
             "video_id": vid, "bib": bib, "player_name": row.player_name,
             "cls": row.cls, "split": row.split, "t_s": grid, "x_yd": xs,
@@ -87,7 +94,7 @@ def main() -> int:
     if len(f):
         print(f.groupby(["cls", "split"]).agg(
             n=("bib", "size"), marks=("n_marks", "mean"),
-            rmse=("rmse_yd", "median"),
+            rmse=("rmse_yd", "median"), onset=("onset_s", "mean"),
             t40_err=("t40_err", lambda s: f"{s.mean():+.3f}")).to_string())
     return 0
 

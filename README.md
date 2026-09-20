@@ -268,12 +268,21 @@ both splits.
 the clip's time origin and, from `data/fits.csv`, the sprint model's predicted
 frame for every 5-yard mark.
 
+`src/calibrate_origin.py` pins each clip's time origin. The manifest's `t_zero`
+is read at 4 fps and lands 0.088 s (sd 0.010 over 57 runs) before the broadcast
+clock actually starts. Reading the clock on every frame locates its zero to a
+fraction of a frame: the clock advances at exactly the frame interval, so only
+the origin is unknown, and the median over a clip is immune to the odd glyph
+misread. Residuals run under 0.012 s. It also catches clips the manifest placed
+wrongly - two runs whose `t_zero` was out by 0.8 s and 2.0 s.
+
 `src/label_server.py` serves those runs at `localhost`. It opens each mark on its
 predicted frame - within 0-4 frames of truth on the run that has ground truth -
 so the work is confirming or nudging rather than searching. Arrow keys step,
 Enter sets the mark and advances, `[` and `]` change run, clicking the image
-zooms. Labels merge into `data/labels.csv` per run and are keyed to clip time, so
-re-extracting a clip with different padding does not orphan them.
+zooms. Changing run saves first. Labels merge into `data/labels.csv` per run and
+are keyed to clip time, so re-extracting a clip with different padding does not
+orphan them.
 
 The detector overlay is a toggle, off by default: a label read off the detector
 would only reproduce the detector's error. It draws every white-on-turf segment
@@ -284,6 +293,12 @@ purpose, because its job is to make sure the real line is among what is shown.
 crossings (`data/series_points.csv`), the model series (`data/series_labeled.csv`)
 and the fit parameters (`data/fits_labeled.csv`). The fit uses the labels alone,
 which leaves the official 40 time as an independent check.
+
+The fit carries a third parameter beside `v_max` and `tau`: the motion onset,
+which comes out at -0.23 s (sd 0.04). The clock starts on the start sensor, by
+which point the athlete is already accelerating, so pinning the curve to zero
+velocity at zero on the clock doubles the residuals - 0.25 yd against 0.11 yd
+with the onset free.
 
 ## Data & licensing
 
@@ -303,6 +318,7 @@ uv run python src/build_series.py                 # -> data/fits.csv, data/serie
 
 uv run python src/label_plan.py                   # -> data/label_plan.csv
 uv run python src/extract_run.py                  # -> label/<video>_<bib>/frames
+uv run python src/calibrate_origin.py             # -> data/origins.csv
 uv run python src/label_server.py                 # label at http://localhost:8765
 uv run python src/build_labeled_series.py         # -> data/series_labeled.csv
 ```

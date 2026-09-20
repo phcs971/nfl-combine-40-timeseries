@@ -87,7 +87,8 @@ kbd{background:#0e1116;border:1px solid var(--line);border-radius:4px;
   </div>
 </main>
 <aside>
-  <h2>Run <span id="rpos" class="pill"></span></h2>
+  <h2>Run <span id="rpos" class="pill"></span>
+      <span id="dot" hidden style="color:var(--warn)">&bull; unsaved</span></h2>
   <select id="pick"></select>
   <div class="meta" id="rmeta"></div>
   <div id="prog"><i style="width:0"></i></div>
@@ -112,6 +113,7 @@ kbd{background:#0e1116;border:1px solid var(--line);border-radius:4px;
     <kbd>&uarr;</kbd><kbd>&darr;</kbd> mark<br>
     <kbd>&crarr;</kbd> set mark &amp; go to next &middot; <kbd>x</kbd> clear mark<br>
     <kbd>[</kbd> <kbd>]</kbd> run &middot; <kbd>o</kbd> overlay &middot; click image to zoom<br><br>
+    Changing run saves first, so <kbd>]</kbd> is safe to lean on.<br><br>
     Set the frame where the athlete's <b>hip</b> is over the mark. The frame
     offered is the sprint model's guess, usually within a frame or two.<br><br>
     Overlay: magenta = candidate yard lines (deliberately over-generous),
@@ -120,7 +122,7 @@ kbd{background:#0e1116;border:1px solid var(--line);border-radius:4px;
   </div>
 </aside>
 <script>
-let P=[], R=null, M={}, i=1, L={}, mi=0, zoom=false;
+let P=[], R=null, M={}, i=1, L={}, mi=0, zoom=false, dirty=false;
 const $=id=>document.getElementById(id);
 const img=$('img'), sl=$('sl');
 
@@ -130,9 +132,14 @@ fetch('/api/plan').then(r=>r.json()).then(p=>{
   open(+(localStorage.getItem('run')||0));
 });
 function open(k){
-  k=Math.max(0,Math.min(P.length-1,k)); localStorage.setItem('run',k);
+  k=Math.max(0,Math.min(P.length-1,k));
+  if(k===R) return;
+  (R!=null&&dirty?save():Promise.resolve()).then(()=>load(k));
+}
+function load(k){
+  localStorage.setItem('run',k);
   fetch('/api/run/'+k).then(r=>r.json()).then(m=>{
-    R=k; M=m; L={}; (m.labels||[]).forEach(r=>L[r.yard]=r.frame);
+    R=k; M=m; L={}; dirty=false; (m.labels||[]).forEach(r=>L[r.yard]=r.frame);
     $('pick').value=k; $('rpos').textContent=(k+1)+' / '+P.length;
     $('rmeta').innerHTML=`<b>${m.athlete}</b> · ${m.pos} · bib ${m.bib}<br>`+
       `${m.video_id} · ${m.cls}/${m.split} · official <b>${m.official_forty}</b>s`+
@@ -161,6 +168,7 @@ function show(n){
 }
 function draw(){
   const done=M.marks.filter(y=>y in L).length;
+  $('dot').hidden=!dirty;
   $('prog').firstChild.style.width=(100*done/M.marks.length)+'%';
   $('rows').innerHTML=M.marks.map((y,k)=>{
     const f=L[y], has=f!=null;
@@ -176,18 +184,20 @@ function draw(){
 }
 function pickMark(k){ goMark(k); }
 function setMark(){
-  L[M.marks[mi]]=i;
+  L[M.marks[mi]]=i; dirty=true;
   if(mi<M.marks.length-1) goMark(mi+1); else draw();
 }
-function clearMark(){ delete L[M.marks[mi]]; draw(); }
+function clearMark(){ delete L[M.marks[mi]]; dirty=true; draw(); }
 function save(){
   const rows=M.marks.filter(y=>y in L)
     .map(y=>({yard:y,frame:L[y],t:+tOf(L[y]).toFixed(4)}));
-  fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({run:R,labels:rows})})
+  const at=R;
+  return fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({run:at,labels:rows})})
    .then(r=>r.json()).then(j=>{
+     dirty=false;
      $('msg').textContent=`saved ${j.n} marks · ${j.total} rows in ${j.path}`;
-     P[R].done=rows.length;
+     if(P[at]) P[at].done=rows.length;
    });
 }
 $('pick').onchange=e=>open(+e.target.value);
@@ -201,7 +211,7 @@ $('todo').onclick=()=>{
 };
 $('set').onclick=setMark;
 $('save').onclick=save;
-$('clear').onclick=()=>{L={};draw();};
+$('clear').onclick=()=>{L={};dirty=true;draw();};
 sl.oninput=()=>show(+sl.value);
 $('ov').onchange=()=>show(i);
 $('wrap').onclick=e=>{
@@ -211,6 +221,13 @@ $('wrap').onclick=e=>{
     (100*(e.clientX-r.left)/r.width)+'% '+(100*(e.clientY-r.top)/r.height)+'%';
   img.style.transform=zoom?'scale(2.6)':'none';
 };
+addEventListener('pagehide',()=>{
+  if(!dirty||R==null) return;
+  const rows=M.marks.filter(y=>y in L)
+    .map(y=>({yard:y,frame:L[y],t:+tOf(L[y]).toFixed(4)}));
+  navigator.sendBeacon('/api/save', new Blob(
+    [JSON.stringify({run:R,labels:rows})],{type:'application/json'}));
+});
 addEventListener('keydown',e=>{
   if(e.target.tagName==='SELECT') return;
   const k=e.key;
@@ -231,8 +248,13 @@ addEventListener('keydown',e=>{
 """
 
 
-def _safe(x):
+TEXT_COLS = {"player_name"}
+
+
+def _safe(col, x):
     s = "" if x is None or (isinstance(x, float) and x != x) else str(x)
+    if col not in TEXT_COLS:
+        return s
     return "'" + s if s[:1] and s[0] in "=+-@\t\r" else s
 
 
@@ -243,7 +265,10 @@ def load_runs(plan: pd.DataFrame, root: pathlib.Path) -> list[dict]:
         if not (d / "meta.json").exists():
             print(f"skip {d.name}: not extracted", file=sys.stderr)
             continue
-        runs.append({"dir": d, "meta": json.loads((d / "meta.json").read_text())})
+        m = json.loads((d / "meta.json").read_text())
+        if "t_zero_panel" in m:
+            m["t_zero"] = m["t_zero_panel"]
+        runs.append({"dir": d, "meta": m})
     return runs
 
 
@@ -413,7 +438,7 @@ class H(BaseHTTPRequestHandler):
             w = csv.writer(buf)
             w.writerow(COLS)
             for r in out.itertuples(index=False):
-                w.writerow([_safe(v) for v in r])
+                w.writerow([_safe(c, v) for c, v in zip(COLS, r)])
             OUT.parent.mkdir(parents=True, exist_ok=True)
             OUT.write_text(buf.getvalue())
         self._json({"n": len(rows), "total": len(out), "path": str(OUT)})
