@@ -7,9 +7,11 @@ pose channels (trunk lean, hip height, joint angles, stride) at 29.97 Hz. Every
 series spans the on-screen clock, from the frame just before it starts to the frame
 just after it stops.
 
-- 11 videos → 303 runs detected → **245 kept** (156 athletes), 56 rejected by
+- 11 videos → 303 runs detected → **254 kept** (161 athletes), 47 rejected by
   quality control, 2 excluded (a QB).
-- At least 23 athletes per class on each side of the train/test split.
+- At least 24 athletes per class on each side of the train/test split.
+- Distances are calibrated on the field's painted yard lines: they agree with our
+  lane coordinate to a median 0.16 yd over the whole 40.
 - Every value is measured from the video. No external timing data is used.
 
 ## Classes
@@ -30,11 +32,11 @@ session is dropped.
 
 | Class | Athletes | Train: runs / athletes | Test: runs / athletes |
 |---|---|---|---|
-| `SKILL` | 58 | 45 / 29 | 46 / 29 |
-| `STRONG` | 52 | 40 / 26 | 41 / 26 |
-| `LINEMAN` | 46 | 36 / 23 | 37 / 23 |
+| `SKILL` | 58 | 45 / 29 | 47 / 29 |
+| `STRONG` | 54 | 44 / 27 | 40 / 27 |
+| `LINEMAN` | 49 | 39 / 25 | 39 / 24 |
 
-Kept runs by position: WR 41, CB 32, SAF 18, RB 13, TE 28, LB 15, EDGE 25, OL 51,
+Kept runs by position: WR 42, CB 32, SAF 18, RB 15, TE 29, LB 16, EDGE 24, OL 56,
 DT 22. Most athletes run twice. The split is by athlete, so both attempts land on the
 same side. It is stratified by position within each class and seeded
 (`build_db.py`, `SEED = 2026`).
@@ -48,18 +50,18 @@ stops. The exact start and stop moments therefore fall inside the data.
 | File | One row per | Contents |
 |---|---|---|
 | `data/runs.csv` | detected run (303) | identity, class, split, clock, QC metrics, `status` |
-| `data/series.parquet` (+ `series.csv`) | video frame of a kept run (35k rows, 130–164 per run) | every channel on every frame |
+| `data/series.parquet` (+ `series.csv`) | video frame of a kept run (36k rows, 130–164 per run) | every channel on every frame |
 | `data/series_by_time.parquet` | 1% step of a kept run (101 per run) | the clock window resampled from `phase` 0 (clock start) to 1 (clock stop); `t_clock` and `x_yd` keep the real time and distance |
-| `data/series_by_distance.parquet` | 0.25-yd step of a kept run (≤ 161 per run) | the channels at each yard mark from 0 to 40 yd, with `t_clock` at each |
+| `data/series_by_distance.parquet` | 0.25-yd step of a kept run (157 per run) | the channels at each distance from 0 to 39 yd, with `t_clock` at each |
 
 - **`series.parquet`** is the primary product.
 - **`series_by_time.parquet`** gives every run the same length (101 points),
   which most time-series classifiers need.
 - **`series_by_distance.parquet`** aligns runs by position on the field instead. It
   starts at the start line, which the hip reaches ~0.3 s after the clock starts.
-  - 229 of the 245 runs reach 40 yd by the frame after the stop.
-  - The rest end between 38.5 and 39.75 yd: the clock stops when the torso breaks
-    the beam, a few tenths of a yard before the hip gets there.
+  - It ends at 39 yd. The clock stops when any part of the athlete breaks the
+    beam, while the hip is still ~0.4 yd short of 40.
+  - 253 of the 254 runs span the full 0–39 yd.
 
 In both resampled views, 0/1 channels (`foot_contact`) are resampled by nearest
 frame, not interpolated. Nothing is extrapolated: the stride channels stay empty
@@ -92,13 +94,13 @@ X = grid.pivot(index="run_id", columns="phase", values=channels)
 
 | t_clock | x_yd | v_yds | a_yds2 | trunk_angle | hip_height_ratio | knee_lead | foot_contact | step_len_yd |
 |---|---|---|---|---|---|---|---|---|
-| −0.01 | −1.11 | 2.10 | 10.3 | 80.4 | 0.58 | 109.6 | 1 | – |
-| 0.02 | −1.02 | 2.56 | 10.4 | 64.6 | 0.53 | 82.8 | 1 | – |
-| 0.49 | 1.04 | 6.18 | 4.4 | 35.2 | 0.67 | 123.2 | 0 | 1.19 |
-| 1.66 | 10.28 | 9.07 | 2.6 | 17.5 | 0.78 | 142.4 | 1 | 1.62 |
-| 2.99 | 24.33 | 11.59 | 3.5 | 14.0 | 0.91 | 127.3 | 1 | 2.37 |
-| 4.26 | 39.89 | 10.93 | −12.2 | 24.1 | 1.02 | 85.2 | 0 | – |
-| 4.29 | 40.24 | 10.21 | −13.6 | 25.6 | 1.01 | 109.3 | 0 | – |
+| −0.01 | −1.05 | 1.97 | 9.8 | 80.4 | 0.58 | 109.6 | 1 | – |
+| 0.02 | −0.97 | 2.40 | 9.9 | 64.6 | 0.53 | 82.8 | 0 | – |
+| 0.49 | 0.99 | 5.99 | 4.9 | 35.2 | 0.67 | 123.2 | 0 | 1.11 |
+| 1.66 | 10.06 | 8.98 | 2.6 | 17.5 | 0.78 | 142.4 | 1 | 1.43 |
+| 2.99 | 23.90 | 11.44 | 3.3 | 14.0 | 0.91 | 127.3 | 0 | 2.26 |
+| 4.26 | 39.21 | 10.79 | −11.4 | 24.1 | 1.02 | 85.2 | 0 | – |
+| 4.29 | 39.55 | 10.11 | −12.8 | 25.6 | 1.01 | 109.3 | 0 | – |
 
 The first and last rows are the bracketing frames either side of the clock. The
 clock starts on first movement. At that point the hip is still 1 yd behind the
@@ -140,7 +142,7 @@ pose model swaps sides when the legs cross in a side view.
 | Identity | `run_id`, `video_id`, `group`, `position`, `panel_pos`, `cls`, `athlete` (`<panel code>-<bib>`), `bib`, `attempt`, `split` |
 | Outcome | `status` (`ok` / `rejected` / `excluded` / `duplicate`), `qc_reason` |
 | Clock | `final_time`, `split10` (line groups), `k0` (clip frame where the clock reads 0), `clip_ss`, `clip_frames` |
-| Measured checks | `t_at_10yd`, `t_at_40yd` (hip crossing times; empty when not reached by the stop), `x_at_zero`, `x_at_stop` (hip at the clock start / stop) |
+| Measured checks | `t_at_10yd` (hip crossing time), `x_at_zero`, `x_at_stop` (hip at the clock start / stop), `yardline_resid` (median distance of the painted yard lines from our 5-yd marks) |
 | QC metrics | `clock_resid_p95`, `clock_coverage`, `bib_agree`, `panel_min_corr`, `max_cut`, `turf_min`, `turf_median`, `lane_frac`, `track_frac`, `start_support`, `max_step_yd` |
 
 `final_time` and `split10` are the broadcast's unofficial times. They are
@@ -194,7 +196,8 @@ uv run python src/segment.py       # 2. clock scan, runs, frame-accurate clock -
 uv run python src/positions.py     # 3. panel position code per run -> data/panel_positions.csv
 uv run python src/extract.py       # 4. pose + lane on every frame -> cache/frames/<run_id>.pkl
 uv run python src/build_db.py      # 5. tracking, yardage, channels, QC, split -> data/
-uv run python src/baseline.py      # 6. 1-NN sanity check per channel group
+uv run python src/calibrate.py     # 6. check the dash period against the painted yard lines
+uv run python src/baseline.py      # 7. 1-NN sanity check per channel group
 ```
 
 | Step | Time (Apple silicon) | Notes |
@@ -202,8 +205,9 @@ uv run python src/baseline.py      # 6. 1-NN sanity check per channel group
 | `download.py` | network-bound (~3.5 GB) | retries alternate YouTube clients when one returns 403 |
 | `segment.py` | ~1 min per video | `--videos=id1,id2` to limit; ids starting with `-` need the `=` form |
 | `positions.py` | ~1.5 min | `harvest` / `label` subcommands rebuild the templates |
-| `extract.py` | ~25 s per run, ~2 h for 303 | resumable; run two workers on disjoint `--videos` to halve it; `--lane-only` recomputes lanes without rerunning pose |
+| `extract.py` | ~25 s per run, ~2 h for 303 | resumable; run two workers on disjoint `--videos` to halve it; `--lane-only --workers 6` recomputes lanes and yard lines on the cache without rerunning pose (~20 min) |
 | `build_db.py` | ~10 s | everything downstream of the cache, so method changes rerun in seconds |
+| `calibrate.py` | ~30 s | fits yards per dash period from every yard-line crossing, overall and per video |
 
 The digit and position templates are committed. To rebuild them, run
 `panel.py harvest` or `positions.py harvest`, which writes a sheet of cluster
@@ -250,12 +254,13 @@ dataset keeps the clock window plus one frame either side.
 ### Position: the black lane marks
 
 The lane is a white strip with two staggered rows of black dashes at a constant
-spacing, one period. The period is 2.0 yd (see Checks). Position is measured
-against these marks on every frame (`lane.py`, `yardage.py`):
+spacing, one period. The period is 1.8 m (1.9685 yd; see Checks). Position is
+measured against these marks on every frame (`lane.py`, `yardage.py`):
 
-1. **Dashes.** Dark elongated blobs surrounded by white lane are the dashes. Their
-   shared angle is the lane direction. Transverse dark marks are kept as
-   start-line candidates.
+1. **Dashes and yard lines.** Dark elongated blobs surrounded by white lane are the
+   dashes. Their shared angle is the lane direction. Transverse dark marks are kept
+   as start-line candidates. The field's painted yard lines are found too: long
+   white Hough lines on the turf, crossing the lane direction.
 2. **Rows.** Two RANSAC lines split the dashes into the near and far row. Pieces of
    one dash cut by a leg or tripod are merged.
 3. **Per-frame lattice.** Each row's dashes are indexed along the row, and an exact
@@ -265,15 +270,19 @@ against these marks on every frame (`lane.py`, `yardage.py`):
 4. **Same index across frames.** Per-frame indices have an arbitrary offset. Offsets
    are chained on the rule that the camera moves less than half a period per frame.
    A second pass then removes any slip on the far row: the runner cannot move a
-   whole period (2 yd) in one frame.
+   whole period (~2 yd) in one frame.
 5. **Across the lane.** The runner runs along the far row, so that row's map carries
-   the measurement. Pairing the rows gives the rung direction, the image of a line
-   across the lane. It is ill-conditioned on a single frame, because the rows are
-   close and nearly parallel. It is smooth over time, because the camera pans
-   smoothly. So it is tracked with continuity, then median- and
-   Savitzky–Golay-smoothed.
+   the measurement. A rung is the image of a line across the lane.
+   - **Direction:** the painted yard lines are exactly that. Where they meet the far
+     row, their angle is fitted linearly along the row and read at the runner, then
+     median- and Savitzky–Golay-smoothed over time. They are found on ~96% of
+     frames.
+   - **Length:** the rung ends on the near row's line.
+   - An earlier version paired the two dash rows to get the direction. That was off
+     by 13–30°, because a small error in the rows' stagger swings it.
 6. **Zero.** The start line is the cross-lane mark seen at the runner's hands at
-   the clock start.
+   the clock start, measured where it crosses the far row. It coincides with a
+   painted yard line (the goal line).
 7. **Measured point.** The ground point straight below the hip centre. It is solved
    as the lane position whose rung, at the runner's lateral line, lies under the
    hip in the image. The runner's lateral line is the median across-lane position
@@ -284,6 +293,14 @@ against these marks on every frame (`lane.py`, `yardage.py`):
 
 The result is independent in every frame: nothing is integrated over time, so
 errors do not accumulate. The clock is never used to scale distance.
+
+**Scale.** The dash period is the lane's own unit. Its length in yards comes from
+the painted yard lines, which are 5 yd apart, with the start line on one of them.
+`calibrate.py` places every yard line that crosses the far row in lane periods and
+fits the scale. Over 50k crossings it gives 1.9679 yd (1.7995 m) per period; the
+per-video fits run from 1.9655 to 1.9698. That is a 1.8 m layout, used exactly:
+`YD_PER_PERIOD = 1.8 / 0.9144` in `features.py`. An earlier assumption of 2.0 yd
+put the 40-yd mark about 0.9 yd short at the finish.
 
 ### Pose and tracking
 
@@ -325,15 +342,17 @@ either side. A transition that ends before that window does not reject a run.
 | Clock | fit residual p95 ≤ 0.025 s; clock read on ≥ 60% of run frames; bib agreement ≥ 80% |
 | Measurement | lane on ≥ 90% and runner on ≥ 90% of run frames; start line seen on ≥ 5 frames; no single-frame jump over 0.8 yd |
 | Consistency | hip within 1.5 yd of 40 at the clock stop; hip between −2.2 and 0.1 yd at the clock start |
+| Reported only | `yardline_resid`: median distance of the painted yard lines from our 5-yd marks |
 | Identity | panel position code matches the session group |
 
-The 56 rejections break down as:
+The 47 rejections break down as:
 
 | Cause | Runs |
 |---|---|
 | Non-standard view | 27 |
-| Clock stop disagrees with the measured distance | 22 |
-| Lane or runner lost | 6 |
+| Clock stop disagrees with the measured distance | 17 |
+| Lane or runner lost | 1 |
+| Hip out of range at the start | 1 |
 | Clock residual | 1 |
 
 - **Non-standard view.** Split screens with the commentators (for example the end of
@@ -343,18 +362,27 @@ The 56 rejections break down as:
 
 ## Checks
 
-- **Scale.** One dash period = 2.0 yd is fixed, not fitted. At the clock stop the
-  hip is at 40.31 ± 0.31 yd over all kept runs, and every position lands between
-  40.15 and 40.49. The +0.3 yd is about one frame of clock latency at top speed.
-- **Held-out 10-yd split.** The panel split is never an input. Over 37 lineman runs
-  the hip crosses 10 yd +0.103 ± 0.034 s after it. That is the torso breaking the
-  beam about 0.6 yd ahead of the hip at 45° lean.
+- **Painted yard lines.** They are the calibration target, and also a per-run
+  check (`yardline_resid`): a median 0.16 yd per run (p90 0.20).
+  - The residual is flat along the run: medians at the 15, 25, 30 and 35 lines lie
+    within ±0.1 yd.
+  - Lines at 10/20/30/40 yd share their spot with the painted distance mats and
+    field numbers, whose white edges add false detections. That inflates the spread,
+    not the medians.
+- **Stop position.** The clock is not used for scale. At the clock stop the hip is
+  at 39.60 ± 0.24 yd over all kept runs. Every position lands between 39.48 and
+  39.71, with sd 0.12–0.17 (OL 0.39). This is expected: the timer stops when any
+  part of the athlete breaks the beam, and the leading body parts are a few tenths
+  of a yard ahead of the hip.
+- **Held-out 10-yd split.** The panel split is never an input. Over 39 lineman runs
+  the hip crosses 10 yd +0.128 ± 0.024 s after it. Leaning ~45° at that point, the
+  head and shoulders break the beam well ahead of the hip.
 - **Physics, from class medians on the distance grid.**
-  - Top speed: SKILL 11.9 yd/s (10.9 m/s), STRONG slightly lower, LINEMAN ~10 yd/s.
-  - Trunk lean falls from ~45° to ~10° in every class. At the same distance, linemen
-    are more upright than SKILL players.
-  - `hip_height_ratio` rises from 0.62 to 1.02, nearly the same in every class.
-  - Step length at top speed: 2.4–2.6 yd.
+  - Top speed: SKILL 11.7 yd/s (10.7 m/s), STRONG 11.3, LINEMAN 10.1.
+  - Trunk lean falls from ~40–44° at 1 yd to 10–13° at 30 yd in every class.
+    Linemen are the most upright.
+  - `hip_height_ratio` rises from ~0.63 to ~1.02, nearly the same in every class.
+  - Step length from 30 to 39 yd: 2.4 yd (LINEMAN) to 2.5 yd (SKILL, STRONG).
 - **Visual.** The contact sheets and videos above, spot-checked on random kept runs
   and on every rejection category.
 - **Signal.** 1-NN on the time grid, train → test, per channel group
@@ -362,15 +390,16 @@ The 56 rejections break down as:
 
 | Channels | Accuracy |
 |---|---|
-| progress (`t_clock`, `x_yd`) | 0.81 |
-| velocity + acceleration | 0.66 |
-| trunk angle + hip height | 0.57 |
-| joint angles | 0.47 |
-| stride (frequency, length) | 0.44 |
-| all pose channels | 0.47 |
+| progress (`t_clock`, `x_yd`) | 0.74 |
+| velocity + acceleration | 0.70 |
+| trunk angle + hip height | 0.59 |
+| joint angles | 0.40 |
+| stride (frequency, length) | 0.56 |
+| all pose channels | 0.43 |
 
-Pose separates the classes less than speed does, but well above chance. This is a
-sanity check, not a model.
+Pose separates the classes less than speed does, but above chance. Plain 1-NN
+over all pose channels is weak and moves by several points between builds. This is
+a sanity check, not a model.
 
 ## Limitations
 
@@ -380,11 +409,10 @@ sanity check, not a model.
   viewpoint changes along the run.
 - **Contacts and steps are coarse.** At 29.97 fps a ground contact spans ~3 frames.
   `step_freq_hz` is quantised to 30/n Hz (3.75, 4.29, 5.0, …).
-- **`x_yd` is a mark count.** It is lane periods × 2.0; the dash marks are what is
-  measured. Its zero is the start line, so at the clock start the hip is at −0.95 to
-  −1.75 yd (5th–95th percentile).
-  The start value varies by a few tenths of a yard with the runner's lateral line,
-  which the oblique view at the start makes sensitive.
+- **`x_yd` is a mark count.** It is lane periods × 1.9685; the dash marks are what
+  is measured. Its zero is the start line, so at the clock start the hip is at
+  −1.21 ± 0.16 yd. That start value depends on the runner's lateral line, which the
+  oblique view at the start makes sensitive.
 - **The clock is unofficial.** It is the broadcast's "unofficial times" graphic,
   used as the time base, not the official result.
 
@@ -397,8 +425,9 @@ sanity check, not a model.
 | `src/segment.py` | run detection and frame-accurate clock fit |
 | `src/positions.py` | position code per run |
 | `src/extract.py` | per-frame pose detections, lane geometry and QC signatures, cached |
-| `src/lane.py` | dash detection, row fitting and indexing, 1-D perspective map |
-| `src/yardage.py` | runner tracking, cross-frame indexing, rung smoothing, start line, hip position |
+| `src/lane.py` | dash and yard-line detection, row fitting and indexing, 1-D perspective map |
+| `src/yardage.py` | runner tracking, cross-frame indexing, rung from yard lines, start line, hip position |
+| `src/calibrate.py` | yards per dash period from the painted yard lines |
 | `src/features.py` | per-frame channels |
 | `src/qc.py` | QC metrics and rules |
 | `src/build_db.py` | dataset assembly, duplicates, split, clock-window trim, time and distance grids |

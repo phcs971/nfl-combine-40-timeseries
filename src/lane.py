@@ -52,6 +52,7 @@ class LaneFrame:
     rows: list[Row] = field(default_factory=list)   # [near, far] when both found
     transverse: list[Blob] = field(default_factory=list)
     lane_theta: float = np.nan
+    yard_lines: np.ndarray = field(default_factory=lambda: np.zeros((0, 4), np.float32))  # x0 y0 x1 y1
 
 
 def _blobs(img: np.ndarray, exclude: list[tuple[int, int, int, int]] = ()) -> list[Blob]:
@@ -172,6 +173,19 @@ def _index_row(pts: np.ndarray, blobs: list[Blob]) -> Row | None:
     return Row(c, d, idx[keep] - idx[keep].min(), pts[keep], _fit_proj((idx[keep] - idx[keep].min()).astype(float), u[keep]), resid)
 
 
+def _yard_lines(img: np.ndarray, lane_theta: float) -> np.ndarray:
+    """Long white lines on the turf crossing the lane direction: the field's yard lines."""
+    hsv = cv2.cvtColor(img[:PANEL_Y], cv2.COLOR_BGR2HSV)
+    white = ((hsv[..., 1] < 70) & (hsv[..., 2] > 165)).astype(np.uint8) * 255
+    segs = cv2.HoughLinesP(white, 1, np.pi / 360, threshold=80, minLineLength=160, maxLineGap=12)
+    if segs is None:
+        return np.zeros((0, 4), np.float32)
+    segs = segs.reshape(-1, 4).astype(np.float32)
+    ang = np.degrees(np.arctan2(segs[:, 3] - segs[:, 1], segs[:, 2] - segs[:, 0])) % 180
+    keep = [_ang_diff(a, lane_theta) > 25 for a in ang]
+    return segs[keep]
+
+
 def detect(img: np.ndarray, exclude: list[tuple[int, int, int, int]] = ()) -> LaneFrame:
     blobs = _blobs(img, exclude)
     lf = LaneFrame()
@@ -184,6 +198,7 @@ def detect(img: np.ndarray, exclude: list[tuple[int, int, int, int]] = ()) -> La
     along = [b for b in blobs if _ang_diff(b.theta, lane_theta) < 8]
     lf.lane_theta = float(np.median([b.theta for b in along]))
     lf.transverse = [b for b in blobs if _ang_diff(b.theta, lane_theta) > 25 and b.length > 60]
+    lf.yard_lines = _yard_lines(img, lf.lane_theta)
     pts = np.array([b.c for b in along])
     rows = []
     remaining = np.arange(len(along))

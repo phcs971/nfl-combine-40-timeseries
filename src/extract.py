@@ -6,6 +6,7 @@ used by QC - the panel logo patch and a colour histogram of the scene. Writes ca
 
 import argparse
 import pickle
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 import cv2
@@ -52,12 +53,24 @@ def extract(run: pd.Series, model: YOLO | None, prev: list[dict] | None = None) 
     return out
 
 
+def _lane_only(args) -> str:
+    run, path = args
+    # Local cache written by this script.
+    with open(path, "rb") as f:
+        prev = pickle.load(f)
+    data = extract(run, None, prev)
+    with open(path, "wb") as f:
+        pickle.dump(data, f)
+    return run.run_id
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", default="", help="comma-separated run_ids")
     ap.add_argument("--videos", default="", help="comma-separated video_ids")
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--lane-only", action="store_true", help="recompute lane on cached runs")
+    ap.add_argument("--workers", type=int, default=1, help="processes for --lane-only")
     a = ap.parse_args()
     runs = pd.read_csv(ROOT / "data/runs_raw.csv")
     if a.runs:
@@ -65,19 +78,19 @@ def main() -> None:
     if a.videos:
         runs = runs[runs.video_id.isin(a.videos.split(","))]
     CACHE.mkdir(parents=True, exist_ok=True)
-    model = None if a.lane_only else YOLO(str(MODEL))
+    if a.lane_only:
+        jobs = [(row, CACHE / f"{row.run_id}.pkl") for _, row in runs.iterrows()
+                if (CACHE / f"{row.run_id}.pkl").exists()]
+        with ProcessPoolExecutor(a.workers) as ex:
+            for rid in ex.map(_lane_only, jobs):
+                print(rid, "lane", flush=True)
+        return
+    model = YOLO(str(MODEL))
     for run in runs.itertuples():
         path = CACHE / f"{run.run_id}.pkl"
-        if a.lane_only:
-            if not path.exists():
-                continue
-            # Local cache written by this script.
-            with open(path, "rb") as f:
-                data = extract(pd.Series(run._asdict()), None, pickle.load(f))
-        elif path.exists() and not a.force:
+        if path.exists() and not a.force:
             continue
-        else:
-            data = extract(pd.Series(run._asdict()), model)
+        data = extract(pd.Series(run._asdict()), model)
         with open(path, "wb") as f:
             pickle.dump(data, f)
         print(run.run_id, len(data), "frames", flush=True)

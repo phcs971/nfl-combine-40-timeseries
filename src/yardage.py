@@ -5,8 +5,8 @@ World frame on the ground plane: s runs along the lane in dash periods, w across
 same frame, so nothing accumulates across frames.
 
 Row indices from `lane.detect` are per-frame arbitrary; they are made world-consistent
-by requiring the camera to move less than half a period between frames. The far row
-is tied to the near row, and s=0 fixed, by the start line.
+by requiring the camera to move less than half a period between frames. s=0 is the
+start line on the far row; the cross-lane direction comes from the painted yard lines.
 """
 
 import pickle
@@ -76,31 +76,26 @@ class Rails:
     """Lane coordinates for one frame, anchored on the far dash row.
 
     The runner runs along the far row, so that row's exact 1-D projective map carries
-    the measurement. The cross-lane (rung) direction and length come from pairing the
-    near row with it; being ill-conditioned per frame, they are passed in smoothed over
-    time when available.
+    the measurement. A rung is the image of a line across the lane: its direction comes
+    from the painted yard lines and it ends on the near row's line.
     """
     near: Row
     far: Row
-    on: float   # world s = near index + on
-    of: float   # world s = far index + of
-    theta: float | None = None   # rung angle from the lane direction, deg, upward
-    length: float | None = None  # rung length near -> far, px
-
-    def pn(self, s):
-        return self.near.point(np.atleast_1d(np.asarray(s, float)) - self.on)
+    of: float     # world s = far index + of
+    theta: float  # rung angle from the lane direction, deg, upward
 
     def pf(self, s):
         return self.far.point(np.atleast_1d(np.asarray(s, float)) - self.of)
 
     def rung(self, s) -> np.ndarray:
-        if self.theta is None:
-            return self.pf(s) - self.pn(s)
+        """Vector from the near row's line to the far row at s, per s."""
         t = self.far.d
-        up = np.array([t[1], -t[0]])
         th = np.radians(self.theta)
-        v = self.length * (np.cos(th) * t + np.sin(th) * up)
-        return np.broadcast_to(v, (len(np.atleast_1d(s)), 2))
+        d = np.cos(th) * t + np.sin(th) * np.array([t[1], -t[0]])
+        P = self.pf(s)
+        M = np.array([d, -self.near.d]).T
+        tt = (np.linalg.inv(M) @ (self.near.p0 - P).T)[0]
+        return -tt[:, None] * d
 
     def point(self, s, w) -> np.ndarray:
         s = np.atleast_1d(np.asarray(s, float))
@@ -145,11 +140,46 @@ class Rails:
         return float(-np.degrees(np.arctan2(t[0] * d[1] - t[1] * d[0], t @ d)))
 
 
-def rails(fr_k: dict, off_k: np.ndarray, pair: float, theta=None, length=None) -> Rails | None:
+def rails(fr_k: dict, off_k: np.ndarray, theta: float) -> Rails | None:
     rows = _rows(fr_k["lane"])
-    if rows is None or np.isnan(off_k).any():
+    if rows is None or np.isnan(off_k[1]) or np.isnan(theta):
         return None
-    return Rails(rows[0], rows[1], float(off_k[0]), float(off_k[1] + pair), theta, length)
+    return Rails(rows[0], rows[1], float(off_k[1]), float(theta))
+
+
+def yard_line_hits(lf: LaneFrame, far: Row) -> np.ndarray:
+    """Painted yard lines where they meet the far row: (u along the row, angle), one per line."""
+    t = far.d
+    hits = []
+    for x0, y0, x1, y1 in lf.yard_lines:
+        a, b = np.array([x0, y0], float), np.array([x1, y1], float)
+        d = (b - a) / np.linalg.norm(b - a)
+        p = intersect(a, d, far.p0, far.d)
+        # A yard line runs down to the lane; other white edges (numbers, logos) rarely do.
+        if p is None or min(np.linalg.norm(a - p), np.linalg.norm(b - p)) > 250:
+            continue
+        v = d if d[1] < 0 else -d
+        hits.append((float(far.u(p)[0]), float(-np.degrees(np.arctan2(t[0] * v[1] - t[1] * v[0], t @ v)))))
+    if not hits:
+        return np.zeros((0, 2))
+    h = np.array(sorted(hits))
+    # Hough returns several segments per painted line.
+    groups = np.split(h, np.nonzero(np.diff(h[:, 0]) > 25)[0] + 1)
+    c = np.array([np.median(g, 0) for g in groups])
+    return c[np.abs(c[:, 1] - np.median(c[:, 1])) < 20]
+
+
+def yard_theta(lf: LaneFrame, far: Row, u_ref: float) -> float:
+    """Rung angle at far-row position u_ref from the painted yard lines, or nan."""
+    c = yard_line_hits(lf, far)
+    if not len(c):
+        return np.nan
+    if len(c) == 1:
+        return float(c[0, 1])
+    # The angle varies smoothly along the row (the lines meet at a vanishing point).
+    slope, icpt = np.polyfit(c[:, 0], c[:, 1], 1)
+    u = np.clip(u_ref, c[:, 0].min() - 300, c[:, 0].max() + 300)
+    return float(slope * u + icpt)
 
 
 def _hands_s(fr: list[dict], off: np.ndarray, trk: "Track", k0: float) -> float:
@@ -166,8 +196,8 @@ def _hands_s(fr: list[dict], off: np.ndarray, trk: "Track", k0: float) -> float:
     return float(np.median(vals)) if vals else np.nan
 
 
-def start_line(fr: list[dict], off: np.ndarray, k0: float, trk: "Track") -> tuple[float, float, int]:
-    """(s of the start line on the near row, far-row pairing offset, support frames)."""
+def start_line(fr: list[dict], off: np.ndarray, k0: float, trk: "Track") -> tuple[float, int]:
+    """(start line s on the far row, support frames)."""
     cands = []
     lo, hi = max(0, int(k0) - 40), min(len(fr), int(k0) + 45)
     for k in range(lo, hi):
@@ -189,9 +219,9 @@ def start_line(fr: list[dict], off: np.ndarray, k0: float, trk: "Track") -> tupl
                 continue
             sn = float(near.s_of_u(near.u(pn)[0])) + off[k, 0]
             sf = float(far.s_of_u(far.u(pf)[0])) + off[k, 1]
-            cands.append((k, sn, sn - sf))
+            cands.append((k, sn, sf))
     if not cands:
-        return np.nan, np.nan, 0
+        return np.nan, 0
     c = np.array(cands)
     # The start line is where the hands are set; other cross-lane marks (the 10-yd
     # timing gate) can be seen in more frames when the stance itself is hidden.
@@ -205,8 +235,8 @@ def start_line(fr: list[dict], off: np.ndarray, k0: float, trk: "Track") -> tupl
         if n > best_n:
             best, best_n = m, n
     if best is None:
-        return np.nan, np.nan, 0
-    return float(np.median(c[best, 1])), float(np.median(c[best, 2])), best_n
+        return np.nan, 0
+    return float(np.median(c[best, 2])), best_n
 
 
 @dataclass
@@ -293,10 +323,9 @@ def _hip(K: np.ndarray) -> np.ndarray | None:
     return (K[L_HIP, :2] + K[R_HIP, :2]) / 2
 
 
-def _far_below(r: Rails, p: np.ndarray) -> float:
+def _far_below(far: Row, of: float, p: np.ndarray) -> float:
     """World s on the far row straight below image point p."""
-    q = _row_at_x(r.far, p[0])
-    return float(r.far.s_of_u(r.far.u(q)[0]) + r.of)
+    return float(far.s_of_u(far.u(_row_at_x(far, p[0]))[0]) + of)
 
 
 def _walk(valid: list[int], start: int):
@@ -304,10 +333,9 @@ def _walk(valid: list[int], start: int):
         yield [k for k in sorted(valid, key=lambda k: abs(k - start)) if (k - start) * step >= 0]
 
 
-def fix_far(fr, off, pair, trk, k_ref) -> np.ndarray:
-    """Remove far-row slips: the runner cannot move a whole period (2 yd) in one frame."""
-    off = off.copy()
-    valid = [k for k in range(len(fr)) if rails(fr[k], off[k], pair) is not None]
+def fix_far(fr, off, trk, k_ref) -> np.ndarray:
+    """Remove far-row slips: the runner cannot move a whole period in one frame."""
+    valid = [k for k in range(len(fr)) if _rows(fr[k]["lane"]) is not None and not np.isnan(off[k, 1])]
     if not valid:
         return off
     start = min(valid, key=lambda k: abs(k - k_ref))
@@ -315,54 +343,16 @@ def fix_far(fr, off, pair, trk, k_ref) -> np.ndarray:
     for ks in _walk(valid, start):
         corr, hist = 0.0, []
         for k in ks:
+            far = _rows(fr[k]["lane"])[1]
             hip = _hip(trk.kpts[k])
             if hip is not None and len(hist) >= 2:
                 hk, hs = np.array(hist[-6:]).T
                 slope, icpt = np.polyfit(hk, hs, 1)
-                pred = slope * k + icpt
-                r = rails(fr[k], off[k] + [0, corr], pair)
-                s0 = _far_below(r, hip)
-                corr += np.round(pred - s0)
+                corr += np.round(slope * k + icpt - _far_below(far, off[k, 1] + corr, hip))
             fixed[k, 1] = off[k, 1] + corr
             if hip is not None:
-                hist.append((k, _far_below(rails(fr[k], fixed[k], pair), hip)))
+                hist.append((k, _far_below(far, fixed[k, 1], hip)))
     return fixed
-
-
-def rung_track(fr, off, pair, trk, k_ref) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Near-row pairing per frame, then the rung angle and length smoothed over time."""
-    n = len(fr)
-    off = off.copy()
-    th = np.full(n, np.nan)
-    ln = np.full(n, np.nan)
-    valid = [k for k in range(n) if rails(fr[k], off[k], pair) is not None]
-    if not valid:
-        return off, th, ln
-    start = min(valid, key=lambda k: abs(k - k_ref))
-    for ks in _walk(valid, start):
-        prev = None
-        for k in ks:
-            hip = _hip(trk.kpts[k])
-            r0 = rails(fr[k], off[k], pair)
-            s_ref = _far_below(r0, hip) if hip is not None else float(
-                r0.far.s_of_u(r0.far.u(_row_at_x(r0.far, 960.0))[0]) + r0.of)
-            best = None
-            for dn in range(-2, 3):
-                r = rails(fr[k], off[k] + [dn, 0], pair)
-                a = r.rung_angle(s_ref)
-                if not 10 <= a <= 150:
-                    continue
-                cost = abs(a - prev) if prev is not None else abs(dn) * 30
-                if best is None or cost < best[0]:
-                    best = (cost, dn, a, float(np.linalg.norm(r.rung(s_ref)[0])))
-            # A pairing that swings the rung by more than this is a mis-pairing, not a pan.
-            if best is None or (prev is not None and best[0] > 20):
-                continue
-            _, dn, a, L = best
-            off[k, 0] += dn
-            th[k], ln[k] = a, L
-            prev = a
-    return off, _robust_smooth(th), _robust_smooth(ln)
 
 
 def _robust_smooth(x: np.ndarray, med: int = 9, win: int = 15, hold: int = 15) -> np.ndarray:
@@ -380,20 +370,45 @@ def _robust_smooth(x: np.ndarray, med: int = 9, win: int = 15, hold: int = 15) -
     return y
 
 
+def yard_rungs(fr: list[dict], off: np.ndarray, trk: "Track") -> tuple[np.ndarray, np.ndarray]:
+    """Per-frame rung angle at the runner from the yard lines, raw and smoothed over time."""
+    n = len(fr)
+    raw = np.full(n, np.nan)
+    for k in range(n):
+        rows = _rows(fr[k]["lane"])
+        if rows is None or np.isnan(off[k, 1]):
+            continue
+        far = rows[1]
+        hip = _hip(trk.kpts[k])
+        u_ref = far.u(_row_at_x(far, hip[0] if hip is not None else 960.0))[0]
+        raw[k] = yard_theta(fr[k]["lane"], far, u_ref)
+    return raw, _robust_smooth(raw)
+
+
+def yard_line_positions(m: dict) -> list[tuple[int, float]]:
+    """(frame, s from the start line) of every painted yard line crossing the far row."""
+    out = []
+    for k, R in enumerate(m["rails"]):
+        if R is None:
+            continue
+        for u, _ in yard_line_hits(m["fr"][k]["lane"], R.far):
+            out.append((k, float(R.far.s_of_u(u) + R.of - m["s_start"])))
+    return out
+
+
 def measure(run_id: str, k0: float) -> dict:
     fr = load(run_id)
     n = len(fr)
     off = unwrap(fr)
     trk = track_runner(fr, k0)
-    s_start, pair, support = start_line(fr, off, k0, trk)
+    off = fix_far(fr, off, trk, int(k0) - 5)
+    s_start, support = start_line(fr, off, k0, trk)
+    th_raw, th = yard_rungs(fr, off, trk)
     R = [None] * n
-    th = ln = np.full(n, np.nan)
-    if not np.isnan(pair):
-        off = fix_far(fr, off, pair, trk, int(k0) - 5)
-        off, th, ln = rung_track(fr, off, pair, trk, int(k0) - 5)
+    if not np.isnan(s_start):
         for k in range(n):
             if not np.isnan(th[k]):
-                R[k] = rails(fr[k], off[k], pair, th[k], ln[k])
+                R[k] = rails(fr[k], off[k], th[k])
     # Lateral line of the run from the ankles over the whole run (runners hold a line).
     w_ank = [R[k].s_through(trk.kpts[k, j, :2])[1] for k in range(n) if R[k] is not None
              for j in (L_ANK, R_ANK) if trk.kpts[k, j, 2] > KP_MIN]
@@ -410,5 +425,5 @@ def measure(run_id: str, k0: float) -> dict:
         filled = np.interp(idx, idx[ok], s[ok])
         med = np.array([np.median(filled[max(0, i - 3):i + 4]) for i in range(n)])
         s[ok & (np.abs(s - med) > SPIKE)] = np.nan
-    return dict(fr=fr, off=off, s_start=s_start, pair=pair, start_support=support,
-                track=trk, rails=R, w_run=w_run, s=s, rung_theta=th, rung_len=ln)
+    return dict(fr=fr, off=off, s_start=s_start, start_support=support,
+                track=trk, rails=R, w_run=w_run, s=s, rung_theta=th, rung_theta_raw=th_raw)

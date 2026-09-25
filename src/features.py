@@ -11,7 +11,8 @@ from scipy.signal import savgol_filter
 
 from yardage import FPS, KP_MIN, L_ANK, L_HIP, L_SHO, L_WRI, R_ANK, R_HIP, R_SHO, R_WRI
 
-YD_PER_PERIOD = 2.0
+# The dashes are 1.8 m apart; calibrate.py fits 1.7995 m from the field's yard lines.
+YD_PER_PERIOD = 1.8 / 0.9144
 L_ELB, R_ELB, L_KNE, R_KNE = 7, 8, 13, 14
 MAX_GAP = 4
 

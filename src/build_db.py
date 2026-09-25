@@ -17,7 +17,8 @@ CLASS = {"skill": "SKILL", "strong": "STRONG", "line": "LINEMAN"}
 GROUP = {"WR": "WR", "CB": "DB", "SAF": "DB", "RB": "RB", "TE": "TE", "LB": "LB",
          "EDGE": "DL", "DT": "DL", "OT|G|C": "OL"}
 POSITION = {"OT|G|C": "OL"}
-GRID = np.round(np.arange(0, 40.0001, 0.25), 2)
+# The hip is ~0.4 yd short of 40 when the torso stops the clock; 39 yd is reached by every run.
+GRID = np.round(np.arange(0, 39.0001, 0.25), 2)
 SEED = 2026
 PHASES = 101
 
@@ -168,13 +169,12 @@ def main() -> None:
     # Held-out check: panel 10-yd split vs the time the measured hip crosses 10 yd.
     cross = dist[dist.x_yd == 10.0].set_index("run_id").t_clock
     runs["t_at_10yd"] = runs.run_id.map(cross)
-    runs["t_at_40yd"] = runs.run_id.map(dist[dist.x_yd == 40.0].set_index("run_id").t_clock)
 
     cols = ["run_id", "video_id", "group", "position", "panel_pos", "cls", "athlete", "bib", "attempt", "split",
-            "status", "qc_reason", "final_time", "split10", "t_at_10yd", "t_at_40yd",
+            "status", "qc_reason", "final_time", "split10", "t_at_10yd",
             "clip_ss", "clip_frames", "k0", "clock_resid_p95", "clock_coverage", "bib_agree",
             "panel_min_corr", "max_cut", "turf_min", "turf_median", "lane_frac", "track_frac", "start_support",
-            "x_at_zero", "x_at_stop", "max_step_yd"]
+            "x_at_zero", "x_at_stop", "max_step_yd", "yardline_resid"]
     runs = runs.sort_values("run_id")[cols]
     for c in runs.select_dtypes("float").columns:
         runs[c] = runs[c].round(4)

@@ -48,7 +48,7 @@ def main() -> None:
         key, grid = "phase", np.round(np.linspace(0, 1, 101), 3)
     else:
         data = pd.read_parquet(ROOT / "data/series_by_distance.parquet")
-        key, grid = "x_yd", np.round(np.arange(0, 40.0001, 0.25), 2)
+        key, grid = "x_yd", np.round(np.arange(0, 39.0001, 0.25), 2)
     tr, te = runs[runs.split == "train"], runs[runs.split == "test"]
     print(f"{a.grid} grid: train {len(tr)} runs / test {len(te)} runs")
     for name, cols in GROUPS.items():

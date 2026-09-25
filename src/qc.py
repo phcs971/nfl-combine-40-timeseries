@@ -4,7 +4,8 @@ import cv2
 import numpy as np
 import pandas as pd
 
-from yardage import FPS
+from features import YD_PER_PERIOD
+from yardage import FPS, yard_line_positions
 
 RULES = {
     "clock_resid_p95": ("<=", 0.025),
@@ -84,7 +85,15 @@ def metrics(run: pd.Series, m: dict, df: pd.DataFrame, logo_ref: np.ndarray) -> 
         x_at_stop=_at(ok, kf),
         x_at_zero=_at(ok, k0),
         max_step_yd=float(np.abs(np.diff(ok.values) / np.diff(ok.index)).max()) if len(ok) > 1 else np.nan,
+        yardline_resid=_yardline_resid(m),
     )
+
+
+def _yardline_resid(m: dict) -> float:
+    """Median distance (yd) from painted yard lines to the nearest 5-yd mark of our scale."""
+    yd = np.array([s for _, s in yard_line_positions(m)]) * YD_PER_PERIOD
+    yd = yd[(yd > 2) & (yd < 38)]
+    return float(np.median(np.abs(yd - 5 * np.round(yd / 5)))) if len(yd) else np.nan
 
 
 def verdict(mt: dict) -> tuple[bool, str]:
