@@ -3,6 +3,7 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/phcs971/nfl-combine-40-timeseries/blob/main/notebooks/quickstart.ipynb)
 ![Data: CC BY 4.0](https://img.shields.io/badge/data-CC%20BY%204.0-blue)
 ![Code: MIT](https://img.shields.io/badge/code-MIT-green)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22983135.svg)](https://doi.org/10.5281/zenodo.22983135)
 
 Per-frame multivariate time series of every 40-yard dash in the 2026 NFL Scouting
 Combine broadcasts, labelled with one of three position classes, for time-series
@@ -479,8 +480,11 @@ local and are gitignored.
 
 ## How to cite
 
-Cite the dataset using [`CITATION.cff`](CITATION.cff); GitHub's *Cite this
-repository* button produces APA and BibTeX from it.
+Cite the dataset with its DOI, [10.5281/zenodo.22983135](https://doi.org/10.5281/zenodo.22983135).
+That DOI covers all versions and resolves to the latest. For a specific version, use
+its own DOI from Zenodo: 1.0.1 is
+[10.5281/zenodo.22983136](https://doi.org/10.5281/zenodo.22983136). GitHub's *Cite this
+repository* button produces APA and BibTeX from [`CITATION.cff`](CITATION.cff).
 
 ```bibtex
 @dataset{cordeirosoares2026nfl40,
@@ -488,7 +492,8 @@ repository* button produces APA and BibTeX from it.
   title   = {NFL Combine 40-Yard Dash Movement Time Series (2026)},
   year    = {2026},
   version = {1.0.1},
-  url     = {https://github.com/phcs971/nfl-combine-40-timeseries}
+  doi     = {10.5281/zenodo.22983136},
+  url     = {https://doi.org/10.5281/zenodo.22983136}
 }
 ```
 

@@ -23,6 +23,14 @@ contact:
 version: 1.0.1
 date-released: "2026-09-27"
 license: CC-BY-4.0
+doi: 10.5281/zenodo.22983135
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22983135
+    description: All versions (resolves to the latest)
+  - type: doi
+    value: 10.5281/zenodo.22983136
+    description: Version 1.0.1
 repository-code: "https://github.com/phcs971/nfl-combine-40-timeseries"
 url: "https://github.com/phcs971/nfl-combine-40-timeseries"
 keywords:

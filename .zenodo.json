@@ -1,0 +1,28 @@
+{
+  "upload_type": "dataset",
+  "title": "NFL Combine 40-Yard Dash Movement Time Series (2026)",
+  "description": "Per-frame multivariate time series of 276 forty-yard dashes from the 2026 NFL Scouting Combine broadcasts (164 athletes), labelled SKILL, STRONG or LINEMAN. Each run gives position along the lane, velocity, acceleration and pose channels (trunk lean, hip height, joint angles, stride) at 29.97 Hz between the start and stop of the on-screen clock, plus the unofficial 40-yard time. Distances are measured against the lane's dash marks and calibrated on the field's painted yard lines. The NFL broadcast footage is not included. Documentation: README, DATASHEET and datapackage.json in the archive and at https://github.com/phcs971/nfl-combine-40-timeseries.",
+  "creators": [
+    {
+      "name": "Cordeiro Soares, Pedro Henrique",
+      "orcid": "0009-0000-6041-2494"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "keywords": [
+    "time series classification",
+    "sports biomechanics",
+    "sprint",
+    "pose estimation",
+    "NFL Combine",
+    "40-yard dash"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/phcs971/nfl-combine-40-timeseries",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}

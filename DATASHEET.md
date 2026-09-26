@@ -177,7 +177,8 @@ The rules are in `src/qc.py`; failed rules are recorded per run in `qc_reason`.
 ## Distribution
 
 **Where.** The public GitHub repository
-<https://github.com/phcs971/nfl-combine-40-timeseries>. Files can be loaded directly
+<https://github.com/phcs971/nfl-combine-40-timeseries>, archived on Zenodo under
+DOI [10.5281/zenodo.22983135](https://doi.org/10.5281/zenodo.22983135) (all versions). Files can be loaded directly
 from `raw.githubusercontent.com` URLs or opened in Google Colab (see the README).
 
 **Licences.**

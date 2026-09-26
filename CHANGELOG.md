@@ -4,6 +4,13 @@ Versions follow [semantic versioning](https://semver.org/) for the data: a major
 version changes values or columns in a way that breaks comparisons with earlier
 releases; a minor version adds runs or columns; a patch fixes documentation.
 
+## Unreleased
+
+- DOI in `CITATION.cff`, the README and the datasheet: 10.5281/zenodo.22983135 (all
+  versions); 1.0.1 is 10.5281/zenodo.22983136.
+- `.zenodo.json`, so future releases are archived on Zenodo as a dataset rather than
+  software.
+
 ## 1.0.1 — 2026-09-27
 
 Documentation only; the data files are identical to 1.0.0.
