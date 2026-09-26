@@ -1,4 +1,4 @@
-# Never commit copyrighted footage or derived frames
+# Footage, full-resolution frames and renders stay local; docs/img holds the credited README figures
 video/
 frames/
 *.mp4
@@ -15,3 +15,8 @@ __pycache__/
 label/
 cache/
 models/
+
+# README figures (reduced-resolution, credited stills and GIFs)
+!docs/img/
+!docs/img/*.jpg
+!docs/img/*.png

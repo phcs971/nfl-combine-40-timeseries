@@ -1,7 +1,10 @@
 """Read the broadcast lower-third: timing fields (d.dd) and the athlete's bib.
 
 Digits are matched against glyph prototypes harvested from the feed itself
-(`harvest`), labelled once by eye from the sheet it writes (`label`).
+(`harvest`), labelled once by eye from the sheet it writes (`label`). The prototypes
+are crops of the broadcast graphic, so only the labels are committed
+(data/templates/glyph_labels.json); `templates` rebuilds them from a local copy of
+the videos.
 """
 
 import argparse
@@ -14,7 +17,11 @@ import cv2
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-TEMPLATES = ROOT / "data/glyph_templates.npz"
+TEMPLATES = ROOT / "cache/templates/glyph_templates.npz"
+LABELS = ROOT / "data/templates/glyph_labels.json"
+# The harvest is deterministic for these videos and settings, so the committed labels apply.
+HARVEST_VIDEOS = ["0r_usy_GIAI", "-zgIolzsJxY", "UcatZ1FYe5E", "g__zmhX838U"]
+HARVEST_FPS = 1.0
 
 W, H = 1920, 1080
 BAND_Y0, BAND_Y1 = 800, 976
@@ -235,6 +242,7 @@ def label(proto_path: Path, labels_json: Path) -> None:
     z = np.load(proto_path)
     lab = json.loads(labels_json.read_text())
     tl, bl = np.array(lab["time"]), np.array(lab["bib"])
+    TEMPLATES.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(TEMPLATES, time_vec=z["time_vec"][:len(tl)], time_lab=tl,
                         bib_vec=z["bib_vec"][:len(bl)], bib_lab=bl)
     print(f"wrote {TEMPLATES}")
@@ -250,8 +258,13 @@ if __name__ == "__main__":
     l = sub.add_parser("label")
     l.add_argument("protos", type=Path)
     l.add_argument("labels", type=Path)
+    sub.add_parser("templates", help="harvest the fixed videos and apply the committed labels")
     a = ap.parse_args()
     if a.cmd == "harvest":
         harvest(a.videos, a.out, a.fps)
-    else:
+    elif a.cmd == "label":
         label(a.protos, a.labels)
+    else:
+        out = ROOT / "cache/glyphs"
+        harvest([str(ROOT / "video" / f"{v}.mp4") for v in HARVEST_VIDEOS], out, HARVEST_FPS)
+        label(out / "protos.npz", LABELS)

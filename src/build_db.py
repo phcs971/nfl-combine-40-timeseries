@@ -170,8 +170,9 @@ def main() -> None:
     cross = dist[dist.x_yd == 10.0].set_index("run_id").t_clock
     runs["t_at_10yd"] = runs.run_id.map(cross)
 
+    runs = runs.rename(columns={"final_time": "time_40yd", "split10": "time_10yd"})
     cols = ["run_id", "video_id", "group", "position", "panel_pos", "cls", "athlete", "bib", "attempt", "split",
-            "status", "qc_reason", "final_time", "split10", "t_at_10yd",
+            "status", "qc_reason", "time_40yd", "time_10yd", "t_at_10yd",
             "clip_ss", "clip_frames", "k0", "clock_resid_p95", "clock_coverage", "bib_agree",
             "panel_min_corr", "max_cut", "turf_min", "turf_median", "lane_frac", "track_frac", "start_support",
             "x_at_zero", "x_at_stop", "max_step_yd", "yardline_resid"]

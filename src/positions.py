@@ -1,9 +1,11 @@
 """Read the position code on the panel for every run (the group video can include
 other positions, e.g. a QB in a WR session).
 
-`harvest` clusters the code patches and writes a sheet to label once;
-`label` stores the labelled prototypes; the default command classifies every run
-into data/panel_positions.csv.
+`harvest` clusters the code patches and writes a sheet to label once; `label` stores
+the labelled prototypes; `templates` does both with the committed labels
+(data/templates/position_labels.json); the default command classifies every run
+into data/panel_positions.csv. The prototypes are crops of the broadcast graphic and
+stay local.
 """
 
 import argparse
@@ -17,7 +19,8 @@ import pandas as pd
 from panel import BAND, frames, position_patch
 
 ROOT = Path(__file__).resolve().parents[1]
-TEMPLATES = ROOT / "data/position_templates.npz"
+TEMPLATES = ROOT / "cache/templates/position_templates.npz"
+LABELS = ROOT / "data/templates/position_labels.json"
 
 
 def run_patch(video: Path, t_origin: float) -> np.ndarray | None:
@@ -42,11 +45,11 @@ def all_patches() -> tuple[pd.DataFrame, np.ndarray]:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", nargs="?", default="classify", choices=["harvest", "label", "classify"])
+    ap.add_argument("cmd", nargs="?", default="classify", choices=["harvest", "label", "templates", "classify"])
     ap.add_argument("--out", type=Path, default=ROOT / "cache/positions")
-    ap.add_argument("--labels", type=Path)
+    ap.add_argument("--labels", type=Path, default=LABELS)
     a = ap.parse_args()
-    if a.cmd == "harvest":
+    if a.cmd in ("harvest", "templates"):
         runs, P = all_patches()
         cents, members = [], []
         for i, v in enumerate(P):
@@ -67,10 +70,11 @@ def main() -> None:
             tiles.append(t)
         cv2.imwrite(str(a.out / "sheet.png"), np.vstack(tiles))
         print(f"{len(P)} runs -> {len(cents)} prototypes")
-    elif a.cmd == "label":
+    if a.cmd in ("label", "templates"):
         z = np.load(a.out / "protos.npz")
+        TEMPLATES.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(TEMPLATES, vec=z["vec"], code=np.array(json.loads(a.labels.read_text())))
-    else:
+    if a.cmd == "classify":
         z = np.load(TEMPLATES)
         runs, P = all_patches()
         s = P @ z["vec"].T

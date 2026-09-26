@@ -31,14 +31,24 @@ def scan(video: Path, reader: Reader) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=["t", "x", "value", "bib"])
 
 
-def _slot(x: pd.Series) -> pd.Series:
-    return (x / 40).round().astype(int)
+def _slots(x: pd.Series, tol: float = 30) -> pd.Series:
+    """Label each field position by its cluster's median x. A field's centre jitters by
+    a few pixels with its digits (a "1" is narrower), so fixed bins would split it."""
+    xs = np.sort(x.unique())
+    groups = np.split(xs, np.nonzero(np.diff(xs) > tol)[0] + 1)
+    label = {v: int(np.median(g)) for g in groups for v in g}
+    return x.map(label)
+
+
+def _field(fields: list[tuple[int, float | None]], x0: float | None, tol: float = 30) -> float | None:
+    near = [v for x, v in fields if x0 is not None and abs(x - x0) < tol]
+    return near[0] if near else None
 
 
 def find_runs(sc: pd.DataFrame) -> list[dict]:
     """Counting stretches per slot that freeze on a plausible 40 time."""
     sc = sc.dropna(subset=["value"]).copy()
-    sc["slot"] = _slot(sc.x)
+    sc["slot"] = _slots(sc.x)
     runs = []
     for slot, g in sc.groupby("slot"):
         g = g.sort_values("t").reset_index(drop=True)
@@ -53,12 +63,13 @@ def find_runs(sc: pd.DataFrame) -> list[dict]:
             j = i
             while j + 1 < n and counting[j + 1] and abs(origin[j + 1] - origin[i]) < 0.1:
                 j += 1
-            after = g[(g.t > g.t[j]) & (g.t <= g.t[j] + 1.0)]
-            frozen = after.value.mode()
-            if j - i >= 3 and len(frozen):
+            # The stop is the first value that repeats once counting ends.
+            after = g[(g.t > g.t[j]) & (g.t <= g.t[j] + 1.5)].value.values
+            rep = [a for a, b in zip(after[:-1], after[1:]) if a == b]
+            if j - i >= 3 and rep:
                 runs.append(dict(slot=slot, x=int(g.x[i:j + 1].median()),
                                  t_origin=float(np.median(origin[i:j + 1])),
-                                 final=float(frozen.iloc[0]), t_last=float(g.t[j])))
+                                 final=float(rep[0]), t_last=float(g.t[j])))
             i = j + 1
     dashes = [r for r in runs if 3.9 <= r["final"] <= 6.5]
     for d in dashes:
@@ -78,10 +89,10 @@ def fine(video: Path, reader: Reader, run: dict) -> dict:
     dur = PRE + run["final"] + POST
     k, val, split, bibs = [], [], [], []
     for i, band in frames(video, ss=ss, dur=dur, crop=BAND):
-        fields = dict((int(round(x / 40)), v) for x, v in reader.times(band))
+        fields = reader.times(band)
         k.append(i)
-        val.append(fields.get(run["slot"]))
-        split.append(fields.get(round(run["split_x"] / 40)) if run["split_x"] else None)
+        val.append(_field(fields, run["x"]))
+        split.append(_field(fields, run["split_x"]))
         bibs.append(reader.bib(band))
     k = np.array(k)
     v = np.array([np.nan if x is None else x for x in val])
@@ -111,13 +122,15 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     # Comma-separated: some ids start with "-" and would parse as flags.
     ap.add_argument("--videos", default="")
+    ap.add_argument("--out", type=Path, default=ROOT / "data/runs_raw.csv")
+    ap.add_argument("--scan-dir", type=Path, default=ROOT / "cache/scan")
     a = ap.parse_args()
     videos = pd.read_csv(ROOT / "data/videos.csv")
     if a.videos:
         videos = videos[videos.video_id.isin(a.videos.split(","))]
     reader = Reader()
-    (ROOT / "cache/scan").mkdir(parents=True, exist_ok=True)
-    out_path = ROOT / "data/runs_raw.csv"
+    a.scan_dir.mkdir(parents=True, exist_ok=True)
+    out_path = a.out
     prev = pd.read_csv(out_path) if out_path.exists() else pd.DataFrame()
     rows = []
     for v in videos.itertuples():
@@ -125,7 +138,7 @@ def main() -> None:
         if not path.exists():
             print(v.video_id, "missing video")
             continue
-        scan_path = ROOT / "cache/scan" / f"{v.video_id}.csv"
+        scan_path = a.scan_dir / f"{v.video_id}.csv"
         sc = pd.read_csv(scan_path) if scan_path.exists() else scan(path, reader)
         sc.to_csv(scan_path, index=False)
         runs = find_runs(sc)

@@ -1,0 +1,967 @@
+{
+  "name": "nfl-combine-40-timeseries",
+  "title": "NFL Combine 40-Yard Dash Movement Time Series (2026)",
+  "version": "1.0.0",
+  "created": "2026-09-27",
+  "homepage": "https://github.com/phcs971/nfl-combine-40-timeseries",
+  "description": "Per-frame position, velocity, acceleration and pose time series of 40-yard dashes measured from the 2026 NFL Combine broadcasts, labelled SKILL, STRONG or LINEMAN. See README.md and DATASHEET.md.",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "Pedro Henrique Cordeiro Soares",
+      "role": "author",
+      "email": "phcs.971@gmail.com",
+      "path": "https://orcid.org/0009-0000-6041-2494"
+    }
+  ],
+  "sources": [
+    {
+      "title": "NFL YouTube channel, 2026 NFL Combine 40-yard dash videos (see data/videos.csv)",
+      "path": "https://www.youtube.com/@NFL"
+    }
+  ],
+  "keywords": [
+    "time series classification",
+    "sports biomechanics",
+    "sprint",
+    "pose estimation",
+    "NFL Combine",
+    "40-yard dash"
+  ],
+  "resources": [
+    {
+      "name": "runs",
+      "path": "data/runs.csv",
+      "description": "one row per detected run: identity, class, split, clock times, QC",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 68851,
+      "hash": "sha256:aa886c23114507d5c863d5f326f7040f5e72ea8b819688e9549bfd1fac2b6897",
+      "rows": 326,
+      "schema": {
+        "fields": [
+          {
+            "name": "run_id",
+            "type": "string",
+            "description": "run identifier, <video_id>_<nnn> in clock-start order within the video"
+          },
+          {
+            "name": "video_id",
+            "type": "string",
+            "description": "YouTube video id (see videos.csv)"
+          },
+          {
+            "name": "group",
+            "type": "string",
+            "description": "session name from the video title"
+          },
+          {
+            "name": "position",
+            "type": "string",
+            "description": "session position (WR, CB, SAF, RB, TE, LB, EDGE, OL, DT)"
+          },
+          {
+            "name": "panel_pos",
+            "type": "string",
+            "description": "position code read from the broadcast panel (WR, DB, RB, TE, LB, DL, OL, QB)"
+          },
+          {
+            "name": "cls",
+            "type": "string",
+            "description": "class label: SKILL, STRONG or LINEMAN"
+          },
+          {
+            "name": "athlete",
+            "type": "string",
+            "description": "athlete key <panel_pos>-<bib>; bibs are unique within a position group"
+          },
+          {
+            "name": "bib",
+            "type": "integer",
+            "description": "bib number read from the broadcast panel (majority vote over the run)"
+          },
+          {
+            "name": "attempt",
+            "type": "number",
+            "description": "attempt number of this athlete (1 or 2)"
+          },
+          {
+            "name": "split",
+            "type": "string",
+            "description": "train or test; by athlete, stratified by position within class, seed 2026"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "description": "ok, rejected (failed QC), excluded (not a class position) or duplicate"
+          },
+          {
+            "name": "qc_reason",
+            "type": "string",
+            "description": "QC rules that failed, name=value, separated by ';'"
+          },
+          {
+            "name": "time_40yd",
+            "type": "number",
+            "description": "unofficial 40-yd time: the on-screen clock value when it stops",
+            "unit": "s"
+          },
+          {
+            "name": "time_10yd",
+            "type": "number",
+            "description": "unofficial 10-yd split shown on the panel (line groups only)",
+            "unit": "s"
+          },
+          {
+            "name": "t_at_10yd",
+            "type": "number",
+            "description": "clock time when the measured hip crosses 10 yd",
+            "unit": "s"
+          },
+          {
+            "name": "clip_ss",
+            "type": "number",
+            "description": "video time of the first decoded frame of the run's clip",
+            "unit": "s"
+          },
+          {
+            "name": "clip_frames",
+            "type": "integer",
+            "description": "number of decoded frames in the clip"
+          },
+          {
+            "name": "k0",
+            "type": "number",
+            "description": "clip frame (fractional) where the clock reads 0"
+          },
+          {
+            "name": "clock_resid_p95",
+            "type": "number",
+            "description": "95th percentile |read - fit| of the clock over the run",
+            "unit": "s"
+          },
+          {
+            "name": "clock_coverage",
+            "type": "number",
+            "description": "share of run frames with a clock read",
+            "unit": "1"
+          },
+          {
+            "name": "bib_agree",
+            "type": "number",
+            "description": "share of bib reads agreeing with the majority",
+            "unit": "1"
+          },
+          {
+            "name": "panel_min_corr",
+            "type": "number",
+            "description": "lowest panel-logo correlation with the video's reference",
+            "unit": "1"
+          },
+          {
+            "name": "max_cut",
+            "type": "number",
+            "description": "largest frame-to-frame colour histogram change (Bhattacharyya)",
+            "unit": "1"
+          },
+          {
+            "name": "turf_min",
+            "type": "number",
+            "description": "lowest share of turf-green pixels in a frame",
+            "unit": "1"
+          },
+          {
+            "name": "turf_median",
+            "type": "number",
+            "description": "median share of turf-green pixels",
+            "unit": "1"
+          },
+          {
+            "name": "lane_frac",
+            "type": "number",
+            "description": "share of run frames with a lane measurement",
+            "unit": "1"
+          },
+          {
+            "name": "track_frac",
+            "type": "number",
+            "description": "share of run frames with the runner's position",
+            "unit": "1"
+          },
+          {
+            "name": "start_support",
+            "type": "integer",
+            "description": "frames supporting the start-line detection"
+          },
+          {
+            "name": "x_at_zero",
+            "type": "number",
+            "description": "hip position at the clock start",
+            "unit": "yd"
+          },
+          {
+            "name": "x_at_stop",
+            "type": "number",
+            "description": "hip position at the clock stop",
+            "unit": "yd"
+          },
+          {
+            "name": "max_step_yd",
+            "type": "number",
+            "description": "largest frame-to-frame position change",
+            "unit": "yd"
+          },
+          {
+            "name": "yardline_resid",
+            "type": "number",
+            "description": "median distance of the painted yard lines from the 5-yd marks of our scale",
+            "unit": "yd"
+          }
+        ]
+      }
+    },
+    {
+      "name": "series",
+      "path": "data/series.parquet",
+      "description": "per-frame series of every kept run (primary product)",
+      "format": "parquet",
+      "mediatype": "application/vnd.apache.parquet",
+      "bytes": 2681751,
+      "hash": "sha256:a5acbb09b65d2d604cb9464f55d2c19d50dbd637214ea9afde801efcfe07fd82",
+      "rows": 39308,
+      "schema": {
+        "fields": [
+          {
+            "name": "run_id",
+            "type": "string",
+            "description": "run identifier, <video_id>_<nnn> in clock-start order within the video"
+          },
+          {
+            "name": "frame",
+            "type": "integer",
+            "description": "frame index within the decoded clip of the run"
+          },
+          {
+            "name": "t_clock",
+            "type": "number",
+            "description": "time on the broadcast 40-yd clock at this frame (fitted, sub-frame zero)",
+            "unit": "s"
+          },
+          {
+            "name": "x_yd",
+            "type": "number",
+            "description": "position along the lane of the ground point under the hip centre, from the start line",
+            "unit": "yd"
+          },
+          {
+            "name": "v_yds",
+            "type": "number",
+            "description": "velocity: Savitzky-Golay derivative of x_yd (15 frames)",
+            "unit": "yd/s"
+          },
+          {
+            "name": "a_yds2",
+            "type": "number",
+            "description": "acceleration: Savitzky-Golay second derivative of x_yd (21 frames)",
+            "unit": "yd/s^2"
+          },
+          {
+            "name": "trunk_angle",
+            "type": "number",
+            "description": "shoulder-mid to hip-mid vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_height_ratio",
+            "type": "number",
+            "description": "hip height above the ground point under it / run-median leg length",
+            "unit": "1"
+          },
+          {
+            "name": "knee_lead",
+            "type": "number",
+            "description": "knee angle of the leg further along the lane (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "knee_trail",
+            "type": "number",
+            "description": "knee angle of the rear leg (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_lead",
+            "type": "number",
+            "description": "trunk-thigh angle of the forward leg",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_trail",
+            "type": "number",
+            "description": "trunk-thigh angle of the rear leg",
+            "unit": "deg"
+          },
+          {
+            "name": "shin_angle_lead",
+            "type": "number",
+            "description": "forward leg's shin vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "thigh_sep",
+            "type": "number",
+            "description": "angle between the two thighs",
+            "unit": "deg"
+          },
+          {
+            "name": "elbow_angle",
+            "type": "number",
+            "description": "mean of both elbow angles",
+            "unit": "deg"
+          },
+          {
+            "name": "arm_swing",
+            "type": "number",
+            "description": "fore-aft spread of the two wrists / arm length",
+            "unit": "1"
+          },
+          {
+            "name": "foot_contact",
+            "type": "number",
+            "description": "1 while a foot is planted (ankle stationary along the lane)",
+            "unit": "0/1"
+          },
+          {
+            "name": "step_freq_hz",
+            "type": "number",
+            "description": "1 / time between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "Hz"
+          },
+          {
+            "name": "step_len_yd",
+            "type": "number",
+            "description": "distance between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "yd"
+          },
+          {
+            "name": "valid",
+            "type": "integer",
+            "description": "1 where position and the core pose channels are all measured",
+            "unit": "0/1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "series-csv",
+      "path": "data/series.csv",
+      "description": "CSV copy of series.parquet",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 5210259,
+      "hash": "sha256:e3e0dbc86440ac07ad4890cf07084461a1215a873a9df301abbb7b6a4e0788d0",
+      "rows": 39308,
+      "schema": {
+        "fields": [
+          {
+            "name": "run_id",
+            "type": "string",
+            "description": "run identifier, <video_id>_<nnn> in clock-start order within the video"
+          },
+          {
+            "name": "frame",
+            "type": "integer",
+            "description": "frame index within the decoded clip of the run"
+          },
+          {
+            "name": "t_clock",
+            "type": "number",
+            "description": "time on the broadcast 40-yd clock at this frame (fitted, sub-frame zero)",
+            "unit": "s"
+          },
+          {
+            "name": "x_yd",
+            "type": "number",
+            "description": "position along the lane of the ground point under the hip centre, from the start line",
+            "unit": "yd"
+          },
+          {
+            "name": "v_yds",
+            "type": "number",
+            "description": "velocity: Savitzky-Golay derivative of x_yd (15 frames)",
+            "unit": "yd/s"
+          },
+          {
+            "name": "a_yds2",
+            "type": "number",
+            "description": "acceleration: Savitzky-Golay second derivative of x_yd (21 frames)",
+            "unit": "yd/s^2"
+          },
+          {
+            "name": "trunk_angle",
+            "type": "number",
+            "description": "shoulder-mid to hip-mid vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_height_ratio",
+            "type": "number",
+            "description": "hip height above the ground point under it / run-median leg length",
+            "unit": "1"
+          },
+          {
+            "name": "knee_lead",
+            "type": "number",
+            "description": "knee angle of the leg further along the lane (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "knee_trail",
+            "type": "number",
+            "description": "knee angle of the rear leg (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_lead",
+            "type": "number",
+            "description": "trunk-thigh angle of the forward leg",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_trail",
+            "type": "number",
+            "description": "trunk-thigh angle of the rear leg",
+            "unit": "deg"
+          },
+          {
+            "name": "shin_angle_lead",
+            "type": "number",
+            "description": "forward leg's shin vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "thigh_sep",
+            "type": "number",
+            "description": "angle between the two thighs",
+            "unit": "deg"
+          },
+          {
+            "name": "elbow_angle",
+            "type": "number",
+            "description": "mean of both elbow angles",
+            "unit": "deg"
+          },
+          {
+            "name": "arm_swing",
+            "type": "number",
+            "description": "fore-aft spread of the two wrists / arm length",
+            "unit": "1"
+          },
+          {
+            "name": "foot_contact",
+            "type": "number",
+            "description": "1 while a foot is planted (ankle stationary along the lane)",
+            "unit": "0/1"
+          },
+          {
+            "name": "step_freq_hz",
+            "type": "number",
+            "description": "1 / time between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "Hz"
+          },
+          {
+            "name": "step_len_yd",
+            "type": "number",
+            "description": "distance between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "yd"
+          },
+          {
+            "name": "valid",
+            "type": "integer",
+            "description": "1 where position and the core pose channels are all measured",
+            "unit": "0/1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "series-by-time",
+      "path": "data/series_by_time.parquet",
+      "description": "kept runs resampled to 101 points from clock start to stop",
+      "format": "parquet",
+      "mediatype": "application/vnd.apache.parquet",
+      "bytes": 1961994,
+      "hash": "sha256:5a471367fcc70031dc74b078f0e792cdac243b331a438de01119c59ccde94feb",
+      "rows": 27876,
+      "schema": {
+        "fields": [
+          {
+            "name": "run_id",
+            "type": "string",
+            "description": "run identifier, <video_id>_<nnn> in clock-start order within the video"
+          },
+          {
+            "name": "phase",
+            "type": "number",
+            "description": "fraction of the run: 0 at the clock start, 1 at the clock stop",
+            "unit": "1"
+          },
+          {
+            "name": "t_clock",
+            "type": "number",
+            "description": "time on the broadcast 40-yd clock at this frame (fitted, sub-frame zero)",
+            "unit": "s"
+          },
+          {
+            "name": "x_yd",
+            "type": "number",
+            "description": "position along the lane of the ground point under the hip centre, from the start line",
+            "unit": "yd"
+          },
+          {
+            "name": "v_yds",
+            "type": "number",
+            "description": "velocity: Savitzky-Golay derivative of x_yd (15 frames)",
+            "unit": "yd/s"
+          },
+          {
+            "name": "a_yds2",
+            "type": "number",
+            "description": "acceleration: Savitzky-Golay second derivative of x_yd (21 frames)",
+            "unit": "yd/s^2"
+          },
+          {
+            "name": "trunk_angle",
+            "type": "number",
+            "description": "shoulder-mid to hip-mid vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_height_ratio",
+            "type": "number",
+            "description": "hip height above the ground point under it / run-median leg length",
+            "unit": "1"
+          },
+          {
+            "name": "knee_lead",
+            "type": "number",
+            "description": "knee angle of the leg further along the lane (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "knee_trail",
+            "type": "number",
+            "description": "knee angle of the rear leg (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_lead",
+            "type": "number",
+            "description": "trunk-thigh angle of the forward leg",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_trail",
+            "type": "number",
+            "description": "trunk-thigh angle of the rear leg",
+            "unit": "deg"
+          },
+          {
+            "name": "shin_angle_lead",
+            "type": "number",
+            "description": "forward leg's shin vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "thigh_sep",
+            "type": "number",
+            "description": "angle between the two thighs",
+            "unit": "deg"
+          },
+          {
+            "name": "elbow_angle",
+            "type": "number",
+            "description": "mean of both elbow angles",
+            "unit": "deg"
+          },
+          {
+            "name": "arm_swing",
+            "type": "number",
+            "description": "fore-aft spread of the two wrists / arm length",
+            "unit": "1"
+          },
+          {
+            "name": "foot_contact",
+            "type": "number",
+            "description": "1 while a foot is planted (ankle stationary along the lane)",
+            "unit": "0/1"
+          },
+          {
+            "name": "step_freq_hz",
+            "type": "number",
+            "description": "1 / time between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "Hz"
+          },
+          {
+            "name": "step_len_yd",
+            "type": "number",
+            "description": "distance between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "yd"
+          }
+        ]
+      }
+    },
+    {
+      "name": "series-by-distance",
+      "path": "data/series_by_distance.parquet",
+      "description": "kept runs resampled every 0.25 yd from 0 to 39 yd",
+      "format": "parquet",
+      "mediatype": "application/vnd.apache.parquet",
+      "bytes": 2644255,
+      "hash": "sha256:0812c89b75056475b9299f316cc5fedcc569325c5b58f70eebbbc24f48d7ba3e",
+      "rows": 43328,
+      "schema": {
+        "fields": [
+          {
+            "name": "run_id",
+            "type": "string",
+            "description": "run identifier, <video_id>_<nnn> in clock-start order within the video"
+          },
+          {
+            "name": "x_yd",
+            "type": "number",
+            "description": "position along the lane of the ground point under the hip centre, from the start line",
+            "unit": "yd"
+          },
+          {
+            "name": "t_clock",
+            "type": "number",
+            "description": "time on the broadcast 40-yd clock at this frame (fitted, sub-frame zero)",
+            "unit": "s"
+          },
+          {
+            "name": "v_yds",
+            "type": "number",
+            "description": "velocity: Savitzky-Golay derivative of x_yd (15 frames)",
+            "unit": "yd/s"
+          },
+          {
+            "name": "a_yds2",
+            "type": "number",
+            "description": "acceleration: Savitzky-Golay second derivative of x_yd (21 frames)",
+            "unit": "yd/s^2"
+          },
+          {
+            "name": "trunk_angle",
+            "type": "number",
+            "description": "shoulder-mid to hip-mid vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_height_ratio",
+            "type": "number",
+            "description": "hip height above the ground point under it / run-median leg length",
+            "unit": "1"
+          },
+          {
+            "name": "knee_lead",
+            "type": "number",
+            "description": "knee angle of the leg further along the lane (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "knee_trail",
+            "type": "number",
+            "description": "knee angle of the rear leg (180 = straight)",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_lead",
+            "type": "number",
+            "description": "trunk-thigh angle of the forward leg",
+            "unit": "deg"
+          },
+          {
+            "name": "hip_flex_trail",
+            "type": "number",
+            "description": "trunk-thigh angle of the rear leg",
+            "unit": "deg"
+          },
+          {
+            "name": "shin_angle_lead",
+            "type": "number",
+            "description": "forward leg's shin vs image vertical, positive leaning forward",
+            "unit": "deg"
+          },
+          {
+            "name": "thigh_sep",
+            "type": "number",
+            "description": "angle between the two thighs",
+            "unit": "deg"
+          },
+          {
+            "name": "elbow_angle",
+            "type": "number",
+            "description": "mean of both elbow angles",
+            "unit": "deg"
+          },
+          {
+            "name": "arm_swing",
+            "type": "number",
+            "description": "fore-aft spread of the two wrists / arm length",
+            "unit": "1"
+          },
+          {
+            "name": "foot_contact",
+            "type": "number",
+            "description": "1 while a foot is planted (ankle stationary along the lane)",
+            "unit": "0/1"
+          },
+          {
+            "name": "step_freq_hz",
+            "type": "number",
+            "description": "1 / time between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "Hz"
+          },
+          {
+            "name": "step_len_yd",
+            "type": "number",
+            "description": "distance between successive touchdowns, held until the next; empty before the first stride",
+            "unit": "yd"
+          }
+        ]
+      }
+    },
+    {
+      "name": "videos",
+      "path": "data/videos.csv",
+      "description": "source videos with provenance and file checksums",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 2878,
+      "hash": "sha256:de4a17abebe5ae8eef167197fe3a5583451745b6fd077513762f13ef37bee675",
+      "rows": 11,
+      "schema": {
+        "fields": [
+          {
+            "name": "video_id",
+            "type": "string",
+            "description": "YouTube video id (see videos.csv)"
+          },
+          {
+            "name": "season",
+            "type": "integer",
+            "description": "combine year"
+          },
+          {
+            "name": "group",
+            "type": "string",
+            "description": "session name from the video title"
+          },
+          {
+            "name": "positions",
+            "type": "string",
+            "description": "session positions as listed in videos.csv"
+          },
+          {
+            "name": "cls",
+            "type": "string",
+            "description": "class label: SKILL, STRONG or LINEMAN"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "description": "YouTube title"
+          },
+          {
+            "name": "channel",
+            "type": "string",
+            "description": "YouTube channel"
+          },
+          {
+            "name": "upload_date",
+            "type": "string",
+            "description": "YouTube upload date"
+          },
+          {
+            "name": "duration_s",
+            "type": "integer",
+            "description": "video duration",
+            "unit": "s"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "description": "YouTube URL"
+          },
+          {
+            "name": "width",
+            "type": "integer",
+            "description": "width of the analysed file",
+            "unit": "px"
+          },
+          {
+            "name": "height",
+            "type": "integer",
+            "description": "height of the analysed file",
+            "unit": "px"
+          },
+          {
+            "name": "fps",
+            "type": "string",
+            "description": "frame rate of the analysed file",
+            "unit": "1/s"
+          },
+          {
+            "name": "sha256",
+            "type": "string",
+            "description": "SHA-256 of the analysed video file"
+          }
+        ]
+      }
+    },
+    {
+      "name": "runs-raw",
+      "path": "data/runs_raw.csv",
+      "description": "intermediate: runs found by the clock scan",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 36955,
+      "hash": "sha256:46380a7e87ac29f73c0c8ee47f70c438436859e958be21991859d3561b23326a",
+      "rows": 326,
+      "schema": {
+        "fields": [
+          {
+            "name": "run_id",
+            "type": "string",
+            "description": "run identifier, <video_id>_<nnn> in clock-start order within the video"
+          },
+          {
+            "name": "video_id",
+            "type": "string",
+            "description": "YouTube video id (see videos.csv)"
+          },
+          {
+            "name": "group",
+            "type": "string",
+            "description": "session name from the video title"
+          },
+          {
+            "name": "positions",
+            "type": "string",
+            "description": "session positions as listed in videos.csv"
+          },
+          {
+            "name": "slot",
+            "type": "integer",
+            "description": "x centre of the panel field holding the live clock",
+            "unit": "px"
+          },
+          {
+            "name": "t_origin",
+            "type": "number",
+            "description": "video time of the clock start from the 4 fps scan",
+            "unit": "s"
+          },
+          {
+            "name": "split10_coarse",
+            "type": "number",
+            "description": "10-yd split from the 4 fps scan",
+            "unit": "s"
+          },
+          {
+            "name": "clip_ss",
+            "type": "number",
+            "description": "video time of the first decoded frame of the run's clip",
+            "unit": "s"
+          },
+          {
+            "name": "clip_frames",
+            "type": "integer",
+            "description": "number of decoded frames in the clip"
+          },
+          {
+            "name": "k0",
+            "type": "number",
+            "description": "clip frame (fractional) where the clock reads 0"
+          },
+          {
+            "name": "final_time",
+            "type": "number",
+            "description": "clock value when it stops (published as time_40yd)",
+            "unit": "s"
+          },
+          {
+            "name": "split10",
+            "type": "number",
+            "description": "10-yd split (published as time_10yd)",
+            "unit": "s"
+          },
+          {
+            "name": "clock_resid_p95",
+            "type": "number",
+            "description": "95th percentile |read - fit| of the clock over the run",
+            "unit": "s"
+          },
+          {
+            "name": "clock_monotone",
+            "type": "boolean",
+            "description": "clock reads never decrease over the run"
+          },
+          {
+            "name": "n_clock",
+            "type": "integer",
+            "description": "run frames with a clock read"
+          },
+          {
+            "name": "bib",
+            "type": "integer",
+            "description": "bib number read from the broadcast panel (majority vote over the run)"
+          },
+          {
+            "name": "bib_agree",
+            "type": "number",
+            "description": "share of bib reads agreeing with the majority",
+            "unit": "1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "panel-positions",
+      "path": "data/panel_positions.csv",
+      "description": "intermediate: position code read per run",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 7928,
+      "hash": "sha256:cb2d608cc8773028149be1bafee5e0de38b0f865a3e88d873f5949b45bf9b878",
+      "rows": 326,
+      "schema": {
+        "fields": [
+          {
+            "name": "run_id",
+            "type": "string",
+            "description": "run identifier, <video_id>_<nnn> in clock-start order within the video"
+          },
+          {
+            "name": "panel_pos",
+            "type": "string",
+            "description": "position code read from the broadcast panel (WR, DB, RB, TE, LB, DL, OL, QB)"
+          },
+          {
+            "name": "panel_pos_score",
+            "type": "number",
+            "description": "match score of the panel position code",
+            "unit": "1"
+          }
+        ]
+      }
+    }
+  ]
+}

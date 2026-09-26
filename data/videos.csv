@@ -1,12 +1,12 @@
-video_id,season,group,positions,cls
-0r_usy_GIAI,2026,Wide Receivers Group 1,WR,skill
-BEFga72DF3U,2026,Wide Receivers Group 2,WR,skill
--zgIolzsJxY,2026,Defensive Backs,CB,skill
-UcatZ1FYe5E,2026,Safeties,SAF,skill
-g__zmhX838U,2026,Running Backs,RB,strong
-9xc35LbeeUE,2026,Tight Ends,TE,strong
-olzS7RidilY,2026,Linebackers,LB,strong
-LDqozfzjaNU,2026,Edge Rushers,EDGE,strong
-W23Nvg3rw6U,2026,Offensive Lineman Group 1,OT|G|C,line
-f9RAoGpGkIY,2026,Offensive Lineman Group 2,OT|G|C,line
-Sr-Q6UjJq6g,2026,Defensive Line,DT,line
+video_id,season,group,positions,cls,title,channel,upload_date,duration_s,url,width,height,fps,sha256
+0r_usy_GIAI,2026,Wide Receivers Group 1,WR,skill,Wide Receivers Run the 40-Yard Dash at 2026 NFL Combine | Group 1,NFL,2026-02-28,739,https://www.youtube.com/watch?v=0r_usy_GIAI,1920,1080,30000/1001,f9efcf058eb259fd776964b3e7bce0966f3aad456a412a5d468bafb7348c4acb
+BEFga72DF3U,2026,Wide Receivers Group 2,WR,skill,Wide Receivers Run the 40-Yard Dash at 2026 NFL Combine | Group 2,NFL,2026-03-01,1128,https://www.youtube.com/watch?v=BEFga72DF3U,1920,1080,30000/1001,9ed09912991aa4f5be811f30f08c06e67b17841cc52bc4b8281b10c317f50e8b
+-zgIolzsJxY,2026,Defensive Backs,CB,skill,Defensive Backs Run the 40-Yard Dash at 2026 NFL Combine,NFL,2026-02-27,917,https://www.youtube.com/watch?v=-zgIolzsJxY,1920,1080,30000/1001,c903387cca74aeed99655555c755a03c2ba72f0f16845391755b188f26dc04a7
+UcatZ1FYe5E,2026,Safeties,SAF,skill,Safeties Run the 40-Yard Dash at 2026 NFL Combine,NFL,2026-02-27,606,https://www.youtube.com/watch?v=UcatZ1FYe5E,1920,1080,30000/1001,9be87cb9a6f63364447d9434fb9446e137119f86b739e9ab9d5fd3f6624cb3c4
+g__zmhX838U,2026,Running Backs,RB,strong,Running Backs Run the 40-Yard Dash at 2026 NFL Combine,NFL,2026-02-28,445,https://www.youtube.com/watch?v=g__zmhX838U,1920,1080,30000/1001,7a5c19f6854536348591ed8e005a6b7b2536f7ffaf0081365a3f1d26b91aec50
+9xc35LbeeUE,2026,Tight Ends,TE,strong,Tight Ends Run the 40-Yard Dash at 2026 NFL Combine,NFL,2026-02-28,758,https://www.youtube.com/watch?v=9xc35LbeeUE,1920,1080,30000/1001,7a2d2e793b990892deb36ec9fb4bcf133b22b64fe89247c9d0242afb2091bb70
+olzS7RidilY,2026,Linebackers,LB,strong,Linebackers Run the 40-Yard Dash at 2026 NFL Combine,NFL,2026-02-27,681,https://www.youtube.com/watch?v=olzS7RidilY,1920,1080,30000/1001,628f53c835d702271082568d1bd18f7611f6fab210e7410d777b058a81127743
+LDqozfzjaNU,2026,Edge Rushers,EDGE,strong,Edge Rushers Run the 40-Yard Dash at 2026 NFL Combine,NFL,2026-02-26,839,https://www.youtube.com/watch?v=LDqozfzjaNU,1920,1080,30000/1001,8e4ce598b8471e64a304dc2c938cee127b74147036af70b1a331e721393fd979
+W23Nvg3rw6U,2026,Offensive Lineman Group 1,OT|G|C,line,Offensive Lineman Run the 40-Yard Dash at 2026 NFL Combine | Group 1,NFL,2026-03-01,1052,https://www.youtube.com/watch?v=W23Nvg3rw6U,1920,1080,30000/1001,bfe8dd39b3951b3c7d8f34f506b9e94e970881204acc4fdc5e1e194585ed715c
+f9RAoGpGkIY,2026,Offensive Lineman Group 2,OT|G|C,line,Offensive Lineman Run the 40-Yard Dash at 2026 NFL Combine | Group 2,NFL,2026-03-01,732,https://www.youtube.com/watch?v=f9RAoGpGkIY,1920,1080,30000/1001,ebc84e252f064681c8140bfc4747033ee650a5b5d8cbcc658423d05a3aa38562
+Sr-Q6UjJq6g,2026,Defensive Line,DT,line,Defensive Lineman Run the 40-Yard Dash at 2026 NFL Combine,NFL,2026-02-26,519,https://www.youtube.com/watch?v=Sr-Q6UjJq6g,1920,1080,30000/1001,4897c43582a84830022bc57bbf77f5d6a5882674203ede1e544a48c2ebdf2224

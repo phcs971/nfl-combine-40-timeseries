@@ -1,0 +1,24 @@
+Data licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Copyright (c) 2026 Pedro Henrique Cordeiro Soares
+
+Scope
+-----
+This licence covers the derived measurements and metadata in this directory
+(the CSV, Parquet and JSON files): positions, velocities, pose angles, clock
+readings, quality-control metrics and the video registry.
+
+It does not cover, and grants no rights in:
+- the NFL broadcast footage the measurements were taken from, which remains the
+  property of the National Football League and is not distributed here;
+- the broadcast stills and GIFs in docs/img/, which are NFL footage reproduced at
+  reduced resolution for research illustration.
+
+The code in src/ and notebooks/ is licensed separately under the MIT License
+(see LICENSE at the repository root).
+
+Attribution
+-----------
+Cite the dataset as given in CITATION.cff at the repository root.
