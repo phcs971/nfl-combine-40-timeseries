@@ -51,7 +51,7 @@ or account is needed.
 ```python
 import pandas as pd
 
-VERSION = "main"  # or a release tag, e.g. "v1.0.0", to pin the data
+VERSION = "main"  # or a release tag, e.g. "v1.0.1", to pin the data
 BASE = f"https://raw.githubusercontent.com/phcs971/nfl-combine-40-timeseries/{VERSION}/data"
 
 runs = pd.read_csv(f"{BASE}/runs.csv")                             # one row per run
@@ -487,7 +487,7 @@ repository* button produces APA and BibTeX from it.
   author  = {Cordeiro Soares, Pedro Henrique},
   title   = {NFL Combine 40-Yard Dash Movement Time Series (2026)},
   year    = {2026},
-  version = {1.0.0},
+  version = {1.0.1},
   url     = {https://github.com/phcs971/nfl-combine-40-timeseries}
 }
 ```

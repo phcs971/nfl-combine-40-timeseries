@@ -1,4 +1,4 @@
-# Datasheet: NFL Combine 40-Yard Dash Movement Time Series (2026), v1.0.0
+# Datasheet: NFL Combine 40-Yard Dash Movement Time Series (2026), v1.0.1
 
 Written following Gebru et al., *Datasheets for Datasets* (Communications of the ACM,
 2021). The method is described in full in the [README](README.md); the column-level

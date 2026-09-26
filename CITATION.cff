@@ -20,7 +20,7 @@ contact:
     family-names: Cordeiro Soares
     email: phcs.971@gmail.com
     orcid: "https://orcid.org/0009-0000-6041-2494"
-version: 1.0.0
+version: 1.0.1
 date-released: "2026-09-27"
 license: CC-BY-4.0
 repository-code: "https://github.com/phcs971/nfl-combine-40-timeseries"

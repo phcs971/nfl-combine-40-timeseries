@@ -9,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 REPO = "https://github.com/phcs971/nfl-combine-40-timeseries"
 
 CHANNELS = {

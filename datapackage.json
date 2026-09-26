@@ -1,7 +1,7 @@
 {
   "name": "nfl-combine-40-timeseries",
   "title": "NFL Combine 40-Yard Dash Movement Time Series (2026)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "created": "2026-09-27",
   "homepage": "https://github.com/phcs971/nfl-combine-40-timeseries",
   "description": "Per-frame position, velocity, acceleration and pose time series of 40-yard dashes measured from the 2026 NFL Combine broadcasts, labelled SKILL, STRONG or LINEMAN. See README.md and DATASHEET.md.",

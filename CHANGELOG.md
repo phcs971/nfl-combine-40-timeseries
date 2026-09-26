@@ -4,6 +4,13 @@ Versions follow [semantic versioning](https://semver.org/) for the data: a major
 version changes values or columns in a way that breaks comparisons with earlier
 releases; a minor version adds runs or columns; a patch fixes documentation.
 
+## 1.0.1 — 2026-09-27
+
+Documentation only; the data files are identical to 1.0.0.
+
+- Archived on Zenodo, which mints the dataset's DOI from this release.
+- Author ORCID and contact email in `CITATION.cff`, the datasheet and the README.
+
 ## 1.0.0 — 2026-09-27
 
 First public release.
